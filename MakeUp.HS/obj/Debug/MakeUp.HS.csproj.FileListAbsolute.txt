@@ -1,0 +1,8 @@
+C:\Users\ED\Documents\Visual Studio 2013\Projects\MakeUp.HS\bin\Debug\MakeUp.HS.dll
+C:\Users\ED\Documents\Visual Studio 2013\Projects\MakeUp.HS\bin\Debug\MakeUp.HS.pdb
+C:\Users\ED\Documents\Visual Studio 2013\Projects\MakeUp.HS\obj\Debug\MakeUp.HS.csprojResolveAssemblyReference.cache
+C:\Users\ED\Documents\Visual Studio 2013\Projects\MakeUp.HS\obj\Debug\MakeUp.HS.dll
+C:\Users\ED\Documents\Visual Studio 2013\Projects\MakeUp.HS\obj\Debug\MakeUp.HS.pdb
+C:\Users\ED\Documents\Visual Studio 2013\Projects\MakeUp.HS\obj\Debug\MakeUp.HS.Form.MakeUpBatchManagerForm.resources
+C:\Users\ED\Documents\Visual Studio 2013\Projects\MakeUp.HS\obj\Debug\MakeUp.HS.Properties.Resources.resources
+C:\Users\ED\Documents\Visual Studio 2013\Projects\MakeUp.HS\obj\Debug\MakeUp.HS.csproj.GenerateResource.Cache
