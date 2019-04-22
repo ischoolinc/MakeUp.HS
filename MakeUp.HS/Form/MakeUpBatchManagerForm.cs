@@ -27,6 +27,12 @@ namespace MakeUp.HS.Form
         {
             InitializeComponent();
 
+            _worker = new BackgroundWorker();
+            _worker.DoWork += new DoWorkEventHandler(Worker_DoWork);
+            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Worker_RunWorkerCompleted);
+            _worker.ProgressChanged += new ProgressChangedEventHandler(Worker_ProgressChanged);
+            _worker.WorkerReportsProgress = true;
+
             // 學年度 
             cboSchoolYear.Items.Add(int.Parse(School.DefaultSchoolYear) - 3);
             cboSchoolYear.Items.Add(int.Parse(School.DefaultSchoolYear) - 2);
@@ -40,19 +46,11 @@ namespace MakeUp.HS.Form
             // 預設為學校的當學年度學期
             cboSchoolYear.Text = School.DefaultSchoolYear;
             cbosemester.Text = School.DefaultSemester;
-
-            _worker = new BackgroundWorker();
-            _worker.DoWork += new DoWorkEventHandler(Worker_DoWork);
-            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Worker_RunWorkerCompleted);
-            _worker.ProgressChanged += new ProgressChangedEventHandler(Worker_ProgressChanged);
-            _worker.WorkerReportsProgress = true;
-            
-            FillCboTemplate();
-            
+                                    
             picLoading.Visible = false;
         }
 
-        private void GetESLTemplate()
+        private void GetMakeUpBatch()
         {
             picLoading.Visible = true;
 
@@ -70,15 +68,6 @@ namespace MakeUp.HS.Form
 
             }
             #endregion
-        }
-
-
-        private void FillCboTemplate()
-        {
-            picLoading.Visible = true;
-
-            //cboSchoolYear.Items.Clear();
-
         }
 
         /// <summary>
@@ -101,19 +90,9 @@ namespace MakeUp.HS.Form
 
 
         /// <summary>
-        /// 依試別取得所有課程成績
-        /// </summary>
-        /// <param name="targetTermName"></param>
-        private void LoadCourses(string targetTermName)
-        {
-
-        }
-
-
-        /// <summary>
         /// 將補考梯次填入 DataGridView
         /// </summary>
-        private void FillCourses()
+        private void FillMakeUpBatch()
         {
             
             dataGridViewX1.SuspendLayout();
@@ -121,7 +100,6 @@ namespace MakeUp.HS.Form
             //dataGridViewX1.Rows.AddRange(list.ToArray());
             dataGridViewX1.ResumeLayout();
         }
-
 
 
         /// <summary>
@@ -144,19 +122,6 @@ namespace MakeUp.HS.Form
         {
 
             RefreshListView();
-        }
-
-        private void cboTemplate_SelectedIndexChanged(object sender, EventArgs e)
-        {           
-            cbosemester.Enabled = true;
-            
-            FillcboExam();
-        }
-
-        private void FillcboExam()
-        {
-            //cbosemester.Items.Clear();
-
         }
 
 
@@ -204,6 +169,17 @@ namespace MakeUp.HS.Form
         private void MakeUpBatchManagerForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+
+        private void cbosemester_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshListView();
+        }
+
+        private void cboSchoolYear_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshListView();
         }
     }
 }

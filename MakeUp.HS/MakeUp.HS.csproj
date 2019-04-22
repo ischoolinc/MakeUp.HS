@@ -105,7 +105,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UDT\UDT_ReportTemplate.cs" />
+    <Compile Include="UDT\UDT_MakeUpData.cs" />
+    <Compile Include="UDT\UDT_MakeUpGroup.cs" />
+    <Compile Include="UDT\UDT_MakeUpBatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Library\" />

@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.cbosemester = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.btnClose = new DevComponents.DotNetBar.ButtonX();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.btnRefresh = new DevComponents.DotNetBar.ButtonX();
+            this.btnInsertBatch = new DevComponents.DotNetBar.ButtonX();
             this.cboSchoolYear = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
-            this.picLoading = new System.Windows.Forms.PictureBox();
             this.ColMakeUpBatch = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColIncludedClassID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.picLoading = new System.Windows.Forms.PictureBox();
             this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
@@ -71,6 +71,7 @@
             this.cbosemester.Name = "cbosemester";
             this.cbosemester.Size = new System.Drawing.Size(64, 25);
             this.cbosemester.TabIndex = 2;
+            this.cbosemester.SelectedIndexChanged += new System.EventHandler(this.cbosemester_SelectedIndexChanged);
             // 
             // btnClose
             // 
@@ -90,18 +91,17 @@
             this.saveFileDialog1.Filter = "Excel 2003 (*.xls)|*.xls";
             this.saveFileDialog1.Title = "儲存檔案";
             // 
-            // btnRefresh
+            // btnInsertBatch
             // 
-            this.btnRefresh.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefresh.BackColor = System.Drawing.Color.Transparent;
-            this.btnRefresh.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnRefresh.Location = new System.Drawing.Point(826, 452);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(90, 23);
-            this.btnRefresh.TabIndex = 6;
-            this.btnRefresh.Text = "儲存";
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            this.btnInsertBatch.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnInsertBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnInsertBatch.BackColor = System.Drawing.Color.Transparent;
+            this.btnInsertBatch.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnInsertBatch.Location = new System.Drawing.Point(530, 14);
+            this.btnInsertBatch.Name = "btnInsertBatch";
+            this.btnInsertBatch.Size = new System.Drawing.Size(221, 23);
+            this.btnInsertBatch.TabIndex = 6;
+            this.btnInsertBatch.Text = "新增補考梯次";
             // 
             // cboSchoolYear
             // 
@@ -114,6 +114,7 @@
             this.cboSchoolYear.Name = "cboSchoolYear";
             this.cboSchoolYear.Size = new System.Drawing.Size(99, 25);
             this.cboSchoolYear.TabIndex = 7;
+            this.cboSchoolYear.SelectedIndexChanged += new System.EventHandler(this.cboSchoolYear_SelectedIndexChanged);
             // 
             // labelX1
             // 
@@ -141,14 +142,14 @@
             this.ColMakeUpBatch,
             this.ColIncludedClassID,
             this.ColDescription});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridViewX1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridViewX1.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dataGridViewX1.ImeMode = System.Windows.Forms.ImeMode.Off;
@@ -160,22 +161,6 @@
             this.dataGridViewX1.Size = new System.Drawing.Size(980, 383);
             this.dataGridViewX1.TabIndex = 9;
             this.dataGridViewX1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewX1_CellMouseDoubleClick);
-            // 
-            // picLoading
-            // 
-            this.picLoading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.picLoading.BackColor = System.Drawing.Color.Transparent;
-            this.picLoading.Image = global::MakeUp.HS.Properties.Resources.loading;
-            this.picLoading.InitialImage = null;
-            this.picLoading.Location = new System.Drawing.Point(473, 227);
-            this.picLoading.Name = "picLoading";
-            this.picLoading.Size = new System.Drawing.Size(44, 46);
-            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picLoading.TabIndex = 10;
-            this.picLoading.TabStop = false;
-            this.picLoading.Visible = false;
             // 
             // ColMakeUpBatch
             // 
@@ -197,6 +182,22 @@
             this.ColDescription.HeaderText = "補考說明";
             this.ColDescription.Name = "ColDescription";
             this.ColDescription.ReadOnly = true;
+            // 
+            // picLoading
+            // 
+            this.picLoading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.picLoading.BackColor = System.Drawing.Color.Transparent;
+            this.picLoading.Image = global::MakeUp.HS.Properties.Resources.loading;
+            this.picLoading.InitialImage = null;
+            this.picLoading.Location = new System.Drawing.Point(473, 227);
+            this.picLoading.Name = "picLoading";
+            this.picLoading.Size = new System.Drawing.Size(44, 46);
+            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picLoading.TabIndex = 10;
+            this.picLoading.TabStop = false;
+            this.picLoading.Visible = false;
             // 
             // buttonX1
             // 
@@ -220,7 +221,7 @@
             this.Controls.Add(this.dataGridViewX1);
             this.Controls.Add(this.cboSchoolYear);
             this.Controls.Add(this.labelX1);
-            this.Controls.Add(this.btnRefresh);
+            this.Controls.Add(this.btnInsertBatch);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.cbosemester);
             this.Controls.Add(this.labelX3);
@@ -241,7 +242,7 @@
         private DevComponents.DotNetBar.Controls.ComboBoxEx cbosemester;
         private DevComponents.DotNetBar.ButtonX btnClose;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private DevComponents.DotNetBar.ButtonX btnRefresh;
+        private DevComponents.DotNetBar.ButtonX btnInsertBatch;
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboSchoolYear;
         private DevComponents.DotNetBar.LabelX labelX1;
         private DevComponents.DotNetBar.Controls.DataGridViewX dataGridViewX1;

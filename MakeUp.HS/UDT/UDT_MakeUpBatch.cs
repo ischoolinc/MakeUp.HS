@@ -4,29 +4,23 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace ESL_System
-{    
+namespace MakeUp.HS
+{
     [FISCA.UDT.TableName("make.up.batch")]
-    public class UDT_MakeUpBatch : FISCA.UDT.ActiveRecord
+    public class UDT_MakeUpData : FISCA.UDT.ActiveRecord
     {
-        
-        /// <summary>
-        /// 參考的評分樣版 ID
-        /// </summary>
-        [FISCA.UDT.Field]
-        public string Ref_exam_Template_ID { get; set; }
 
         /// <summary>
-        /// 設定檔名稱
+        /// 補考梯次
         /// </summary>
         [FISCA.UDT.Field]
-        public string Name { get; set; }
+        public string MakeUp_Batch { get; set; }
 
         /// <summary>
         /// 學年度
         /// </summary>
         [FISCA.UDT.Field]
-        public string SchoolYear { get; set; }
+        public string School_Year { get; set; }
 
         /// <summary>
         /// 學期
@@ -35,11 +29,16 @@ namespace ESL_System
         public string Semester { get; set; }
 
         /// <summary>
-        /// 試別
+        /// 梯次敘述
         /// </summary>
         [FISCA.UDT.Field]
-        public string Exam { get; set; }
+        public string Description { get; set; }
 
-              
+        /// <summary>
+        /// 包含班級id
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string Included_Class_ID { get; set; }
+        
     }
 }

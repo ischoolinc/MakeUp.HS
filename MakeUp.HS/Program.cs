@@ -17,8 +17,10 @@ namespace MakeUp.HS
         {            
             FISCA.UDT.AccessHelper accessHelper = new FISCA.UDT.AccessHelper();
 
-            //accessHelper.Select<UDT_ReportTemplate>(); // 先將UDT 選起來，如果是第一次開啟沒有話就會新增
-            //accessHelper.Select<UDT_WeeklyReportTemplate>(); // 先將UDT 選起來，如果是第一次開啟沒有話就會新增
+            // 先將UDT 選起來，如果是第一次開啟沒有話就會新增
+            accessHelper.Select<UDT_MakeUpBatch>();
+            accessHelper.Select<UDT_MakeUpGroup>();
+            accessHelper.Select<UDT_MakeUpData>();
 
             {
                 Catalog ribbon = RoleAclSource.Instance["教務作業"]["補考作業"];
