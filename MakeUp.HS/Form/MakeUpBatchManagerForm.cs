@@ -181,6 +181,20 @@ namespace MakeUp.HS.Form
         {
             RefreshListView();
         }
+
+        private void btnInsertBatch_Click(object sender, EventArgs e)
+        {
+            // 新增模式
+            InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("新增", cboSchoolYear.Text, cbosemester.Text);
+            iumbf.ShowDialog();
+        }
+
+        private void btnGenMakeUpGroup_Click(object sender, EventArgs e)
+        {
+
+
+
+        }
     }
 }
 

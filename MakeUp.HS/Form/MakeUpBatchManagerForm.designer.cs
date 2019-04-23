@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.cbosemester = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.btnClose = new DevComponents.DotNetBar.ButtonX();
@@ -41,7 +41,7 @@
             this.ColIncludedClassID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.picLoading = new System.Windows.Forms.PictureBox();
-            this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
+            this.btnGenMakeUpGroup = new DevComponents.DotNetBar.ButtonX();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
@@ -102,6 +102,7 @@
             this.btnInsertBatch.Size = new System.Drawing.Size(221, 23);
             this.btnInsertBatch.TabIndex = 6;
             this.btnInsertBatch.Text = "新增補考梯次";
+            this.btnInsertBatch.Click += new System.EventHandler(this.btnInsertBatch_Click);
             // 
             // cboSchoolYear
             // 
@@ -142,14 +143,14 @@
             this.ColMakeUpBatch,
             this.ColIncludedClassID,
             this.ColDescription});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewX1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridViewX1.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dataGridViewX1.ImeMode = System.Windows.Forms.ImeMode.Off;
@@ -199,24 +200,25 @@
             this.picLoading.TabStop = false;
             this.picLoading.Visible = false;
             // 
-            // buttonX1
+            // btnGenMakeUpGroup
             // 
-            this.buttonX1.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.buttonX1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonX1.BackColor = System.Drawing.Color.Transparent;
-            this.buttonX1.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.buttonX1.Location = new System.Drawing.Point(779, 14);
-            this.buttonX1.Name = "buttonX1";
-            this.buttonX1.Size = new System.Drawing.Size(189, 23);
-            this.buttonX1.TabIndex = 11;
-            this.buttonX1.Text = "產生補考群組";
+            this.btnGenMakeUpGroup.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnGenMakeUpGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGenMakeUpGroup.BackColor = System.Drawing.Color.Transparent;
+            this.btnGenMakeUpGroup.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnGenMakeUpGroup.Location = new System.Drawing.Point(779, 14);
+            this.btnGenMakeUpGroup.Name = "btnGenMakeUpGroup";
+            this.btnGenMakeUpGroup.Size = new System.Drawing.Size(189, 23);
+            this.btnGenMakeUpGroup.TabIndex = 11;
+            this.btnGenMakeUpGroup.Text = "產生補考群組";
+            this.btnGenMakeUpGroup.Click += new System.EventHandler(this.btnGenMakeUpGroup_Click);
             // 
             // MakeUpBatchManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1004, 481);
-            this.Controls.Add(this.buttonX1);
+            this.Controls.Add(this.btnGenMakeUpGroup);
             this.Controls.Add(this.picLoading);
             this.Controls.Add(this.dataGridViewX1);
             this.Controls.Add(this.cboSchoolYear);
@@ -250,6 +252,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUpBatch;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColIncludedClassID;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColDescription;
-        private DevComponents.DotNetBar.ButtonX buttonX1;
+        private DevComponents.DotNetBar.ButtonX btnGenMakeUpGroup;
     }
 }
