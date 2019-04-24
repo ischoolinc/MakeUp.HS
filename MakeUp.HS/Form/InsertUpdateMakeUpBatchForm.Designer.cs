@@ -35,9 +35,9 @@
             this.txtDescription = new DevComponents.DotNetBar.Controls.TextBoxX();
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
             this.groupPanel3 = new DevComponents.DotNetBar.Controls.GroupPanel();
+            this.picLoading = new System.Windows.Forms.PictureBox();
             this.lstClass = new DevComponents.DotNetBar.Controls.ListViewEx();
             this.chkSelectAll = new DevComponents.DotNetBar.Controls.CheckBoxX();
-            this.picLoading = new System.Windows.Forms.PictureBox();
             this.groupPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
@@ -48,7 +48,7 @@
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
             this.btnClose.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnClose.Location = new System.Drawing.Point(570, 350);
+            this.btnClose.Location = new System.Drawing.Point(572, 350);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(102, 23);
             this.btnClose.TabIndex = 13;
@@ -61,7 +61,7 @@
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.BackColor = System.Drawing.Color.Transparent;
             this.btnSave.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnSave.Location = new System.Drawing.Point(460, 350);
+            this.btnSave.Location = new System.Drawing.Point(462, 350);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(104, 23);
             this.btnSave.TabIndex = 12;
@@ -165,6 +165,22 @@
             this.groupPanel3.TabIndex = 19;
             this.groupPanel3.Text = "包含班級";
             // 
+            // picLoading
+            // 
+            this.picLoading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.picLoading.BackColor = System.Drawing.Color.Transparent;
+            this.picLoading.Image = global::MakeUp.HS.Properties.Resources.loading;
+            this.picLoading.InitialImage = null;
+            this.picLoading.Location = new System.Drawing.Point(295, 70);
+            this.picLoading.Name = "picLoading";
+            this.picLoading.Size = new System.Drawing.Size(44, 46);
+            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picLoading.TabIndex = 21;
+            this.picLoading.TabStop = false;
+            this.picLoading.Visible = false;
+            // 
             // lstClass
             // 
             // 
@@ -201,27 +217,11 @@
             this.chkSelectAll.Text = "全選/全不選";
             this.chkSelectAll.CheckedChanged += new System.EventHandler(this.chkSelectAll_CheckedChanged);
             // 
-            // picLoading
-            // 
-            this.picLoading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.picLoading.BackColor = System.Drawing.Color.Transparent;
-            this.picLoading.Image = global::MakeUp.HS.Properties.Resources.loading;
-            this.picLoading.InitialImage = null;
-            this.picLoading.Location = new System.Drawing.Point(295, 70);
-            this.picLoading.Name = "picLoading";
-            this.picLoading.Size = new System.Drawing.Size(44, 46);
-            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picLoading.TabIndex = 21;
-            this.picLoading.TabStop = false;
-            this.picLoading.Visible = false;
-            // 
             // InsertUpdateMakeUpBatchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(696, 374);
+            this.ClientSize = new System.Drawing.Size(688, 385);
             this.Controls.Add(this.chkSelectAll);
             this.Controls.Add(this.groupPanel3);
             this.Controls.Add(this.txtDescription);

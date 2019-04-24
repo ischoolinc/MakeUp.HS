@@ -94,7 +94,7 @@
             // btnInsertBatch
             // 
             this.btnInsertBatch.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnInsertBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnInsertBatch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnInsertBatch.BackColor = System.Drawing.Color.Transparent;
             this.btnInsertBatch.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnInsertBatch.Location = new System.Drawing.Point(530, 14);
@@ -159,6 +159,7 @@
             this.dataGridViewX1.Name = "dataGridViewX1";
             this.dataGridViewX1.ReadOnly = true;
             this.dataGridViewX1.RowTemplate.Height = 24;
+            this.dataGridViewX1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewX1.Size = new System.Drawing.Size(980, 383);
             this.dataGridViewX1.TabIndex = 9;
             this.dataGridViewX1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewX1_CellMouseDoubleClick);
@@ -203,7 +204,7 @@
             // btnGenMakeUpGroup
             // 
             this.btnGenMakeUpGroup.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnGenMakeUpGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGenMakeUpGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGenMakeUpGroup.BackColor = System.Drawing.Color.Transparent;
             this.btnGenMakeUpGroup.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnGenMakeUpGroup.Location = new System.Drawing.Point(779, 14);

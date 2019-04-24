@@ -7,7 +7,7 @@ using System.IO;
 namespace MakeUp.HS
 {
     [FISCA.UDT.TableName("make.up.batch")]
-    public class UDT_MakeUpData : FISCA.UDT.ActiveRecord
+    public class UDT_MakeUpBatch : FISCA.UDT.ActiveRecord
     {
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace MakeUp.HS
         public string Semester { get; set; }
 
         /// <summary>
-        /// 梯次敘述
+        /// 補考說明
         /// </summary>
         [FISCA.UDT.Field]
         public string Description { get; set; }
@@ -39,6 +39,10 @@ namespace MakeUp.HS
         /// </summary>
         [FISCA.UDT.Field]
         public string Included_Class_ID { get; set; }
-        
+
+
+        // 取代原本 ActiveRecord 不能 Set 的 UID
+        public string UID { get; set; }
+
     }
 }

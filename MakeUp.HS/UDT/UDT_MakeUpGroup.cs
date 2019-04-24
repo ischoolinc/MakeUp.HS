@@ -7,7 +7,7 @@ using System.IO;
 namespace MakeUp.HS
 {
     [FISCA.UDT.TableName("make.up.group")]
-    public class UDT_MakeUpBatch : FISCA.UDT.ActiveRecord
+    public class UDT_MakeUpGroup : FISCA.UDT.ActiveRecord
     {
 
         /// <summary>
