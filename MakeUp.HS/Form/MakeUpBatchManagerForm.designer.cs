@@ -163,6 +163,8 @@
             this.dataGridViewX1.Size = new System.Drawing.Size(980, 383);
             this.dataGridViewX1.TabIndex = 9;
             this.dataGridViewX1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewX1_CellMouseDoubleClick);
+            this.dataGridViewX1.SelectionChanged += new System.EventHandler(this.dataGridViewX1_SelectionChanged);
+            this.dataGridViewX1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridViewX1_MouseDown);
             // 
             // ColMakeUpBatch
             // 
@@ -207,6 +209,7 @@
             this.btnGenMakeUpGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGenMakeUpGroup.BackColor = System.Drawing.Color.Transparent;
             this.btnGenMakeUpGroup.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnGenMakeUpGroup.Enabled = false;
             this.btnGenMakeUpGroup.Location = new System.Drawing.Point(779, 14);
             this.btnGenMakeUpGroup.Name = "btnGenMakeUpGroup";
             this.btnGenMakeUpGroup.Size = new System.Drawing.Size(189, 23);

@@ -13,6 +13,8 @@ using FISCA.Data;
 using System.Xml.Linq;
 using System.ComponentModel;
 using FISCA.Presentation.Controls;
+using FISCA.Authentication;
+using FISCA.LogAgent;
 
 namespace MakeUp.HS.Form
 {
@@ -29,6 +31,9 @@ namespace MakeUp.HS.Form
 
         // 學期
         private string _semester;
+
+        // 目前選的梯次
+        private UDT_MakeUpBatch _selectedBatch;
 
 
         public MakeUpBatchManagerForm()
@@ -221,12 +226,12 @@ school_year = '" + _schoolYear + "'" +
             DataGridViewCell cell = dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
             //  找到選取到的 梯次
-            UDT_MakeUpBatch selectedBatch = _BatchList.Find(x => x.UID == "" + cell.OwningRow.Tag);
+            _selectedBatch = _BatchList.Find(x => x.UID == "" + cell.OwningRow.Tag);
 
             // 修改模式
-            InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("修改", cboSchoolYear.Text, cbosemester.Text, selectedBatch);
+            InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("修改", cboSchoolYear.Text, cbosemester.Text, _selectedBatch);
             iumbf.ShowDialog();
-            
+
             RefreshListView(); //重整畫面
         }
 
@@ -290,9 +295,127 @@ school_year = '" + _schoolYear + "'" +
                 classNameList.Add(className);
             }
 
-            totalclassName = string.Join("、", classNameList); 
+            totalclassName = string.Join("、", classNameList);
 
             return totalclassName;
+        }
+
+        private void dataGridViewX1_SelectionChanged(object sender, EventArgs e)
+        {
+            // 有選擇梯次 才可以產生補考群組
+            if (dataGridViewX1.SelectedRows.Count > 0)
+            {
+                btnGenMakeUpGroup.Enabled = true;
+
+                // 一次只能選一條 Row ，所以是第一個
+                _selectedBatch = _BatchList.Find(x => x.UID == "" + dataGridViewX1.SelectedRows[0].Tag); 
+
+            }
+            else
+            {
+                btnGenMakeUpGroup.Enabled = false;
+            }
+
+        }
+
+        //刪除 補考梯次
+        private void MenuItemDelete_Click(Object sender, System.EventArgs e)
+        {
+            if (FISCA.Presentation.Controls.MsgBox.Show("是否要刪除本補考梯次?", "警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            {
+                // LOG 資訊
+                string _actor = DSAServices.UserAccount; ;
+                string _client_info = ClientInfo.GetCurrentClientInfo().OutputResult().OuterXml;
+
+                //拚SQL
+                // 兜資料
+                List<string> dataList = new List<string>();
+
+                string data = string.Format(@"
+                SELECT
+                    '{0}'::TEXT AS makeup_batch
+                    ,'{1}'::TEXT AS school_year
+                    ,'{2}'::TEXT AS semester
+                    ,'{3}'::TEXT AS description
+                    ,'{4}'::TEXT AS included_class_id                    
+                    ,'{5}'::BIGINT AS uid
+                ", _selectedBatch.MakeUp_Batch, _schoolYear, _semester, _selectedBatch.Description, _selectedBatch.Included_Class_ID, _selectedBatch.UID);
+                dataList.Add(data);
+
+                string dataString = string.Join(" UNION ALL", dataList);
+                ;
+
+                string sql = string.Format(@"
+WITH data_row AS
+(
+    {0}
+)
+,delete_data AS(			 
+DELETE
+FROM $make.up.batch
+WHERE $make.up.batch.uid IN
+(
+    SELECT 
+        data_row.uid 
+    FROM data_row
+)
+)
+INSERT INTO log(
+	actor
+	, action_type
+	, action
+	, target_category
+	, target_id
+	, server_time
+	, client_info
+	, action_by
+	, description
+)
+SELECT 
+	'{1}'::TEXT AS actor
+	, 'Record' AS action_type
+	, '刪除高中補考梯次' AS action
+	, ''::TEXT AS target_category
+	, '' AS target_id
+	, now() AS server_time
+	, '{2}' AS client_info
+	, '刪除高中補考梯次'AS action_by   
+	, '刪除 高中補考 學年度「'|| data_row.school_year||'」，學期「'|| data_row.semester||'」， 補考梯次「'|| data_row.makeup_batch||'」，補考說明 「'|| data_row.description ||'」。' AS description 
+FROM
+	data_row
+
+", dataString, _actor, _client_info);
+            
+
+            K12.Data.UpdateHelper uh = new UpdateHelper();
+
+                //執行sql
+                uh.Execute(sql);
+
+                FISCA.Presentation.Controls.MsgBox.Show("刪除成功。");
+
+                // 刷新畫面
+                RefreshListView();
+            }           
+        }
+
+        private void dataGridViewX1_MouseDown(object sender, MouseEventArgs e)
+        {
+            MenuItem[] menuItems = new MenuItem[0];
+
+            MenuItem menuItems_delete = new MenuItem("刪除", MenuItemDelete_Click);
+
+            menuItems = new MenuItem[] { menuItems_delete };
+
+            if (e.Button == MouseButtons.Right && dataGridViewX1.SelectedRows.Count > 0)
+            {
+                ContextMenu buttonMenu = new ContextMenu(menuItems);
+
+                dataGridViewX1.ContextMenu = buttonMenu;
+
+                dataGridViewX1.ContextMenu.Show(dataGridViewX1, e.Location);
+            }
+
         }
     }
 }
