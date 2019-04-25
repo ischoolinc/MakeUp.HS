@@ -16,6 +16,13 @@ namespace MakeUp.HS
         [FISCA.UDT.Field]
         public string Ref_MakeUp_Batch_ID { get; set; }
 
+
+        /// <summary>
+        /// 補考群組
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string MakeUp_Group { get; set; }
+
         /// <summary>
         /// 閱卷老師
         /// </summary>

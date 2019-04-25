@@ -22,6 +22,11 @@ namespace MakeUp.HS
         [FISCA.UDT.Field]
         public string Ref_MakeUp_Group_ID { get; set; }
 
+        /// <summary>
+        /// 參考學生系統編號
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string Ref_Student_ID { get; set; }
 
         /// <summary>
         /// 科目
@@ -48,7 +53,7 @@ namespace MakeUp.HS
         public string Score { get; set; }
 
         /// <summary>
-        /// 成績分數
+        /// 補考分數
         /// </summary>
         [FISCA.UDT.Field]
         public string MakeUp_score { get; set; }
@@ -58,6 +63,12 @@ namespace MakeUp.HS
         /// </summary>
         [FISCA.UDT.Field]
         public string Pass_Standard { get; set; }
+
+
+        /// <summary>
+        /// 參考補考群組名稱(非UDT 欄位，此屬性為做資料使用)
+        /// </summary>
+        public string Ref_MakeUp_Group_Name { get; set; }
 
     }
 }

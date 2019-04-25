@@ -61,7 +61,6 @@
             this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picLoading.TabIndex = 22;
             this.picLoading.TabStop = false;
-            this.picLoading.Visible = false;
             // 
             // GenMakeUpGroupForm
             // 

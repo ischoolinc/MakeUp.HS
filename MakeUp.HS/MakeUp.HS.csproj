@@ -88,6 +88,10 @@
       <HintPath>Library\K12.Presentation.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SmartSchool.Core">
+      <HintPath>..\..\..\Visual Studio 2013\Projects\MakeUp.HS\Library\SmartSchool.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SmartSchool.Customization.Data">
       <HintPath>Library\SmartSchool.Customization.Data.dll</HintPath>
       <Private>False</Private>

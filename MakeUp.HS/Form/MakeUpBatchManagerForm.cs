@@ -276,7 +276,7 @@ school_year = '" + _schoolYear + "'" +
 
         private void btnGenMakeUpGroup_Click(object sender, EventArgs e)
         {
-            // 傳入目前選的梯次 產生群組
+            // 傳入目前選的梯次 來產生群組
             GenMakeUpGroupForm gmugf = new GenMakeUpGroupForm(_selectedBatch);
 
             gmugf.ShowDialog();
