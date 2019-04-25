@@ -48,7 +48,7 @@
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
             this.btnClose.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnClose.Location = new System.Drawing.Point(572, 350);
+            this.btnClose.Location = new System.Drawing.Point(572, 388);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(102, 23);
             this.btnClose.TabIndex = 13;
@@ -61,7 +61,7 @@
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.BackColor = System.Drawing.Color.Transparent;
             this.btnSave.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnSave.Location = new System.Drawing.Point(462, 350);
+            this.btnSave.Location = new System.Drawing.Point(462, 388);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(104, 23);
             this.btnSave.TabIndex = 12;
@@ -103,8 +103,9 @@
             this.txtDescription.Border.Class = "TextBoxBorder";
             this.txtDescription.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.txtDescription.Location = new System.Drawing.Point(85, 54);
+            this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(587, 25);
+            this.txtDescription.Size = new System.Drawing.Size(587, 83);
             this.txtDescription.TabIndex = 17;
             // 
             // labelX2
@@ -129,7 +130,7 @@
             this.groupPanel3.Controls.Add(this.picLoading);
             this.groupPanel3.Controls.Add(this.lstClass);
             this.groupPanel3.DrawTitleBox = false;
-            this.groupPanel3.Location = new System.Drawing.Point(12, 94);
+            this.groupPanel3.Location = new System.Drawing.Point(14, 143);
             this.groupPanel3.Name = "groupPanel3";
             this.groupPanel3.Size = new System.Drawing.Size(660, 239);
             // 
@@ -209,7 +210,7 @@
             this.chkSelectAll.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSelectAll.CheckValue = "Y";
             this.chkSelectAll.Enabled = false;
-            this.chkSelectAll.Location = new System.Drawing.Point(85, 92);
+            this.chkSelectAll.Location = new System.Drawing.Point(87, 141);
             this.chkSelectAll.Name = "chkSelectAll";
             this.chkSelectAll.Size = new System.Drawing.Size(100, 23);
             this.chkSelectAll.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -221,7 +222,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(688, 385);
+            this.ClientSize = new System.Drawing.Size(688, 423);
             this.Controls.Add(this.chkSelectAll);
             this.Controls.Add(this.groupPanel3);
             this.Controls.Add(this.txtDescription);

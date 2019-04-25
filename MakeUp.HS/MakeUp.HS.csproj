@@ -88,6 +88,14 @@
       <HintPath>Library\K12.Presentation.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SmartSchool.Customization.Data">
+      <HintPath>Library\SmartSchool.Customization.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SmartSchool.Evaluation.HS">
+      <HintPath>Library\SmartSchool.Evaluation.HS.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -100,6 +108,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Form\GenMakeUpGroupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\GenMakeUpGroupForm.Designer.cs">
+      <DependentUpon>GenMakeUpGroupForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\InsertUpdateMakeUpBatchForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +141,9 @@
     <Folder Include="Library\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Form\GenMakeUpGroupForm.resx">
+      <DependentUpon>GenMakeUpGroupForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\InsertUpdateMakeUpBatchForm.resx">
       <DependentUpon>InsertUpdateMakeUpBatchForm.cs</DependentUpon>
     </EmbeddedResource>

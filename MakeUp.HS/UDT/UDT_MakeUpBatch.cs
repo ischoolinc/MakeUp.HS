@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Xml.Linq;
 
 namespace MakeUp.HS
 {
@@ -43,6 +44,41 @@ namespace MakeUp.HS
 
         // 取代原本 ActiveRecord 不能 Set 的 UID
         public string UID { get; set; }
+
+        public string totalclassName { get; set; }
+
+        public List<string> classIDList { get; set; }
+
+        public void ParseClassXMLNameString()
+        {            
+            List<string> classNameList = new List<string>();
+
+
+            XElement elmRoot = XElement.Parse(Included_Class_ID);
+
+            foreach (XElement ele_class in elmRoot.Elements("ClassID"))
+            {
+                string className = ele_class.Attribute("ClassName").Value;
+
+                classNameList.Add(className);
+            }
+
+            totalclassName = string.Join("、", classNameList);
+        }
+
+        public void ParseClassXMLIDList()
+        {
+            classIDList = new List<string>();
+
+            XElement elmRoot = XElement.Parse(Included_Class_ID);
+
+            foreach (XElement ele_class in elmRoot.Elements("ClassID"))
+            {
+                string classID = ele_class.Value;
+
+                classIDList.Add(classID);
+            }            
+        }
 
     }
 }

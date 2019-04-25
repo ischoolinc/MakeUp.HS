@@ -191,8 +191,10 @@ school_year = '" + _schoolYear + "'" +
 
                 row.Cells[0].Value = batchRecord.MakeUp_Batch;
 
-                // 解析班級XML 
-                row.Cells[1].Value = ParseClassXML(batchRecord.Included_Class_ID);
+                // 解析班級XML className
+                batchRecord.ParseClassXMLNameString();
+
+                row.Cells[1].Value = batchRecord.totalclassName;
 
                 row.Cells[2].Value = batchRecord.Description;
 
@@ -274,31 +276,13 @@ school_year = '" + _schoolYear + "'" +
 
         private void btnGenMakeUpGroup_Click(object sender, EventArgs e)
         {
+            // 傳入目前選的梯次 產生群組
+            GenMakeUpGroupForm gmugf = new GenMakeUpGroupForm(_selectedBatch);
 
-
-
+            gmugf.ShowDialog();
         }
 
-        private string ParseClassXML(string xml)
-        {
-            string totalclassName = "";
 
-            List<string> classNameList = new List<string>();
-
-
-            XElement elmRoot = XElement.Parse(xml);
-
-            foreach (XElement ele_class in elmRoot.Elements("ClassID"))
-            {
-                string className = ele_class.Attribute("ClassName").Value;
-
-                classNameList.Add(className);
-            }
-
-            totalclassName = string.Join("、", classNameList);
-
-            return totalclassName;
-        }
 
         private void dataGridViewX1_SelectionChanged(object sender, EventArgs e)
         {
