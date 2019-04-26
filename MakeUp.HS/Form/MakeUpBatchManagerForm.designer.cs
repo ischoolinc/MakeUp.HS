@@ -201,7 +201,6 @@
             this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picLoading.TabIndex = 10;
             this.picLoading.TabStop = false;
-            this.picLoading.Visible = false;
             // 
             // btnGenMakeUpGroup
             // 

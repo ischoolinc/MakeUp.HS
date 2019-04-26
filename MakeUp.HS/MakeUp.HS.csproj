@@ -140,6 +140,7 @@
     <Compile Include="UDT\UDT_MakeUpData.cs" />
     <Compile Include="UDT\UDT_MakeUpGroup.cs" />
     <Compile Include="UDT\UDT_MakeUpBatch.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Library\" />

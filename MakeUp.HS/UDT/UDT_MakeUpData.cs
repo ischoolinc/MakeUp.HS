@@ -59,10 +59,16 @@ namespace MakeUp.HS
         public string MakeUp_score { get; set; }
 
         /// <summary>
-        /// 補考通過標準
+        /// 及格標準
         /// </summary>
         [FISCA.UDT.Field]
         public string Pass_Standard { get; set; }
+
+        /// <summary>
+        /// 補考標準
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string MakeUp_Standard { get; set; }
 
 
         /// <summary>
