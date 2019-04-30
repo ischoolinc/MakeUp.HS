@@ -66,7 +66,10 @@ namespace MakeUp.HS.Form
             AccessHelper helper = new AccessHelper();
             List<StudentRecord> allStudents = new List<StudentRecord>();
             List<ClassRecord> allClasses = helper.ClassHelper.GetClass(_classIDList);
-            WearyDogComputer computer = new WearyDogComputer();
+
+            //WearyDogComputer computer = new WearyDogComputer();
+
+            Utility utility = new Utility();
 
             double currentClass = 1;
             double totalClasses = allClasses.Count;
@@ -74,7 +77,9 @@ namespace MakeUp.HS.Form
             foreach (ClassRecord aClass in allClasses)
             {
                 List<StudentRecord> classStudents = aClass.Students;
-                computer.FillSemesterSubjectScoreInfoWithResit(helper, true, classStudents);
+                //computer.FillSemesterSubjectScoreInfoWithResit(helper, true, classStudents);
+
+                utility.FillSemesterSubjectScoreInfoWithResit(helper, true, classStudents);
 
                 allStudents.AddRange(classStudents);
 
@@ -130,11 +135,15 @@ namespace MakeUp.HS.Form
                         {
                             isCourseGroup = true;
                             //string makeUpGroupKey = scaRecord.CourseName + "_科目(" + scaRecord.Subject + ")_級別(" + scaRecord.SubjectLevel + ")_學分(" + scaRecord.Credit + ")_課程系統編號(" + scaRecord.CourseID + ")";
-                            makeUpGroupKey = scaRecord.CourseName + "_課程系統編號(" + scaRecord.CourseID + ")";
+                            //makeUpGroupKey = scaRecord.CourseName + "_課程系統編號(" + scaRecord.CourseID + ")";
+
+                            // 2019/04/26 穎驊與恩正確認， 同一學期的 課程名稱 在系統中是唯一值， 因此不必擔心重覆的問題，捨棄上面舊的補考群組名稱。
+                            makeUpGroupKey = scaRecord.CourseName ;
                         }
                         else if (info.Detail.GetAttribute("達補考標準") == "否" && scaRecord != null)
                         {
-                            makeUpGroupKey = "未達補考標準群組";
+                            // 2019/04/26 穎驊與恩正確認， 不同課程的未達標準分開建立
+                            makeUpGroupKey = scaRecord.CourseName +"_" + "未達補考標準群組";
                         }
                         else
                         {
@@ -191,18 +200,23 @@ namespace MakeUp.HS.Form
                         // 學分
                         makeUpData.Credit = "" + info.CreditDec();
 
+                        // 校部定
+                        makeUpData.C_Is_Required_By = info.Detail.HasAttribute("修課校部訂") ? info.Detail.GetAttribute("修課校部訂") : "";
+
+                        // 必選修
+                        makeUpData.C_Is_Required = info.Detail.HasAttribute("修課必選修") ? info.Detail.GetAttribute("修課必選修") : "";
+
                         // 原始成績
                         makeUpData.Score = info.Detail.HasAttribute("原始成績") ? info.Detail.GetAttribute("原始成績") : "";
 
                         // 補考成績
-                        makeUpData.MakeUp_score = info.Detail.HasAttribute("補考成績") ? info.Detail.GetAttribute("補考成績") : "";
-
-
-                        //// 補考標準(目前未使用)
-                        //makeUpData.MakeUp_Standard = info.Detail.HasAttribute("補考標準") ? info.Detail.GetAttribute("補考標準") : "";
+                        makeUpData.MakeUp_Score = info.Detail.HasAttribute("補考成績") ? info.Detail.GetAttribute("補考成績") : "";
 
                         // 及格標準
                         makeUpData.Pass_Standard = info.Detail.HasAttribute("及格標準") ? info.Detail.GetAttribute("及格標準") : "";
+
+                        // 補考標準
+                        makeUpData.MakeUp_Standard = info.Detail.HasAttribute("補考標準") ? info.Detail.GetAttribute("補考標準") : "";
 
                         UDT_MakeUpDataList.Add(makeUpData);
                     }
@@ -249,10 +263,13 @@ namespace MakeUp.HS.Form
                     ,'{3}'::TEXT AS subject                                   
                     ,'{4}'::TEXT AS level                                   
                     ,'{5}'::TEXT AS credit                                   
-                    ,'{6}'::TEXT AS score                                   
-                    ,'{7}'::TEXT AS makeup_score                                   
-                    ,'{8}'::TEXT AS pass_standard                                                                              
-                ", makeUpData.Ref_MakeUp_Batch_ID, makeUpData.Ref_MakeUp_Group_Name, makeUpData.Ref_Student_ID, makeUpData.Subject, makeUpData.Level, makeUpData.Credit, makeUpData.Score, makeUpData.MakeUp_score, makeUpData.Pass_Standard);
+                    ,'{6}'::TEXT AS c_is_required_by                                   
+                    ,'{7}'::TEXT AS c_is_required                                   
+                    ,'{8}'::TEXT AS score                                   
+                    ,'{9}'::TEXT AS makeup_score                                   
+                    ,'{10}'::TEXT AS pass_standard                                                                              
+                    ,'{11}'::TEXT AS makeup_standard      
+                ", makeUpData.Ref_MakeUp_Batch_ID, makeUpData.Ref_MakeUp_Group_Name, makeUpData.Ref_Student_ID, makeUpData.Subject, makeUpData.Level, makeUpData.Credit, makeUpData.C_Is_Required_By, makeUpData.C_Is_Required, makeUpData.Score, makeUpData.MakeUp_Score, makeUpData.Pass_Standard, makeUpData.MakeUp_Standard);
 
                 UDT_MakeUpDataDataList.Add(data);
             }
@@ -291,9 +308,12 @@ INSERT INTO $make.up.data(
 	,subject
     ,level
 	,credit	
+    ,c_is_required_by	
+    ,c_is_required	
     ,score
     ,makeup_score
     ,pass_standard    
+    ,makeup_standard
 )
 SELECT 
 	makeUpDataData_row.ref_makeup_batch_id::TEXT AS ref_makeup_batch_id	
@@ -302,9 +322,12 @@ SELECT
 	,makeUpDataData_row.subject::TEXT AS subject		
     ,makeUpDataData_row.level::TEXT AS level    
     ,makeUpDataData_row.credit::TEXT AS credit
+    ,makeUpDataData_row.c_is_required_by::TEXT AS c_is_required_by
+    ,makeUpDataData_row.c_is_required::TEXT AS c_is_required
     ,makeUpDataData_row.score::TEXT AS score
     ,makeUpDataData_row.makeup_score::TEXT AS makeup_score
     ,makeUpDataData_row.pass_standard::TEXT AS pass_standard
+    ,makeUpDataData_row.pass_standard::TEXT AS makeup_standard
 FROM
 	makeUpDataData_row
 LEFT JOIN insert_makeUpGroupData ON insert_makeUpGroupData.makeup_group = makeUpDataData_row.ref_makeup_group_name
@@ -367,8 +390,8 @@ SELECT
 	, '高中補考資料新增'AS action_by   
 	, ' 高中補考 學年度「'|| makeUpDataData_row_Log.school_year||'」，學期「'|| makeUpDataData_row_Log.semester||'」， 補考梯次「'|| makeUpDataData_row_Log.makeup_batch||'」，補考群族 「'|| makeUpDataData_row_Log.makeup_group ||'」，閱卷老師 「'|| COALESCE(makeUpDataData_row_Log.teacher_name,'')  ||'」
     新增 補考資料 學生系統編號 「'|| makeUpDataData_row_Log.ref_student_id||'」 ，學號 「'|| makeUpDataData_row_Log.student_number||'」，學生姓名 「'|| makeUpDataData_row_Log.student_name||'」 
-    ，科目 「'|| makeUpDataData_row_Log.ref_student_id||'」，級別 「'|| makeUpDataData_row_Log.level||'」，學分 「'|| makeUpDataData_row_Log.credit||'」   
-    ，分數 「'|| makeUpDataData_row_Log.score||'」 ，補考分數 「'|| makeUpDataData_row_Log.makeup_score||'」 ，及格標準 「'|| makeUpDataData_row_Log.pass_standard||'」' AS description 
+    ，科目 「'|| makeUpDataData_row_Log.subject||'」，級別 「'|| makeUpDataData_row_Log.level||'」，學分 「'|| makeUpDataData_row_Log.credit||'」，校部定 「'|| makeUpDataData_row_Log.c_is_required_by||'」，必選修 「'|| makeUpDataData_row_Log.c_is_required||'」      
+    ，分數 「'|| makeUpDataData_row_Log.score||'」 ，補考分數 「'|| makeUpDataData_row_Log.makeup_score||'」 ，及格標準 「'|| makeUpDataData_row_Log.pass_standard||'」，補考標準 「'|| makeUpDataData_row_Log.makeup_standard||'」' AS description 
 FROM
 (   
     SELECT
@@ -383,9 +406,12 @@ FROM
         ,makeUpDataData_row.subject AS subject
         ,makeUpDataData_row.level AS level
         ,makeUpDataData_row.credit AS credit
+        ,makeUpDataData_row.credit AS c_is_required_by
+        ,makeUpDataData_row.credit AS c_is_required
         ,makeUpDataData_row.score AS score
         ,makeUpDataData_row.makeup_score AS makeup_score
         ,makeUpDataData_row.pass_standard AS pass_standard
+        ,makeUpDataData_row.makeup_standard AS makeup_standard
     FROM makeUpDataData_row
     LEFT JOIN insert_makeUpGroupData ON insert_makeUpGroupData.makeup_group = makeUpDataData_row.ref_makeup_group_name
     LEFT JOIN $make.up.batch ON $make.up.batch.uid :: TEXT = insert_makeUpGroupData.ref_makeup_batch_id 

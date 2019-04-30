@@ -21,13 +21,14 @@ namespace MakeUp.HS
             accesshelper.StudentHelper.FillSemesterSubjectScore(filterRepeat, students);
             foreach (StudentRecord var in students)
             {
+
+                //及格標準<年及,及格標準>
+                Dictionary<int, decimal> applyLimit = new Dictionary<int, decimal>();
+
                 //補考標準<年及,及格標準>
                 Dictionary<int, decimal> resitLimit = new Dictionary<int, decimal>();
-                //resitLimit.Add(1, 40);
-                //resitLimit.Add(2, 40);
-                //resitLimit.Add(3, 40);
-                //resitLimit.Add(4, 40);
-                
+                                
+
                 #region 處理計算規則
                 XmlElement scoreCalcRule = SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(var.StudentID) == null ? null : SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(var.StudentID).ScoreCalcRuleElement;
                 if (scoreCalcRule == null)
@@ -55,6 +56,13 @@ namespace MakeUp.HS
                                 switch (gyear)
                                 {
                                     case 1:
+                                        if (decimal.TryParse(element.GetAttribute("一年級及格標準"), out tryParseDecimal))
+                                        {
+                                            if (!applyLimit.ContainsKey(gyear))
+                                                applyLimit.Add(gyear, tryParseDecimal);
+                                            if (applyLimit[gyear] > tryParseDecimal)
+                                                applyLimit[gyear] = tryParseDecimal;
+                                        }
                                         if (decimal.TryParse(element.GetAttribute("一年級補考標準"), out tryParseDecimal))
                                         {
                                             if (!resitLimit.ContainsKey(gyear))
@@ -64,6 +72,13 @@ namespace MakeUp.HS
                                         }
                                         break;
                                     case 2:
+                                        if (decimal.TryParse(element.GetAttribute("二年級及格標準"), out tryParseDecimal))
+                                        {
+                                            if (!applyLimit.ContainsKey(gyear))
+                                                applyLimit.Add(gyear, tryParseDecimal);
+                                            if (applyLimit[gyear] > tryParseDecimal)
+                                                applyLimit[gyear] = tryParseDecimal;
+                                        }
                                         if (decimal.TryParse(element.GetAttribute("二年級補考標準"), out tryParseDecimal))
                                         {
                                             if (!resitLimit.ContainsKey(gyear))
@@ -73,6 +88,13 @@ namespace MakeUp.HS
                                         }
                                         break;
                                     case 3:
+                                        if (decimal.TryParse(element.GetAttribute("三年級及格標準"), out tryParseDecimal))
+                                        {
+                                            if (!applyLimit.ContainsKey(gyear))
+                                                applyLimit.Add(gyear, tryParseDecimal);
+                                            if (applyLimit[gyear] > tryParseDecimal)
+                                                applyLimit[gyear] = tryParseDecimal;
+                                        }
                                         if (decimal.TryParse(element.GetAttribute("三年級補考標準"), out tryParseDecimal))
                                         {
                                             if (!resitLimit.ContainsKey(gyear))
@@ -82,6 +104,13 @@ namespace MakeUp.HS
                                         }
                                         break;
                                     case 4:
+                                        if (decimal.TryParse(element.GetAttribute("四年級及格標準"), out tryParseDecimal))
+                                        {
+                                            if (!applyLimit.ContainsKey(gyear))
+                                                applyLimit.Add(gyear, tryParseDecimal);
+                                            if (applyLimit[gyear] > tryParseDecimal)
+                                                applyLimit[gyear] = tryParseDecimal;
+                                        }
                                         if (decimal.TryParse(element.GetAttribute("四年級補考標準"), out tryParseDecimal))
                                         {
                                             if (!resitLimit.ContainsKey(gyear))
@@ -102,14 +131,24 @@ namespace MakeUp.HS
                 {
                     bool canResit = false;
                     decimal s = 0;
-                    decimal limit = 40;
+
+                    // 補考標準
+                    decimal makeUpStandard = 40;
+
+                    // 及格標準
+                    decimal passStandard = 60;
+
                     if (decimal.TryParse(score.Detail.GetAttribute("原始成績"), out s))
                     {
-                        if (resitLimit.ContainsKey(score.GradeYear)) limit = resitLimit[score.GradeYear];
-                        canResit = (s >= limit);
+                        if (resitLimit.ContainsKey(score.GradeYear)) makeUpStandard = resitLimit[score.GradeYear];
+                        canResit = (s >= makeUpStandard);
                     }
+
+                    if (applyLimit.ContainsKey(score.GradeYear)) passStandard = applyLimit[score.GradeYear];
+
+                    score.Detail.SetAttribute("及格標準", passStandard.ToString());
                     score.Detail.SetAttribute("達補考標準", canResit ? "是" : "否");
-                    score.Detail.SetAttribute("補考標準", limit.ToString());
+                    score.Detail.SetAttribute("補考標準", makeUpStandard.ToString());
                 }
             }
         }

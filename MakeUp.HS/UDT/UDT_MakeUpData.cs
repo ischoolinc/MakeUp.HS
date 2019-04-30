@@ -47,6 +47,18 @@ namespace MakeUp.HS
         public string Credit { get; set; }
 
         /// <summary>
+        /// 校部定
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string C_Is_Required_By { get; set; }
+
+        /// <summary>
+        /// 必修
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string C_Is_Required { get; set; }
+
+        /// <summary>
         /// 成績分數
         /// </summary>
         [FISCA.UDT.Field]
@@ -56,7 +68,7 @@ namespace MakeUp.HS
         /// 補考分數
         /// </summary>
         [FISCA.UDT.Field]
-        public string MakeUp_score { get; set; }
+        public string MakeUp_Score { get; set; }
 
         /// <summary>
         /// 及格標準
