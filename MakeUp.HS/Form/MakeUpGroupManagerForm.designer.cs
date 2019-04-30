@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.cbosemester = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.btnClose = new DevComponents.DotNetBar.ButtonX();
@@ -143,24 +143,24 @@
             this.ColMakeUpBatch,
             this.ColIncludedClassID,
             this.ColDescription});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridViewX1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridViewX1.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dataGridViewX1.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.dataGridViewX1.Location = new System.Drawing.Point(12, 63);
+            this.dataGridViewX1.Location = new System.Drawing.Point(382, 63);
             this.dataGridViewX1.MultiSelect = false;
             this.dataGridViewX1.Name = "dataGridViewX1";
             this.dataGridViewX1.ReadOnly = true;
             this.dataGridViewX1.RowTemplate.Height = 24;
             this.dataGridViewX1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewX1.Size = new System.Drawing.Size(980, 383);
+            this.dataGridViewX1.Size = new System.Drawing.Size(610, 383);
             this.dataGridViewX1.TabIndex = 9;
             this.dataGridViewX1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewX1_CellMouseDoubleClick);
             this.dataGridViewX1.SelectionChanged += new System.EventHandler(this.dataGridViewX1_SelectionChanged);
@@ -195,7 +195,7 @@
             this.picLoading.BackColor = System.Drawing.Color.Transparent;
             this.picLoading.Image = global::MakeUp.HS.Properties.Resources.loading;
             this.picLoading.InitialImage = null;
-            this.picLoading.Location = new System.Drawing.Point(473, 227);
+            this.picLoading.Location = new System.Drawing.Point(691, 232);
             this.picLoading.Name = "picLoading";
             this.picLoading.Size = new System.Drawing.Size(44, 46);
             this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -216,7 +216,7 @@
             this.btnGenMakeUpGroup.Text = "產生補考群組";
             this.btnGenMakeUpGroup.Click += new System.EventHandler(this.btnGenMakeUpGroup_Click);
             // 
-            // MakeUpBatchManagerForm
+            // MakeUpGroupManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -233,8 +233,8 @@
             this.DoubleBuffered = true;
             this.MaximizeBox = true;
             this.MinimumSize = new System.Drawing.Size(520, 300);
-            this.Name = "MakeUpBatchManagerForm";
-            this.Text = "補考梯次管理";
+            this.Name = "MakeUpGroupManagerForm";
+            this.Text = "補考群組管理";
             this.Load += new System.EventHandler(this.MakeUpBatchManagerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();

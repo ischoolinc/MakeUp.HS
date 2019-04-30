@@ -18,7 +18,7 @@ using FISCA.LogAgent;
 
 namespace MakeUp.HS.Form
 {
-    public partial class MakeUpBatchManagerForm : FISCA.Presentation.Controls.BaseForm
+    public partial class MakeUpGroupManagerForm : FISCA.Presentation.Controls.BaseForm
     {
         private List<string> _BatchIDList;
 
@@ -36,7 +36,7 @@ namespace MakeUp.HS.Form
         private UDT_MakeUpBatch _selectedBatch;
 
 
-        public MakeUpBatchManagerForm()
+        public MakeUpGroupManagerForm()
         {
             InitializeComponent();
 

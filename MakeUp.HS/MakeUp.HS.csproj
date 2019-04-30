@@ -124,6 +124,12 @@
     <Compile Include="Form\InsertUpdateMakeUpBatchForm.Designer.cs">
       <DependentUpon>InsertUpdateMakeUpBatchForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\MakeUpGroupManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\MakeUpGroupManagerForm.designer.cs">
+      <DependentUpon>MakeUpGroupManagerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\MakeUpBatchManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +157,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\InsertUpdateMakeUpBatchForm.resx">
       <DependentUpon>InsertUpdateMakeUpBatchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\MakeUpGroupManagerForm.resx">
+      <DependentUpon>MakeUpGroupManagerForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\MakeUpBatchManagerForm.resx">
       <DependentUpon>MakeUpBatchManagerForm.cs</DependentUpon>
