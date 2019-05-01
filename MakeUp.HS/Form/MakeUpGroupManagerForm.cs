@@ -22,9 +22,20 @@ namespace MakeUp.HS.Form
     {
         private List<string> _BatchIDList;
 
-        private List<UDT_MakeUpBatch> _BatchList;
+        private List<UDT_MakeUpBatch> _batchList;
 
-        private BackgroundWorker _worker;
+        private List<UDT_MakeUpGroup> _groupList;
+
+        private List<K12.Data.TeacherRecord> _teacherList;
+       
+        // 抓梯次用　BackgroundWorker
+        private BackgroundWorker _batchWorker;
+
+        // 抓群組用　BackgroundWorker
+        private BackgroundWorker _groupWorker;
+
+        // 上傳更新用　BackgroundWorker
+        private BackgroundWorker _updateWorker;
 
         // 學年度
         private string _schoolYear;
@@ -32,21 +43,43 @@ namespace MakeUp.HS.Form
         // 學期
         private string _semester;
 
-        // 目前選的梯次
-        private UDT_MakeUpBatch _selectedBatch;
+
+        // 現在點在哪一小節
+        private DevComponents.AdvTree.Node _node_now;
+
+        // 目前選的梯次 id
+        private string _selectedBatchID;
+
+        // 目前選的群組 List
+        private List<UDT_MakeUpGroup> _selectedGroupList;
+
+        // 目前選的群組 id
+        private string _selectedGroupID;
 
 
         public MakeUpGroupManagerForm()
         {
             InitializeComponent();
 
-            _BatchList = new List<UDT_MakeUpBatch>();
+            _batchList = new List<UDT_MakeUpBatch>();
 
-            _worker = new BackgroundWorker();
-            _worker.DoWork += new DoWorkEventHandler(Worker_DoWork);
-            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Worker_RunWorkerCompleted);
-            _worker.ProgressChanged += new ProgressChangedEventHandler(Worker_ProgressChanged);
-            _worker.WorkerReportsProgress = true;
+            _groupList = new List<UDT_MakeUpGroup>();
+
+            // 取得教師清單
+            _teacherList = K12.Data.Teacher.SelectAll();
+
+            _batchWorker = new BackgroundWorker();
+            _batchWorker.DoWork += new DoWorkEventHandler(BatchWorker_DoWork);
+            _batchWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BatchWorker_RunWorkerCompleted);
+            _batchWorker.ProgressChanged += new ProgressChangedEventHandler(BatchWorker_ProgressChanged);
+            _batchWorker.WorkerReportsProgress = true;
+
+            _groupWorker = new BackgroundWorker();
+            _groupWorker.DoWork += new DoWorkEventHandler(GroupWorker_DoWork);
+            _groupWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(GroupWorker_RunWorkerCompleted);
+            _groupWorker.ProgressChanged += new ProgressChangedEventHandler(GroupWorker_ProgressChanged);
+            _groupWorker.WorkerReportsProgress = true;
+
 
             // 學年度 
             cboSchoolYear.Items.Add(int.Parse(School.DefaultSchoolYear) - 3);
@@ -65,12 +98,151 @@ namespace MakeUp.HS.Form
             cboSchoolYear.Text = School.DefaultSchoolYear;
             cbosemester.Text = School.DefaultSemester;
 
-            picLoading.Visible = false;
+        }
+
+
+
+        private void BatchWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            GetMakeUpBatch();
+        }
+
+        private void BatchWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            picLoadingAdvTreeMakeUpBatch.Visible = false;
+
+            // 解凍　畫面　控制項
+            ResumeAllLayout();
+
+            // 清除舊項目
+            advTreeMakeUpBatch.Nodes.Clear();
+
+            // 清除舊項目
+            dataGridViewX1.Rows.Clear();
+
+            string semesterNodeString = _schoolYear + "學年度第" + _semester + "學期";
+
+            DevComponents.AdvTree.Node semesterNode = new DevComponents.AdvTree.Node(semesterNodeString);
+
+            // 父 Node 不可選，也不可拖曳
+            semesterNode.Selectable = false;
+            semesterNode.DragDropEnabled = false;
+
+
+            // 將 補考梯次　子 node　批次 加入 　學年度學期父 node
+            foreach (UDT_MakeUpBatch batchRecord in _batchList)
+            {
+                string batchNodeString = batchRecord.MakeUp_Batch;
+
+                DevComponents.AdvTree.Node batchNode = new DevComponents.AdvTree.Node(batchNodeString);
+
+                // 補考梯次　子 node 可以選，但也不可拖曳 
+                batchNode.DragDropEnabled = false;
+
+                // Node 的 Tag 為 補考梯次的系統編號
+                batchNode.Tag = batchRecord.UID;
+
+                batchNode.NodeMouseDown += new System.Windows.Forms.MouseEventHandler(NodeMouseDown);
+                
+                semesterNode.Nodes.Add(batchNode);
+            }
+
+            //  預設將node 展開
+            semesterNode.ExpandAll();
+
+            advTreeMakeUpBatch.Nodes.Add(semesterNode);
+
+            FISCA.Presentation.MotherForm.SetStatusBarMessage("取得補考梯次完成");
+
+            //  假如有補考梯次，主動觸發　滑鼠點擊　第一個項目　，　帶出　補考群組
+            if (advTreeMakeUpBatch.Nodes.Count > 0)
+            {
+                if (advTreeMakeUpBatch.Nodes[0].Nodes.Count > 0)
+                {
+                    DevComponents.AdvTree.Node defaultNode = advTreeMakeUpBatch.Nodes[0].Nodes[0];
+
+                    defaultNode.SetSelectedCell(defaultNode.Cells[0], DevComponents.AdvTree.eTreeAction.Mouse);
+                   
+                    NodeMouseDown(defaultNode, new MouseEventArgs(MouseButtons.Left,1,0,0,0));
+                }
+            }
+        }
+
+        private void BatchWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            FISCA.Presentation.MotherForm.SetStatusBarMessage("" + e.UserState, e.ProgressPercentage);
+        }
+
+        private void GroupWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            GetMakeUpGroup();
+        }
+
+        private void GroupWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            picLoadingDgvXMakeUpGroup.Visible = false;
+
+            // 解凍　畫面　控制項
+            ResumeAllLayout();
+
+            // 清除舊項目
+            dataGridViewX1.Rows.Clear();
+
+            foreach (UDT_MakeUpGroup groupRecord in _groupList)
+            {
+                DataGridViewRow row = new DataGridViewRow();
+                row.CreateCells(dataGridViewX1);
+
+                // row 的 Tag 為 補考梯次的系統編號
+                row.Tag = groupRecord.UID;
+
+                row.Cells[0].Value = groupRecord.MakeUp_Group;
+               
+                row.Cells[1].Value = groupRecord.Ref_Teacher_ID;
+
+                row.Cells[2].Value = groupRecord.StudentCount;
+
+                row.Cells[3].Value = groupRecord.Description;
+
+                dataGridViewX1.Rows.Add(row);
+            }
+
+
+            FISCA.Presentation.MotherForm.SetStatusBarMessage("取得補考群組完成");
+        }
+
+        private void GroupWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            FISCA.Presentation.MotherForm.SetStatusBarMessage("" + e.UserState, e.ProgressPercentage);
+        }
+
+
+
+        private void cboSchoolYear_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+            if (cbosemester.Text == "")
+            {
+                return;
+            }
+
+            RefreshAdvTreeMakeUpBatchView();
+        }
+
+        private void cbosemester_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            if (cboSchoolYear.Text == "")
+            {
+                return;
+            }
+
+            RefreshAdvTreeMakeUpBatchView();
         }
 
         private void GetMakeUpBatch()
         {
-            _BatchList.Clear();
+            _batchList.Clear();
 
             #region 取得補考梯次 
 
@@ -109,115 +281,132 @@ school_year = '" + _schoolYear + "'" +
                     //包含班級id
                     batch.Included_Class_ID = "" + row["included_class_id"];
 
-                    _BatchList.Add(batch);
+                    _batchList.Add(batch);
                 }
             }
             #endregion
         }
 
-        /// <summary>
-        /// 更新ListView
-        /// </summary>
-        private void RefreshListView()
+        private void GetMakeUpGroup()
         {
-            picLoading.Visible = true;
+            _groupList.Clear();
+
+            #region 取得補考群組
+
+            string query = @"
+SELECT 
+$make.up.group.uid
+,$make.up.group.makeup_group
+,$make.up.group.ref_teacher_id
+,$make.up.group.description
+,COUNT($make.up.data.uid) AS studentCount
+FROM  $make.up.group
+LEFT JOIN  $make.up.data ON  $make.up.data.ref_makeup_group_id :: BIGINT = $make.up.group.uid
+WHERE  $make.up.group.ref_makeup_batch_id = '" + _selectedBatchID + @"'
+GROUP BY  $make.up.group.uid ";
+
+            QueryHelper qh = new QueryHelper();
+            DataTable dt = qh.Select(query);
+
+            //整理目前的補考梯次 資料
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    UDT_MakeUpGroup group = new UDT_MakeUpGroup();
+
+                    group.UID = "" + row["uid"];
+
+                    //補考群組
+                    group.MakeUp_Group = "" + row["makeup_group"];
+
+                    K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == "" + row["ref_teacher_id"]);
+
+                    //閱卷老師
+                    group.Ref_Teacher_ID = tr!=null ? tr.Name :"";
+
+                    //補考人數
+                    group.StudentCount = "" + row["studentCount"]; ;
+
+                    // 描述
+                    group.Description = "" + row["description"];
+                    
+                    _groupList.Add(group);
+                }
+            }
+            #endregion
+        }
+
+
+        /// <summary>
+        /// 更新advTree　補考梯次
+        /// </summary>
+        private void RefreshAdvTreeMakeUpBatchView()
+        {
+            picLoadingAdvTreeMakeUpBatch.Visible = true;
 
             _schoolYear = cboSchoolYear.Text;
             _semester = cbosemester.Text;
 
             // 暫停畫面控制項
+            SuspendAllLayout();
 
+            _batchWorker.RunWorkerAsync();
+        }
+
+
+        /// <summary>
+        /// 更新dataGridViewX1　補考群組
+        /// </summary>
+        private void RefreshDataGridViewXMakeUpGroupView()
+        {
+            picLoadingDgvXMakeUpGroup.Visible = true;
+
+            // 暫停畫面控制項
+            SuspendAllLayout();
+
+            _groupWorker.RunWorkerAsync();
+        }
+
+
+        // 2019/05/01 穎驊 註記， 發現 panel 在  expand 的前後，         
+        //會強制將內容原本已經 設定好Visible 控制項，通通變成不可見、可見，　因此要另外做調整。
+        private void expandablePanel1_ExpandedChanged(object sender, DevComponents.DotNetBar.ExpandedChangeEventArgs e)
+        {
+            picLoadingAdvTreeMakeUpBatch.Visible = false;
+
+        }
+
+        // 點下項目後 更新補考群組
+        private void NodeMouseDown(object sender, MouseEventArgs e)
+        {
+            _node_now = (DevComponents.AdvTree.Node)sender;
+
+            // 現在選的 node 的　Tag 就是　batchId
+            _selectedBatchID = "" + _node_now.Tag;
+
+            RefreshDataGridViewXMakeUpGroupView();
+        }
+
+        // 凍結　畫面上所有　控制項
+        private void SuspendAllLayout()
+        {
+            advTreeMakeUpBatch.SuspendLayout();
             cboSchoolYear.SuspendLayout();
             cbosemester.SuspendLayout();
             dataGridViewX1.SuspendLayout();
-
-            _worker.RunWorkerAsync();
         }
 
 
-        /// <summary>
-        /// 將補考梯次填入 DataGridView
-        /// </summary>
-        private void FillMakeUpBatch()
+        // 解凍　畫面上所有　控制項
+        private void ResumeAllLayout()
         {
-
-            dataGridViewX1.SuspendLayout();
-            dataGridViewX1.Rows.Clear();
-            //dataGridViewX1.Rows.AddRange(list.ToArray());
-            dataGridViewX1.ResumeLayout();
-        }
-
-
-        /// <summary>
-        /// 按下「關閉」時觸發
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-
-        /// <summary>
-        /// 按下「重新整理」時觸發
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-
-            RefreshListView();
-        }
-
-
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            GetMakeUpBatch();
-        }
-
-        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            // 清除舊項目
-            dataGridViewX1.Rows.Clear();
-
-            foreach (UDT_MakeUpBatch batchRecord in _BatchList)
-            {
-                DataGridViewRow row = new DataGridViewRow();
-                row.CreateCells(dataGridViewX1);
-
-                // row 的 Tag 為 補考梯次的系統編號
-                row.Tag = batchRecord.UID;
-
-                row.Cells[0].Value = batchRecord.MakeUp_Batch;
-
-                // 解析班級XML className
-                batchRecord.ParseClassXMLNameString();
-
-                row.Cells[1].Value = batchRecord.totalclassName;
-
-                row.Cells[2].Value = batchRecord.Description;
-
-                dataGridViewX1.Rows.Add(row);
-            }
-
-
-            // 繼續 畫面控制項       
-            picLoading.Visible = false;
-
+            advTreeMakeUpBatch.ResumeLayout();
             cboSchoolYear.ResumeLayout();
             cbosemester.ResumeLayout();
-
             dataGridViewX1.ResumeLayout();
-
-            FISCA.Presentation.MotherForm.SetStatusBarMessage("取得補考梯次完成");
-
         }
 
-        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            FISCA.Presentation.MotherForm.SetStatusBarMessage("" + e.UserState, e.ProgressPercentage);
-        }
 
 
         private void dataGridViewX1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -227,179 +416,29 @@ school_year = '" + _schoolYear + "'" +
             if (e.RowIndex < 0) return;
             DataGridViewCell cell = dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            //  找到選取到的 梯次
-            _selectedBatch = _BatchList.Find(x => x.UID == "" + cell.OwningRow.Tag);
+            ////  找到選取到的 梯次
+            //_selectedBatch = _BatchList.Find(x => x.UID == "" + cell.OwningRow.Tag);
 
-            // 修改模式
-            InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("修改", cboSchoolYear.Text, cbosemester.Text, _selectedBatch);
-            iumbf.ShowDialog();
+            //// 修改模式
+            //InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("修改", cboSchoolYear.Text, cbosemester.Text, _selectedBatch);
+            //iumbf.ShowDialog();
 
-            RefreshListView(); //重整畫面
-        }
-
-        private void MakeUpBatchManagerForm_Load(object sender, EventArgs e)
-        {
+            //RefreshListView(); //重整畫面
 
         }
-
-
-        private void cbosemester_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cboSchoolYear.Text == "")
-            {
-                return;
-            }
-
-
-
-            RefreshListView();
-        }
-
-        private void cboSchoolYear_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cbosemester.Text == "")
-            {
-                return;
-            }
-
-            RefreshListView();
-        }
-
-        private void btnInsertBatch_Click(object sender, EventArgs e)
-        {
-            // 新增模式
-            InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("新增", cboSchoolYear.Text, cbosemester.Text);
-            iumbf.ShowDialog();
-
-            RefreshListView();
-        }
-
-        private void btnGenMakeUpGroup_Click(object sender, EventArgs e)
-        {
-            // 傳入目前選的梯次 來產生群組
-            GenMakeUpGroupForm gmugf = new GenMakeUpGroupForm(_selectedBatch);
-
-            gmugf.ShowDialog();
-        }
-
-
 
         private void dataGridViewX1_SelectionChanged(object sender, EventArgs e)
         {
-            // 有選擇梯次 才可以產生補考群組
-            if (dataGridViewX1.SelectedRows.Count > 0)
+            DevComponents.DotNetBar.Controls.DataGridViewX drvx = (DevComponents.DotNetBar.Controls.DataGridViewX)sender;
+
+            foreach (DataGridViewRow row in drvx.Rows)
             {
-                btnGenMakeUpGroup.Enabled = true;
+                if (row.Selected)
+                {
+                    //_selectedGroupList.Add();
 
-                // 一次只能選一條 Row ，所以是第一個
-                _selectedBatch = _BatchList.Find(x => x.UID == "" + dataGridViewX1.SelectedRows[0].Tag); 
-
+                }
             }
-            else
-            {
-                btnGenMakeUpGroup.Enabled = false;
-            }
-
-        }
-
-        //刪除 補考梯次
-        private void MenuItemDelete_Click(Object sender, System.EventArgs e)
-        {
-            if (FISCA.Presentation.Controls.MsgBox.Show("是否要刪除本補考梯次?", "警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
-            {
-                // LOG 資訊
-                string _actor = DSAServices.UserAccount; ;
-                string _client_info = ClientInfo.GetCurrentClientInfo().OutputResult().OuterXml;
-
-                //拚SQL
-                // 兜資料
-                List<string> dataList = new List<string>();
-
-                string data = string.Format(@"
-                SELECT
-                    '{0}'::TEXT AS makeup_batch
-                    ,'{1}'::TEXT AS school_year
-                    ,'{2}'::TEXT AS semester
-                    ,'{3}'::TEXT AS description
-                    ,'{4}'::TEXT AS included_class_id                    
-                    ,'{5}'::BIGINT AS uid
-                ", _selectedBatch.MakeUp_Batch, _schoolYear, _semester, _selectedBatch.Description, _selectedBatch.Included_Class_ID, _selectedBatch.UID);
-                dataList.Add(data);
-
-                string dataString = string.Join(" UNION ALL", dataList);
-                ;
-
-                string sql = string.Format(@"
-WITH data_row AS
-(
-    {0}
-)
-,delete_data AS(			 
-DELETE
-FROM $make.up.batch
-WHERE $make.up.batch.uid IN
-(
-    SELECT 
-        data_row.uid 
-    FROM data_row
-)
-)
-INSERT INTO log(
-	actor
-	, action_type
-	, action
-	, target_category
-	, target_id
-	, server_time
-	, client_info
-	, action_by
-	, description
-)
-SELECT 
-	'{1}'::TEXT AS actor
-	, 'Record' AS action_type
-	, '刪除高中補考梯次' AS action
-	, ''::TEXT AS target_category
-	, '' AS target_id
-	, now() AS server_time
-	, '{2}' AS client_info
-	, '刪除高中補考梯次'AS action_by   
-	, '刪除 高中補考 學年度「'|| data_row.school_year||'」，學期「'|| data_row.semester||'」， 補考梯次「'|| data_row.makeup_batch||'」，補考說明 「'|| data_row.description ||'」。' AS description 
-FROM
-	data_row
-
-", dataString, _actor, _client_info);
-            
-
-            K12.Data.UpdateHelper uh = new UpdateHelper();
-
-                //執行sql
-                uh.Execute(sql);
-
-                FISCA.Presentation.Controls.MsgBox.Show("刪除成功。");
-
-                // 刷新畫面
-                RefreshListView();
-            }           
-        }
-
-        private void dataGridViewX1_MouseDown(object sender, MouseEventArgs e)
-        {
-            MenuItem[] menuItems = new MenuItem[0];
-
-            MenuItem menuItems_delete = new MenuItem("刪除", MenuItemDelete_Click);
-
-            menuItems = new MenuItem[] { menuItems_delete };
-
-            if (e.Button == MouseButtons.Right && dataGridViewX1.SelectedRows.Count > 0)
-            {
-                ContextMenu buttonMenu = new ContextMenu(menuItems);
-
-                dataGridViewX1.ContextMenu = buttonMenu;
-
-                dataGridViewX1.ContextMenu.Show(dataGridViewX1, e.Location);
-            }
-
         }
     }
 }

@@ -35,7 +35,15 @@ namespace MakeUp.HS
         [FISCA.UDT.Field]
         public string Description { get; set; }
 
-   
-        
+
+        // 取代原本 ActiveRecord 不能 Set 的 UID
+        public string UID { get; set; }
+
+
+
+        //  本群組　補考學生數　總計
+        public string StudentCount { get; set; }
+
+
     }
 }
