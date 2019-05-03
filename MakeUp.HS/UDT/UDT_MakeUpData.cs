@@ -53,7 +53,7 @@ namespace MakeUp.HS
         public string C_Is_Required_By { get; set; }
 
         /// <summary>
-        /// 必修
+        /// 必選修
         /// </summary>
         [FISCA.UDT.Field]
         public string C_Is_Required { get; set; }
@@ -83,10 +83,34 @@ namespace MakeUp.HS
         public string MakeUp_Standard { get; set; }
 
 
+        // 取代原本 ActiveRecord 不能 Set 的 UID
+        public string UID { get; set; }
+
         /// <summary>
         /// 參考補考群組名稱(非UDT 欄位，此屬性為做資料使用)
         /// </summary>
         public string Ref_MakeUp_Group_Name { get; set; }
+
+        /// <summary>
+        /// 學生姓名(非UDT 欄位，此屬性為UI介面資料使用)
+        /// </summary>
+        public string StudentName { get; set; }
+
+        /// <summary>
+        /// 學生班級名稱(非UDT 欄位，此屬性為UI介面資料使用)
+        /// </summary>
+        public string ClassName { get; set; }
+
+        /// <summary>
+        /// 學生座號(非UDT 欄位，此屬性為UI介面資料使用)
+        /// </summary>
+        public string Seat_no { get; set; }
+
+        /// <summary>
+        /// 學生學號(非UDT 欄位，此屬性為UI介面資料使用)
+        /// </summary>
+        public string StudentNumber { get; set; }
+
 
     }
 }

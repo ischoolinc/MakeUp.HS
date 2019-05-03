@@ -118,6 +118,12 @@
     <Compile Include="Form\GenMakeUpGroupForm.Designer.cs">
       <DependentUpon>GenMakeUpGroupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\InsertUpdateMakeUpGroupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\InsertUpdateMakeUpGroupForm.Designer.cs">
+      <DependentUpon>InsertUpdateMakeUpGroupForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\InsertUpdateMakeUpBatchForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -154,6 +160,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Form\GenMakeUpGroupForm.resx">
       <DependentUpon>GenMakeUpGroupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\InsertUpdateMakeUpGroupForm.resx">
+      <DependentUpon>InsertUpdateMakeUpGroupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\InsertUpdateMakeUpBatchForm.resx">
       <DependentUpon>InsertUpdateMakeUpBatchForm.cs</DependentUpon>

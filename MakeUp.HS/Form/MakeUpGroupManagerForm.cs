@@ -28,10 +28,10 @@ namespace MakeUp.HS.Form
 
         private List<K12.Data.TeacherRecord> _teacherList;
        
-        // 抓梯次用　BackgroundWorker
+        // 抓補考梯次用　BackgroundWorker
         private BackgroundWorker _batchWorker;
 
-        // 抓群組用　BackgroundWorker
+        // 抓補考群組用　BackgroundWorker
         private BackgroundWorker _groupWorker;
 
         // 上傳更新用　BackgroundWorker
@@ -53,8 +53,8 @@ namespace MakeUp.HS.Form
         // 目前選的群組 List
         private List<UDT_MakeUpGroup> _selectedGroupList;
 
-        // 目前選的群組 id
-        private string _selectedGroupID;
+        // 目前選的單一群組 
+        private UDT_MakeUpGroup _selectedGroup;
 
 
         public MakeUpGroupManagerForm()
@@ -64,6 +64,8 @@ namespace MakeUp.HS.Form
             _batchList = new List<UDT_MakeUpBatch>();
 
             _groupList = new List<UDT_MakeUpGroup>();
+
+            _selectedGroupList = new List<UDT_MakeUpGroup>();
 
             // 取得教師清單
             _teacherList = K12.Data.Teacher.SelectAll();
@@ -417,11 +419,11 @@ GROUP BY  $make.up.group.uid ";
             DataGridViewCell cell = dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
             ////  找到選取到的 梯次
-            //_selectedBatch = _BatchList.Find(x => x.UID == "" + cell.OwningRow.Tag);
+            _selectedGroup = _selectedGroupList.Find(x => x.UID == "" + cell.OwningRow.Tag);
 
-            //// 修改模式
-            //InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("修改", cboSchoolYear.Text, cbosemester.Text, _selectedBatch);
-            //iumbf.ShowDialog();
+            // 修改模式
+            InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm("修改",_selectedGroup);
+            iumgf.ShowDialog();
 
             //RefreshListView(); //重整畫面
 
@@ -431,14 +433,76 @@ GROUP BY  $make.up.group.uid ";
         {
             DevComponents.DotNetBar.Controls.DataGridViewX drvx = (DevComponents.DotNetBar.Controls.DataGridViewX)sender;
 
+            int selectRowsTotalCount = 0;
+
+            // 先數 這次使用者 全部一共選擇幾個項目
             foreach (DataGridViewRow row in drvx.Rows)
             {
                 if (row.Selected)
                 {
-                    //_selectedGroupList.Add();
-
+                    selectRowsTotalCount++;                    
                 }
             }
+
+            // 假如 選擇 Row的總數 為 1 代表 這是第一個選的 Row， 
+            // 之後，要做補考群組合併 的補考群組，都會合到第一個補考群組
+            if (selectRowsTotalCount == 1)
+            {
+                // 把之前 選的群組Group 都清空
+                _selectedGroupList.Clear();
+
+                // 先將所有的Row 都視為非第一個選 row
+                foreach (UDT_MakeUpGroup group in _groupList)
+                {
+                    group.IsFirstSelectedRow = false;
+                }
+
+                foreach (DataGridViewRow row in drvx.Rows)
+                {
+                    if (row.Selected)
+                    {
+                        UDT_MakeUpGroup firstSelectedGroup = _groupList.Find(g => g.UID == "" + row.Tag);
+
+                        // 用uid 找的到的 是原本就有的 補考群組
+                        if (firstSelectedGroup != null)
+                        {
+                            firstSelectedGroup.IsFirstSelectedRow = true;
+                            _selectedGroupList.Add(firstSelectedGroup);
+                        }
+
+                        
+                    }
+                }
+            }
+
+
+            // 假如 選擇的 Row 總數 大於 1，代表使用者再選擇完第一個Row後
+            // 還有再選擇其他的 Row，之前第一個Row(要合併其他人的， IsFirstSelectedRow =true) 就不必再加入List
+            // 後面選的 Row(被合併的, IsFirstSelectedRow =false ) 再加List 即可
+            if (selectRowsTotalCount > 1)
+            {
+                foreach (DataGridViewRow row in drvx.Rows)
+                {
+                    if (row.Selected)
+                    {
+                        UDT_MakeUpGroup selectedGroup = _groupList.Find(g => g.UID == "" + row.Tag);
+
+                        // 非第一個選的 row ，且不在_selectedGroupList 中 就加
+                        if ( !selectedGroup.IsFirstSelectedRow && !_selectedGroupList.Contains(selectedGroup))
+                        {
+                            _selectedGroupList.Add(selectedGroup);
+                        }
+
+                        
+                    }
+                }
+
+            }
+
+
+
+
+
         }
     }
 }
