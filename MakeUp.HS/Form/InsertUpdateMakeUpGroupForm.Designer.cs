@@ -51,6 +51,8 @@
             this.ColMakeUp_Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColPass_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUp_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.labelX4 = new DevComponents.DotNetBar.LabelX();
+            this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.SuspendLayout();
@@ -106,7 +108,7 @@
             this.txtGroupName.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.txtGroupName.Location = new System.Drawing.Point(85, 23);
             this.txtGroupName.Name = "txtGroupName";
-            this.txtGroupName.Size = new System.Drawing.Size(922, 25);
+            this.txtGroupName.Size = new System.Drawing.Size(518, 25);
             this.txtGroupName.TabIndex = 15;
             // 
             // txtDescription
@@ -288,11 +290,39 @@
             this.ColMakeUp_Standard.HeaderText = "補考標準";
             this.ColMakeUp_Standard.Name = "ColMakeUp_Standard";
             // 
+            // labelX4
+            // 
+            this.labelX4.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX4.BackgroundStyle.Class = "";
+            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX4.Location = new System.Drawing.Point(609, 23);
+            this.labelX4.Name = "labelX4";
+            this.labelX4.Size = new System.Drawing.Size(61, 23);
+            this.labelX4.TabIndex = 24;
+            this.labelX4.Text = "閱卷老師:";
+            // 
+            // cboTeacher
+            // 
+            this.cboTeacher.DisplayMember = "Text";
+            this.cboTeacher.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboTeacher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboTeacher.FormattingEnabled = true;
+            this.cboTeacher.ItemHeight = 19;
+            this.cboTeacher.Location = new System.Drawing.Point(676, 23);
+            this.cboTeacher.Name = "cboTeacher";
+            this.cboTeacher.Size = new System.Drawing.Size(141, 25);
+            this.cboTeacher.TabIndex = 25;
+            // 
             // InsertUpdateMakeUpGroupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1023, 694);
+            this.Controls.Add(this.cboTeacher);
+            this.Controls.Add(this.labelX4);
             this.Controls.Add(this.picLoading);
             this.Controls.Add(this.dataGridViewX1);
             this.Controls.Add(this.labelX3);
@@ -336,5 +366,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Score;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPass_Standard;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Standard;
+        private DevComponents.DotNetBar.LabelX labelX4;
+        private DevComponents.DotNetBar.Controls.ComboBoxEx cboTeacher;
     }
 }

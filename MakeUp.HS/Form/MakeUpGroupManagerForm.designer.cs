@@ -56,6 +56,7 @@
             this.ColRefTeacher = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUpStudentCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDesription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lblIsDirty = new DevComponents.DotNetBar.LabelX();
             this.expandablePanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoadingAdvTreeMakeUpBatch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.advTreeMakeUpBatch)).BeginInit();
@@ -114,6 +115,7 @@
             this.btnUpdate.Size = new System.Drawing.Size(200, 20);
             this.btnUpdate.TabIndex = 14;
             this.btnUpdate.Text = "儲存";
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // picLoadingAdvTreeMakeUpBatch
             // 
@@ -325,6 +327,7 @@
             // 
             this.expandablePanel2.CanvasColor = System.Drawing.SystemColors.Control;
             this.expandablePanel2.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.expandablePanel2.Controls.Add(this.lblIsDirty);
             this.expandablePanel2.Controls.Add(this.picLoadingDgvXMakeUpGroup);
             this.expandablePanel2.Controls.Add(this.dataGridViewX1);
             this.expandablePanel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -396,6 +399,7 @@
             this.dataGridViewX1.TabIndex = 1;
             this.dataGridViewX1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewX1_CellMouseDoubleClick);
             this.dataGridViewX1.SelectionChanged += new System.EventHandler(this.dataGridViewX1_SelectionChanged);
+            this.dataGridViewX1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridViewX1_MouseDown);
             // 
             // ColMakeUpGroupName
             // 
@@ -428,6 +432,23 @@
             this.ColDesription.HeaderText = "描述";
             this.ColDesription.Name = "ColDesription";
             this.ColDesription.ReadOnly = true;
+            // 
+            // lblIsDirty
+            // 
+            this.lblIsDirty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.lblIsDirty.BackgroundStyle.Class = "";
+            this.lblIsDirty.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lblIsDirty.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.lblIsDirty.ForeColor = System.Drawing.Color.Red;
+            this.lblIsDirty.Location = new System.Drawing.Point(6, 3);
+            this.lblIsDirty.Name = "lblIsDirty";
+            this.lblIsDirty.Size = new System.Drawing.Size(63, 23);
+            this.lblIsDirty.TabIndex = 13;
+            this.lblIsDirty.Text = "未儲存";
+            this.lblIsDirty.Visible = false;
             // 
             // MakeUpGroupManagerForm
             // 
@@ -480,5 +501,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColRefTeacher;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUpStudentCount;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColDesription;
+        private DevComponents.DotNetBar.LabelX lblIsDirty;
     }
 }

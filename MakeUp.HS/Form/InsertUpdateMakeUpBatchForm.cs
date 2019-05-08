@@ -311,7 +311,7 @@ SELECT
 	, '' AS target_id
 	, now() AS server_time
 	, '{2}' AS client_info
-	, '高中補考梯次新增'AS action_by   
+	, '高中補考梯次更新'AS action_by   
 	, ' 高中補考 學年度「'|| data_row.school_year||'」，學期「'|| data_row.semester||'」， 補考梯次「'|| data_row.makeup_batch||'」，補考說明 由「'|| data_row.old_description ||'」 更改為「'|| data_row.description ||'」。' AS description 
 FROM
 	data_row

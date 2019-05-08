@@ -112,6 +112,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Form\AssignTeacherForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\AssignTeacherForm.Designer.cs">
+      <DependentUpon>AssignTeacherForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\GenMakeUpGroupForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +164,9 @@
     <Folder Include="Library\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Form\AssignTeacherForm.resx">
+      <DependentUpon>AssignTeacherForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\GenMakeUpGroupForm.resx">
       <DependentUpon>GenMakeUpGroupForm.cs</DependentUpon>
     </EmbeddedResource>

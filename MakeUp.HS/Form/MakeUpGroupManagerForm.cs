@@ -24,10 +24,13 @@ namespace MakeUp.HS.Form
 
         private List<UDT_MakeUpBatch> _batchList;
 
+        // 原始的 groupList
+        private List<UDT_MakeUpGroup> _groupListOri;
+
         private List<UDT_MakeUpGroup> _groupList;
 
         private List<K12.Data.TeacherRecord> _teacherList;
-       
+
         // 抓補考梯次用　BackgroundWorker
         private BackgroundWorker _batchWorker;
 
@@ -47,8 +50,9 @@ namespace MakeUp.HS.Form
         // 現在點在哪一小節
         private DevComponents.AdvTree.Node _node_now;
 
-        // 目前選的梯次 id
-        private string _selectedBatchID;
+
+        // 目前選的單一梯次 
+        private UDT_MakeUpBatch _selectedBatch;
 
         // 目前選的群組 List
         private List<UDT_MakeUpGroup> _selectedGroupList;
@@ -145,7 +149,7 @@ namespace MakeUp.HS.Form
                 batchNode.Tag = batchRecord.UID;
 
                 batchNode.NodeMouseDown += new System.Windows.Forms.MouseEventHandler(NodeMouseDown);
-                
+
                 semesterNode.Nodes.Add(batchNode);
             }
 
@@ -164,8 +168,8 @@ namespace MakeUp.HS.Form
                     DevComponents.AdvTree.Node defaultNode = advTreeMakeUpBatch.Nodes[0].Nodes[0];
 
                     defaultNode.SetSelectedCell(defaultNode.Cells[0], DevComponents.AdvTree.eTreeAction.Mouse);
-                   
-                    NodeMouseDown(defaultNode, new MouseEventArgs(MouseButtons.Left,1,0,0,0));
+
+                    NodeMouseDown(defaultNode, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0));
                 }
             }
         }
@@ -195,12 +199,14 @@ namespace MakeUp.HS.Form
                 DataGridViewRow row = new DataGridViewRow();
                 row.CreateCells(dataGridViewX1);
 
-                // row 的 Tag 為 補考梯次的系統編號
+                // row 的 Tag 為 補考群組的系統編號
                 row.Tag = groupRecord.UID;
 
                 row.Cells[0].Value = groupRecord.MakeUp_Group;
-               
-                row.Cells[1].Value = groupRecord.Ref_Teacher_ID;
+
+                K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == groupRecord.Ref_Teacher_ID);
+
+                row.Cells[1].Value = tr != null ? tr.Name + "(" + tr.Nickname + ")" : "";
 
                 row.Cells[2].Value = groupRecord.StudentCount;
 
@@ -298,13 +304,14 @@ school_year = '" + _schoolYear + "'" +
             string query = @"
 SELECT 
 $make.up.group.uid
+,$make.up.group.ref_makeup_batch_id
 ,$make.up.group.makeup_group
 ,$make.up.group.ref_teacher_id
 ,$make.up.group.description
 ,COUNT($make.up.data.uid) AS studentCount
 FROM  $make.up.group
 LEFT JOIN  $make.up.data ON  $make.up.data.ref_makeup_group_id :: BIGINT = $make.up.group.uid
-WHERE  $make.up.group.ref_makeup_batch_id = '" + _selectedBatchID + @"'
+WHERE  $make.up.group.ref_makeup_batch_id = '" + _selectedBatch.UID + @"'
 GROUP BY  $make.up.group.uid ";
 
             QueryHelper qh = new QueryHelper();
@@ -322,20 +329,25 @@ GROUP BY  $make.up.group.uid ";
                     //補考群組
                     group.MakeUp_Group = "" + row["makeup_group"];
 
-                    K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == "" + row["ref_teacher_id"]);
+                    //補考群組 參考梯次uid
+                    group.Ref_MakeUp_Batch_ID = "" + row["ref_makeup_batch_id"];
 
-                    //閱卷老師
-                    group.Ref_Teacher_ID = tr!=null ? tr.Name :"";
+                    //閱卷老師 ID
+                    group.Ref_Teacher_ID = "" + row["ref_teacher_id"];
 
                     //補考人數
                     group.StudentCount = "" + row["studentCount"]; ;
 
                     // 描述
                     group.Description = "" + row["description"];
-                    
+
                     _groupList.Add(group);
                 }
             }
+
+            //另存份  原本的list 作為比較
+            _groupListOri = new List<UDT_MakeUpGroup>(_groupList.ToArray());
+
             #endregion
         }
 
@@ -384,8 +396,8 @@ GROUP BY  $make.up.group.uid ";
         {
             _node_now = (DevComponents.AdvTree.Node)sender;
 
-            // 現在選的 node 的　Tag 就是　batchId
-            _selectedBatchID = "" + _node_now.Tag;
+            // 現在選的 node 的　Tag 就是　batch
+            _selectedBatch = _batchList.Find(b => b.UID == "" + _node_now.Tag);
 
             RefreshDataGridViewXMakeUpGroupView();
         }
@@ -422,11 +434,30 @@ GROUP BY  $make.up.group.uid ";
             _selectedGroup = _selectedGroupList.Find(x => x.UID == "" + cell.OwningRow.Tag);
 
             // 修改模式
-            InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm("修改",_selectedGroup);
+            InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "修改", _selectedGroup);
             iumgf.ShowDialog();
 
-            //RefreshListView(); //重整畫面
+            RefreshListView(); //重整畫面
 
+        }
+
+        /// <summary>
+        /// 更新ListView
+        /// </summary>
+        private void RefreshListView()
+        {
+            picLoadingDgvXMakeUpGroup.Visible = true;
+
+            _schoolYear = cboSchoolYear.Text;
+            _semester = cbosemester.Text;
+
+            // 暫停畫面控制項
+
+            cboSchoolYear.SuspendLayout();
+            cbosemester.SuspendLayout();
+            dataGridViewX1.SuspendLayout();
+
+            _groupWorker.RunWorkerAsync();
         }
 
         private void dataGridViewX1_SelectionChanged(object sender, EventArgs e)
@@ -440,7 +471,7 @@ GROUP BY  $make.up.group.uid ";
             {
                 if (row.Selected)
                 {
-                    selectRowsTotalCount++;                    
+                    selectRowsTotalCount++;
                 }
             }
 
@@ -470,7 +501,7 @@ GROUP BY  $make.up.group.uid ";
                             _selectedGroupList.Add(firstSelectedGroup);
                         }
 
-                        
+
                     }
                 }
             }
@@ -488,12 +519,12 @@ GROUP BY  $make.up.group.uid ";
                         UDT_MakeUpGroup selectedGroup = _groupList.Find(g => g.UID == "" + row.Tag);
 
                         // 非第一個選的 row ，且不在_selectedGroupList 中 就加
-                        if ( !selectedGroup.IsFirstSelectedRow && !_selectedGroupList.Contains(selectedGroup))
+                        if (!selectedGroup.IsFirstSelectedRow && !_selectedGroupList.Contains(selectedGroup))
                         {
                             _selectedGroupList.Add(selectedGroup);
                         }
 
-                        
+
                     }
                 }
 
@@ -503,6 +534,89 @@ GROUP BY  $make.up.group.uid ";
 
 
 
+        }
+
+        private void dataGridViewX1_MouseDown(object sender, MouseEventArgs e)
+        {
+            MenuItem[] menuItems = new MenuItem[0];
+
+            MenuItem menuItems_insertNewGroup = new MenuItem("新增補考群組", MenuItemInsertGroup_Click);
+
+            MenuItem menuItems_assingnTeacher = new MenuItem("指定閱卷老師", MenuItemAssingnTeacher_Click);
+
+            menuItems = new MenuItem[] { menuItems_insertNewGroup, menuItems_assingnTeacher };
+
+            if (e.Button == MouseButtons.Right)
+            {
+                ContextMenu buttonMenu = new ContextMenu(menuItems);
+
+                dataGridViewX1.ContextMenu = buttonMenu;
+
+                dataGridViewX1.ContextMenu.Show(dataGridViewX1, e.Location);
+            }
+        }
+
+        // 新增補考群組
+        private void MenuItemInsertGroup_Click(Object sender, System.EventArgs e)
+        {
+            // 修改模式
+            InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "新增", _selectedBatch);
+            iumgf.ShowDialog();
+
+            RefreshListView(); //重整畫面
+        }
+
+        private void MenuItemAssingnTeacher_Click(Object sender, System.EventArgs e)
+        {
+            AssignTeacherForm atf = new AssignTeacherForm();
+
+            if (DialogResult.OK == atf.ShowDialog())
+            {
+                foreach (UDT_MakeUpGroup selectGroup in _selectedGroupList)
+                {
+                    selectGroup.Ref_Teacher_ID = atf.assignteacherID;
+                }
+
+                // 清除舊項目
+                dataGridViewX1.Rows.Clear();
+
+                foreach (UDT_MakeUpGroup groupRecord in _groupList)
+                {
+                    DataGridViewRow row = new DataGridViewRow();
+                    row.CreateCells(dataGridViewX1);
+
+                    // row 的 Tag 為 補考群組的系統編號
+                    row.Tag = groupRecord.UID;
+
+                    row.Cells[0].Value = groupRecord.MakeUp_Group;
+
+                    K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == groupRecord.Ref_Teacher_ID);
+
+                    row.Cells[1].Value = tr != null ? tr.Name + "(" + tr.Nickname + ")" : "";
+
+                    row.Cells[2].Value = groupRecord.StudentCount;
+
+                    row.Cells[3].Value = groupRecord.Description;
+
+                    dataGridViewX1.Rows.Add(row);
+                }
+            }
+
+            if (!_groupListOri.Equals(_groupList))
+            {
+                // 尚未儲存
+                lblIsDirty.Visible = true;
+            }
+            
+        }
+
+
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+
+            // 已儲存完畢
+            lblIsDirty.Visible = false;
         }
     }
 }

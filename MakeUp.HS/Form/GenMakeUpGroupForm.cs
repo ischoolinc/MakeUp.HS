@@ -353,7 +353,7 @@ SELECT
 	, now() AS server_time
 	, '{3}' AS client_info
 	, '高中補考群組新增'AS action_by   
-	, ' 高中補考 學年度「'|| makeUpGroupData_row_Log.school_year||'」，學期「'|| makeUpGroupData_row_Log.semester||'」， 補考梯次「'|| makeUpGroupData_row_Log.makeup_batch||'」，新增補考群族 「'|| makeUpGroupData_row_Log.makeup_group ||'」，閱卷老師 「'|| COALESCE(makeUpGroupData_row_Log.teacher_name,'')  ||'」。' AS description 
+	, ' 高中補考 學年度「'|| makeUpGroupData_row_Log.school_year||'」，學期「'|| makeUpGroupData_row_Log.semester||'」， 補考梯次「'|| makeUpGroupData_row_Log.makeup_batch||'」，新增補考群組 「'|| makeUpGroupData_row_Log.makeup_group ||'」，閱卷老師 「'|| COALESCE(makeUpGroupData_row_Log.teacher_name,'')  ||'」。' AS description 
 FROM
 (   
     SELECT
@@ -388,7 +388,7 @@ SELECT
 	, now() AS server_time
 	, '{3}' AS client_info
 	, '高中補考資料新增'AS action_by   
-	, ' 高中補考 學年度「'|| makeUpDataData_row_Log.school_year||'」，學期「'|| makeUpDataData_row_Log.semester||'」， 補考梯次「'|| makeUpDataData_row_Log.makeup_batch||'」，補考群族 「'|| makeUpDataData_row_Log.makeup_group ||'」，閱卷老師 「'|| COALESCE(makeUpDataData_row_Log.teacher_name,'')  ||'」
+	, ' 高中補考 學年度「'|| makeUpDataData_row_Log.school_year||'」，學期「'|| makeUpDataData_row_Log.semester||'」， 補考梯次「'|| makeUpDataData_row_Log.makeup_batch||'」，補考群組 「'|| makeUpDataData_row_Log.makeup_group ||'」，閱卷老師 「'|| COALESCE(makeUpDataData_row_Log.teacher_name,'')  ||'」
     新增 補考資料 學生系統編號 「'|| makeUpDataData_row_Log.ref_student_id||'」 ，學號 「'|| makeUpDataData_row_Log.student_number||'」，學生姓名 「'|| makeUpDataData_row_Log.student_name||'」 
     ，科目 「'|| makeUpDataData_row_Log.subject||'」，級別 「'|| makeUpDataData_row_Log.level||'」，學分 「'|| makeUpDataData_row_Log.credit||'」，校部定 「'|| makeUpDataData_row_Log.c_is_required_by||'」，必選修 「'|| makeUpDataData_row_Log.c_is_required||'」      
     ，分數 「'|| makeUpDataData_row_Log.score||'」 ，補考分數 「'|| makeUpDataData_row_Log.makeup_score||'」 ，及格標準 「'|| makeUpDataData_row_Log.pass_standard||'」，補考標準 「'|| makeUpDataData_row_Log.makeup_standard||'」' AS description 
