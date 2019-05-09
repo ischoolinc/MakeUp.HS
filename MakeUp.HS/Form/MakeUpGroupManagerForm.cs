@@ -188,6 +188,9 @@ namespace MakeUp.HS.Form
         {
             picLoadingDgvXMakeUpGroup.Visible = false;
 
+            lblIsDirty.Visible = false;
+
+
             // 解凍　畫面　控制項
             ResumeAllLayout();
 
@@ -340,6 +343,8 @@ GROUP BY  $make.up.group.uid ";
 
                     // 描述
                     group.Description = "" + row["description"];
+
+                    group.IsDirty = false;
 
                     _groupList.Add(group);
                 }
@@ -542,9 +547,13 @@ GROUP BY  $make.up.group.uid ";
 
             MenuItem menuItems_insertNewGroup = new MenuItem("新增補考群組", MenuItemInsertGroup_Click);
 
+            MenuItem menuItems_deleteGroup = new MenuItem("刪除補考群組", MenuItemDeleteGroup_Click);
+
+            MenuItem menuItems_MergeGroup = new MenuItem("合併補考群組", MenuItemMergeGroup_Click);
+
             MenuItem menuItems_assingnTeacher = new MenuItem("指定閱卷老師", MenuItemAssingnTeacher_Click);
 
-            menuItems = new MenuItem[] { menuItems_insertNewGroup, menuItems_assingnTeacher };
+            menuItems = new MenuItem[] { menuItems_insertNewGroup, menuItems_deleteGroup, menuItems_MergeGroup, menuItems_assingnTeacher };
 
             if (e.Button == MouseButtons.Right)
             {
@@ -566,6 +575,36 @@ GROUP BY  $make.up.group.uid ";
             RefreshListView(); //重整畫面
         }
 
+        // 刪除補考群組
+        private void MenuItemDeleteGroup_Click(Object sender, System.EventArgs e)
+        {
+            if (_selectedGroupList.Find(g => g.MakeUp_Group == "未分群組") != null)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("【未分群組】 不得刪除。");
+                return;
+            }
+
+            foreach (UDT_MakeUpGroup selectGroup in _selectedGroupList)
+            {
+                selectGroup.IsDirty = true;
+
+                selectGroup.Action = "刪除";                
+            }
+
+            RefreshUIGroupListView();
+
+        }
+
+        // 合併補考群組
+        private void MenuItemMergeGroup_Click(Object sender, System.EventArgs e)
+        {
+
+
+
+
+        }
+
+
         private void MenuItemAssingnTeacher_Click(Object sender, System.EventArgs e)
         {
             AssignTeacherForm atf = new AssignTeacherForm();
@@ -574,49 +613,265 @@ GROUP BY  $make.up.group.uid ";
             {
                 foreach (UDT_MakeUpGroup selectGroup in _selectedGroupList)
                 {
-                    selectGroup.Ref_Teacher_ID = atf.assignteacherID;
+                    // 和原本的教師id 不同 就指定成新的教師 id， 且標記 有改變
+                    if (selectGroup.Ref_Teacher_ID != atf.assignteacherID)
+                    {
+                        selectGroup.New_Ref_Teacher_ID = atf.assignteacherID;
+
+                        selectGroup.IsDirty = true;
+
+                        selectGroup.Action = "更新";
+                    }
                 }
 
-                // 清除舊項目
-                dataGridViewX1.Rows.Clear();
-
-                foreach (UDT_MakeUpGroup groupRecord in _groupList)
-                {
-                    DataGridViewRow row = new DataGridViewRow();
-                    row.CreateCells(dataGridViewX1);
-
-                    // row 的 Tag 為 補考群組的系統編號
-                    row.Tag = groupRecord.UID;
-
-                    row.Cells[0].Value = groupRecord.MakeUp_Group;
-
-                    K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == groupRecord.Ref_Teacher_ID);
-
-                    row.Cells[1].Value = tr != null ? tr.Name + "(" + tr.Nickname + ")" : "";
-
-                    row.Cells[2].Value = groupRecord.StudentCount;
-
-                    row.Cells[3].Value = groupRecord.Description;
-
-                    dataGridViewX1.Rows.Add(row);
-                }
+                RefreshUIGroupListView();
             }
 
-            if (!_groupListOri.Equals(_groupList))
-            {
-                // 尚未儲存
-                lblIsDirty.Visible = true;
-            }
-            
         }
-
-
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
+            if (dataGridViewX1.Rows.Count == 0)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("目前無任何補考群組可以儲存。");
+                return;
+            }
 
-            // 已儲存完畢
-            lblIsDirty.Visible = false;
+            picLoadingDgvXMakeUpGroup.Visible = true;
+
+            // LOG 資訊
+            string _actor = DSAServices.UserAccount; ;
+            string _client_info = ClientInfo.GetCurrentClientInfo().OutputResult().OuterXml;
+
+            //拚SQL
+            // 兜資料
+            List<string> dataList = new List<string>();
+
+            string sql = "";
+
+            // 更新的
+            foreach (DataGridViewRow row in dataGridViewX1.Rows)
+            {
+                UDT_MakeUpGroup groupRecord = _groupList.Find(g => g.UID == "" + row.Tag);
+
+                // 再原有補考群組清單找不到， 就是 新增的
+                if (groupRecord == null)
+                {
+
+                }
+                else
+                {
+                    // 沒有改變的項目 也不必儲存
+                    if (!groupRecord.IsDirty)
+                    {
+                        continue;
+                    }
+                }
+
+                // row 的 Tag 為 補考群組的系統編號
+                groupRecord.UID = "" + row.Tag;
+
+                groupRecord.MakeUp_Group = "" + row.Cells[0].Value;
+
+                groupRecord.Description = "" + row.Cells[3].Value;
+
+
+
+                string logDetail = @" 高中補考 學年度「" + _schoolYear +
+                   @"」，學期「" + _semester + @"」， 補考梯次「 " + _selectedBatch.MakeUp_Batch + @"」， 補考群組「 " + groupRecord.MakeUp_Group + @"」
+                    ";
+
+                string old_teacher_name = "";
+
+                string new_teacher_name = "";
+
+                if (groupRecord.New_Ref_Teacher_ID != null)
+                {
+                    K12.Data.TeacherRecord old_tr = _teacherList.Find(t => t.ID == groupRecord.Ref_Teacher_ID);
+
+                    K12.Data.TeacherRecord new_tr = _teacherList.Find(t => t.ID == groupRecord.New_Ref_Teacher_ID);
+
+                    old_teacher_name = old_tr != null ? old_tr.Name + "(" + old_tr.Nickname + ")" : "";
+
+                    new_teacher_name = new_tr != null ? new_tr.Name + "(" + new_tr.Nickname + ")" : "";
+                }
+
+                if (groupRecord.Ref_Teacher_ID != groupRecord.New_Ref_Teacher_ID)
+                {
+                    logDetail += "閱卷老師由「 " + old_teacher_name + @"」， 更改為「 " + new_teacher_name + @"」";
+
+                    // 更新統一用Ref_Teacher_ID
+                    groupRecord.Ref_Teacher_ID = groupRecord.New_Ref_Teacher_ID;
+                }
+
+                string data = string.Format(@"
+                SELECT
+                    '{0}'::TEXT AS makeup_group
+                    ,'{1}'::TEXT AS school_year
+                    ,'{2}'::TEXT AS semester
+                    ,'{3}'::TEXT AS description                                    
+                    ,'{4}'::TEXT AS log_detail                    
+                    ,'{5}'::TEXT AS ref_makeup_batch_id
+                    ,'{6}'::TEXT AS ref_teacher_id
+                    ,'{7}'::BIGINT AS uid
+                    ,'{8}'::TEXT AS action
+                ", groupRecord.MakeUp_Group, _schoolYear, _semester, groupRecord.Description, logDetail, _selectedBatch.UID, groupRecord.Ref_Teacher_ID != null ? groupRecord.Ref_Teacher_ID : "", groupRecord.UID, groupRecord.Action);
+
+                dataList.Add(data);
+            }
+
+            // 刪除的
+            foreach (UDT_MakeUpGroup deleteGroup in _groupList)
+            {                
+                if (deleteGroup.Action !="刪除")
+                {
+                    continue;
+                }
+
+                string logDetail = @" 高中補考 學年度「" + _schoolYear +
+                   @"」，學期「" + _semester + @"」， 補考梯次「 " + _selectedBatch.MakeUp_Batch + @"」， 補考群組「 " + deleteGroup.MakeUp_Group + @"」
+                    ";
+
+                logDetail += " 刪除， 其下的補考學生將分派至【未分群組】";
+
+                string data = string.Format(@"
+                SELECT
+                    '{0}'::TEXT AS makeup_group
+                    ,'{1}'::TEXT AS school_year
+                    ,'{2}'::TEXT AS semester
+                    ,'{3}'::TEXT AS description                                    
+                    ,'{4}'::TEXT AS log_detail                    
+                    ,'{5}'::TEXT AS ref_makeup_batch_id
+                    ,'{6}'::TEXT AS ref_teacher_id
+                    ,'{7}'::BIGINT AS uid
+                    ,'{8}'::TEXT AS action
+                ", deleteGroup.MakeUp_Group, _schoolYear, _semester, deleteGroup.Description, logDetail, _selectedBatch.UID, deleteGroup.Ref_Teacher_ID != null ? deleteGroup.Ref_Teacher_ID : "", deleteGroup.UID, deleteGroup.Action);
+
+                dataList.Add(data);
+            }
+
+
+
+
+
+            string dataString = string.Join(" UNION ALL", dataList);
+
+            sql = string.Format(@"
+WITH data_row AS(			 
+                {0}     
+)
+,update_group_data AS (
+    Update $make.up.group
+    SET
+        makeup_group = data_row.makeup_group
+        ,description = data_row.description        
+        ,ref_teacher_id = data_row.ref_teacher_id    
+    FROM data_row     
+    WHERE $make.up.group.uid = data_row.uid  
+    AND data_row.action ='更新'
+)
+,delete_group_data AS (
+    DELETE 
+    FROM  $make.up.group    
+    WHERE $make.up.group.uid IN
+    (   
+        SELECT data_row.uid
+		FROM data_row
+        WHERE data_row.action ='刪除'
+    )    
+)
+INSERT INTO log(
+	actor
+	, action_type
+	, action
+	, target_category
+	, target_id
+	, server_time
+	, client_info
+	, action_by
+	, description
+)
+SELECT 
+	'{1}'::TEXT AS actor
+	, 'Record' AS action_type
+	, '編輯高中補考群組' AS action
+	, ''::TEXT AS target_category
+	, '' AS target_id
+	, now() AS server_time
+	, '{2}' AS client_info
+	, '編輯高中補考群組'AS action_by   
+	,data_row.log_detail  AS description 
+FROM
+	data_row
+
+", dataString, _actor, _client_info);
+
+
+            K12.Data.UpdateHelper uh = new UpdateHelper();
+
+            //執行sql
+            uh.Execute(sql);
+
+
+            FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
+
+
+            // 儲存完畢 重新整理 介面
+            RefreshListView();
+        }
+
+
+        // 更新 補考群組畫面， 僅是介面上的更新，並沒有做任何的儲存。
+        private void RefreshUIGroupListView()
+        {
+
+            // 清除舊項目
+            dataGridViewX1.Rows.Clear();
+
+            foreach (UDT_MakeUpGroup groupRecord in _groupList)
+            {
+
+                DataGridViewRow row = new DataGridViewRow();
+                row.CreateCells(dataGridViewX1);
+
+                // row 的 Tag 為 補考群組的系統編號
+                row.Tag = groupRecord.UID;
+
+                row.Cells[0].Value = groupRecord.MakeUp_Group;
+
+                if (groupRecord.New_Ref_Teacher_ID != null)
+                {
+                    K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == groupRecord.New_Ref_Teacher_ID);
+
+                    row.Cells[1].Value = tr != null ? tr.Name + "(" + tr.Nickname + ")" : "";
+                }
+                else
+                {
+                    K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == groupRecord.Ref_Teacher_ID);
+
+                    row.Cells[1].Value = tr != null ? tr.Name + "(" + tr.Nickname + ")" : "";
+                }
+
+                row.Cells[2].Value = groupRecord.StudentCount;
+
+                row.Cells[3].Value = groupRecord.Description;
+
+                // 只要有一筆 改變， 就顯示 『未儲存』
+                if (groupRecord.IsDirty)
+                {
+                    lblIsDirty.Visible = true;
+                }
+
+                // 假如 補考群組 是準備要刪除的 就不顯示了
+                if (groupRecord.Action == "刪除")
+                {
+                    continue;
+                }
+
+                dataGridViewX1.Rows.Add(row);
+                
+            }
+
         }
     }
 }

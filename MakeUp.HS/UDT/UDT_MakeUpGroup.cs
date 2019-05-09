@@ -52,9 +52,22 @@ namespace MakeUp.HS
 
 
         /// <summary>
-        /// 本群組　使否為第一個選擇的Row(合併其他Row)
+        /// 本群組　是否為第一個選擇的Row(合併其他Row)
         /// </summary>        
         public bool IsFirstSelectedRow { get; set; }
+
+
+        /// <summary>
+        /// 本群組　是否為有改變(判斷更新使用)
+        /// </summary>        
+        public bool IsDirty { get; set; }
+
+
+        /// <summary>
+        /// 新閱卷老師(新手動指定的)
+        /// </summary>        
+        public string New_Ref_Teacher_ID { get; set; }
+
 
 
     }

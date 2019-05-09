@@ -38,6 +38,8 @@
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
+            this.labelX4 = new DevComponents.DotNetBar.LabelX();
+            this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.ColStudentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColClassName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColSeat_no = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,8 +53,6 @@
             this.ColMakeUp_Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColPass_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUp_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.labelX4 = new DevComponents.DotNetBar.LabelX();
-            this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.SuspendLayout();
@@ -207,6 +207,34 @@
             this.dataGridViewX1.Size = new System.Drawing.Size(988, 477);
             this.dataGridViewX1.TabIndex = 23;
             // 
+            // labelX4
+            // 
+            this.labelX4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelX4.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX4.BackgroundStyle.Class = "";
+            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX4.Location = new System.Drawing.Point(609, 23);
+            this.labelX4.Name = "labelX4";
+            this.labelX4.Size = new System.Drawing.Size(61, 23);
+            this.labelX4.TabIndex = 24;
+            this.labelX4.Text = "閱卷老師:";
+            // 
+            // cboTeacher
+            // 
+            this.cboTeacher.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboTeacher.DisplayMember = "Text";
+            this.cboTeacher.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboTeacher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboTeacher.FormattingEnabled = true;
+            this.cboTeacher.ItemHeight = 19;
+            this.cboTeacher.Location = new System.Drawing.Point(676, 23);
+            this.cboTeacher.Name = "cboTeacher";
+            this.cboTeacher.Size = new System.Drawing.Size(141, 25);
+            this.cboTeacher.TabIndex = 25;
+            // 
             // ColStudentName
             // 
             this.ColStudentName.FillWeight = 190.4105F;
@@ -216,7 +244,7 @@
             // ColClassName
             // 
             this.ColClassName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColClassName.FillWeight = 44.76244F;
+            this.ColClassName.FillWeight = 70.76244F;
             this.ColClassName.HeaderText = "班級";
             this.ColClassName.Name = "ColClassName";
             this.ColClassName.ReadOnly = true;
@@ -290,32 +318,6 @@
             this.ColMakeUp_Standard.HeaderText = "補考標準";
             this.ColMakeUp_Standard.Name = "ColMakeUp_Standard";
             // 
-            // labelX4
-            // 
-            this.labelX4.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX4.BackgroundStyle.Class = "";
-            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX4.Location = new System.Drawing.Point(609, 23);
-            this.labelX4.Name = "labelX4";
-            this.labelX4.Size = new System.Drawing.Size(61, 23);
-            this.labelX4.TabIndex = 24;
-            this.labelX4.Text = "閱卷老師:";
-            // 
-            // cboTeacher
-            // 
-            this.cboTeacher.DisplayMember = "Text";
-            this.cboTeacher.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboTeacher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboTeacher.FormattingEnabled = true;
-            this.cboTeacher.ItemHeight = 19;
-            this.cboTeacher.Location = new System.Drawing.Point(676, 23);
-            this.cboTeacher.Name = "cboTeacher";
-            this.cboTeacher.Size = new System.Drawing.Size(141, 25);
-            this.cboTeacher.TabIndex = 25;
-            // 
             // InsertUpdateMakeUpGroupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -353,6 +355,8 @@
         private DevComponents.DotNetBar.LabelX labelX3;
         private System.Windows.Forms.PictureBox picLoading;
         private DevComponents.DotNetBar.Controls.DataGridViewX dataGridViewX1;
+        private DevComponents.DotNetBar.LabelX labelX4;
+        private DevComponents.DotNetBar.Controls.ComboBoxEx cboTeacher;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColStudentName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColClassName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColSeat_no;
@@ -366,7 +370,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Score;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPass_Standard;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Standard;
-        private DevComponents.DotNetBar.LabelX labelX4;
-        private DevComponents.DotNetBar.Controls.ComboBoxEx cboTeacher;
     }
 }
