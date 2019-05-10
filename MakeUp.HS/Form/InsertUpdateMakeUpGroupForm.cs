@@ -38,6 +38,9 @@ namespace MakeUp.HS.Form
         // 補考資料
         private List<UDT_MakeUpData> _dataList;
 
+        // 選取的補考資料
+        private List<UDT_MakeUpData> _selected_dataList;
+
         // 教師清單
         private List<K12.Data.TeacherRecord> _teacherList;
 
@@ -537,6 +540,28 @@ FROM
             this.Close();
         }
 
+        // 將補考資料 移至其他群組
+        private void btnSwap_Click(object sender, EventArgs e)
+        {
+            int selectRows = 0;
 
+            // 計算 所有被選取的 補考資料 項目數
+            foreach (DataGridViewRow row in dataGridViewX1.Rows)
+            {
+                if (row.Selected)
+                {
+                    selectRows++;
+                }
+            }
+
+
+            if (selectRows <1)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("轉移群組功能需選擇 大於1個資料。");
+                return;
+            }
+
+
+        }
     }
 }

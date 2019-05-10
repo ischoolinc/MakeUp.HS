@@ -38,8 +38,6 @@
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
-            this.labelX4 = new DevComponents.DotNetBar.LabelX();
-            this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.ColStudentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColClassName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColSeat_no = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,6 +51,9 @@
             this.ColMakeUp_Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColPass_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUp_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.labelX4 = new DevComponents.DotNetBar.LabelX();
+            this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
+            this.btnSwap = new DevComponents.DotNetBar.ButtonX();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.SuspendLayout();
@@ -207,34 +208,6 @@
             this.dataGridViewX1.Size = new System.Drawing.Size(988, 477);
             this.dataGridViewX1.TabIndex = 23;
             // 
-            // labelX4
-            // 
-            this.labelX4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelX4.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX4.BackgroundStyle.Class = "";
-            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX4.Location = new System.Drawing.Point(609, 23);
-            this.labelX4.Name = "labelX4";
-            this.labelX4.Size = new System.Drawing.Size(61, 23);
-            this.labelX4.TabIndex = 24;
-            this.labelX4.Text = "閱卷老師:";
-            // 
-            // cboTeacher
-            // 
-            this.cboTeacher.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboTeacher.DisplayMember = "Text";
-            this.cboTeacher.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboTeacher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboTeacher.FormattingEnabled = true;
-            this.cboTeacher.ItemHeight = 19;
-            this.cboTeacher.Location = new System.Drawing.Point(676, 23);
-            this.cboTeacher.Name = "cboTeacher";
-            this.cboTeacher.Size = new System.Drawing.Size(141, 25);
-            this.cboTeacher.TabIndex = 25;
-            // 
             // ColStudentName
             // 
             this.ColStudentName.FillWeight = 190.4105F;
@@ -318,11 +291,53 @@
             this.ColMakeUp_Standard.HeaderText = "補考標準";
             this.ColMakeUp_Standard.Name = "ColMakeUp_Standard";
             // 
+            // labelX4
+            // 
+            this.labelX4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelX4.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX4.BackgroundStyle.Class = "";
+            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX4.Location = new System.Drawing.Point(609, 23);
+            this.labelX4.Name = "labelX4";
+            this.labelX4.Size = new System.Drawing.Size(61, 23);
+            this.labelX4.TabIndex = 24;
+            this.labelX4.Text = "閱卷老師:";
+            // 
+            // cboTeacher
+            // 
+            this.cboTeacher.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboTeacher.DisplayMember = "Text";
+            this.cboTeacher.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboTeacher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboTeacher.FormattingEnabled = true;
+            this.cboTeacher.ItemHeight = 19;
+            this.cboTeacher.Location = new System.Drawing.Point(676, 23);
+            this.cboTeacher.Name = "cboTeacher";
+            this.cboTeacher.Size = new System.Drawing.Size(141, 25);
+            this.cboTeacher.TabIndex = 25;
+            // 
+            // btnSwap
+            // 
+            this.btnSwap.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnSwap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSwap.BackColor = System.Drawing.Color.Transparent;
+            this.btnSwap.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnSwap.Location = new System.Drawing.Point(18, 659);
+            this.btnSwap.Name = "btnSwap";
+            this.btnSwap.Size = new System.Drawing.Size(160, 23);
+            this.btnSwap.TabIndex = 26;
+            this.btnSwap.Text = "補考資料移至其他群組";
+            this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
+            // 
             // InsertUpdateMakeUpGroupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1023, 694);
+            this.Controls.Add(this.btnSwap);
             this.Controls.Add(this.cboTeacher);
             this.Controls.Add(this.labelX4);
             this.Controls.Add(this.picLoading);
@@ -370,5 +385,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Score;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPass_Standard;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Standard;
+        private DevComponents.DotNetBar.ButtonX btnSwap;
     }
 }
