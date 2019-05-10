@@ -779,6 +779,38 @@ WITH data_row AS(
 		FROM data_row
         WHERE data_row.action ='刪除'
     )    
+),check_non_group_id AS
+(
+    --確認【未分群組】 的id 如果沒有 就幫他建立新的
+    INSERT INTO $make.up.group
+        (Ref_MakeUp_Batch_ID, MakeUp_Group)
+    SELECT '{3}', '未分群組'
+    WHERE
+        NOT EXISTS (
+            SELECT 
+            * 
+            FROM $make.up.group 
+            WHERE
+                Ref_MakeUp_Batch_ID = '{3}'
+                AND MakeUp_Group ='未分群組'               
+        )
+     RETURNING *
+),non_group_id AS
+(   
+    SELECT 
+         * 
+    FROM $make.up.group  
+    WHERE
+        Ref_MakeUp_Batch_ID = '{3}'
+        AND MakeUp_Group ='未分群組'
+),update_data_data AS (
+    Update $make.up.data
+    SET
+        Ref_MakeUp_Group_ID = non_group_id.uid       
+    FROM data_row    
+    LEFT JOIN non_group_id ON data_row.action ='刪除'
+    WHERE $make.up.data.Ref_MakeUp_Group_ID ::BIGINT = data_row.uid  
+    AND data_row.action ='刪除'
 )
 INSERT INTO log(
 	actor
@@ -804,7 +836,7 @@ SELECT
 FROM
 	data_row
 
-", dataString, _actor, _client_info);
+", dataString, _actor, _client_info,_selectedBatch.UID);
 
 
             K12.Data.UpdateHelper uh = new UpdateHelper();
