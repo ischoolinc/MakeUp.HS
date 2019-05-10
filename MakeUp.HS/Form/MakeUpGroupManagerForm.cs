@@ -435,6 +435,13 @@ GROUP BY  $make.up.group.uid ";
             if (e.RowIndex < 0) return;
             DataGridViewCell cell = dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
+            if (lblIsDirty.Visible)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("編輯群組資料前，請先儲存。");
+                return;
+            }
+
+
             ////  找到選取到的 梯次
             _selectedGroup = _selectedGroupList.Find(x => x.UID == "" + cell.OwningRow.Tag);
 
@@ -584,8 +591,16 @@ GROUP BY  $make.up.group.uid ";
                 return;
             }
 
+            UDT_MakeUpGroup non_group = _groupList.Find(g => g.MakeUp_Group == "未分群組");
+
             foreach (UDT_MakeUpGroup selectGroup in _selectedGroupList)
             {
+                // 把 刪除的學生人數 都數到未分群組
+                if (non_group != null)
+                {
+                    non_group.StudentCount = "" + (int.Parse(non_group.StudentCount) + int.Parse(selectGroup.StudentCount));
+                }
+
                 selectGroup.IsDirty = true;
 
                 selectGroup.Action = "刪除";                
@@ -598,9 +613,52 @@ GROUP BY  $make.up.group.uid ";
         // 合併補考群組
         private void MenuItemMergeGroup_Click(Object sender, System.EventArgs e)
         {
+            if (_selectedGroupList.Find(g => g.MakeUp_Group == "未分群組") != null)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("【未分群組】 不得合併。");
+                return;
+            }
+
+            if (_selectedGroupList.Count < 2)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("合併功能需選擇 大於1個群組。");
+                return;
+            }
+
+            // 合併後的 群組id
+            string new_merge_group_id = "";
+
+            // 合併後的 群組名稱
+            string new_merge_group_name = "";
+
+            // 第一個群組(併別人的)
+            UDT_MakeUpGroup firstGroup = _selectedGroupList.Find(g => g.IsFirstSelectedRow);
+
+            new_merge_group_id = firstGroup.UID;
+
+            new_merge_group_name = firstGroup.MakeUp_Group;
 
 
+            foreach (UDT_MakeUpGroup selectGroup in _selectedGroupList)
+            {
+                // 非第一個選的 就是要被併的
+                if (!selectGroup.IsFirstSelectedRow)
+                {
+                    // 把從其他群組併過來的 人數 加上
+                    firstGroup.StudentCount = "" + (int.Parse(firstGroup.StudentCount) + int.Parse(selectGroup.StudentCount));
 
+                    selectGroup.New_Merge_Group_ID = new_merge_group_id;
+
+                    selectGroup.New_Merge_Group_Name = new_merge_group_name;
+
+                    selectGroup.IsDirty = true;
+
+                    selectGroup.Action = "合併";
+
+                }
+            }
+
+            RefreshUIGroupListView();
 
         }
 
@@ -715,26 +773,25 @@ GROUP BY  $make.up.group.uid ";
                     ,'{6}'::TEXT AS ref_teacher_id
                     ,'{7}'::BIGINT AS uid
                     ,'{8}'::TEXT AS action
-                ", groupRecord.MakeUp_Group, _schoolYear, _semester, groupRecord.Description, logDetail, _selectedBatch.UID, groupRecord.Ref_Teacher_ID != null ? groupRecord.Ref_Teacher_ID : "", groupRecord.UID, groupRecord.Action);
+                    ,'{9}'::TEXT AS new_merge_group_id
+                ", groupRecord.MakeUp_Group, _schoolYear, _semester, groupRecord.Description, logDetail, _selectedBatch.UID, groupRecord.Ref_Teacher_ID != null ? groupRecord.Ref_Teacher_ID : "", groupRecord.UID, groupRecord.Action, groupRecord.New_Merge_Group_ID);
 
                 dataList.Add(data);
             }
 
-            // 刪除的
-            foreach (UDT_MakeUpGroup deleteGroup in _groupList)
-            {                
-                if (deleteGroup.Action !="刪除")
-                {
-                    continue;
-                }
 
-                string logDetail = @" 高中補考 學年度「" + _schoolYear +
-                   @"」，學期「" + _semester + @"」， 補考梯次「 " + _selectedBatch.MakeUp_Batch + @"」， 補考群組「 " + deleteGroup.MakeUp_Group + @"」
+            foreach (UDT_MakeUpGroup group in _groupList)
+            {
+                // 刪除的
+                if (group.Action == "刪除")
+                {
+                    string logDetail = @" 高中補考 學年度「" + _schoolYear +
+                  @"」，學期「" + _semester + @"」， 補考梯次「 " + _selectedBatch.MakeUp_Batch + @"」， 補考群組「 " + group.MakeUp_Group + @"」
                     ";
 
-                logDetail += " 刪除， 其下的補考學生將分派至【未分群組】";
+                    logDetail += " 刪除， 其下的補考學生將分派至【未分群組】";
 
-                string data = string.Format(@"
+                    string data = string.Format(@"
                 SELECT
                     '{0}'::TEXT AS makeup_group
                     ,'{1}'::TEXT AS school_year
@@ -745,9 +802,39 @@ GROUP BY  $make.up.group.uid ";
                     ,'{6}'::TEXT AS ref_teacher_id
                     ,'{7}'::BIGINT AS uid
                     ,'{8}'::TEXT AS action
-                ", deleteGroup.MakeUp_Group, _schoolYear, _semester, deleteGroup.Description, logDetail, _selectedBatch.UID, deleteGroup.Ref_Teacher_ID != null ? deleteGroup.Ref_Teacher_ID : "", deleteGroup.UID, deleteGroup.Action);
+                    ,'{9}'::TEXT AS new_merge_group_id
+                ", group.MakeUp_Group, _schoolYear, _semester, group.Description, logDetail, _selectedBatch.UID, group.Ref_Teacher_ID != null ? group.Ref_Teacher_ID : "", group.UID, group.Action, group.New_Merge_Group_ID);
 
-                dataList.Add(data);
+                    dataList.Add(data);
+                }
+
+                // 合併的
+                if (group.Action == "合併")
+                {
+                    string logDetail = @" 高中補考 學年度「" + _schoolYear +
+                  @"」，學期「" + _semester + @"」， 補考梯次「 " + _selectedBatch.MakeUp_Batch + @"」， 補考群組「 " + group.MakeUp_Group + @"」
+                    ";
+
+                    logDetail += " 合併 至【" + group.New_Merge_Group_Name +"】群組。";
+
+                    string data = string.Format(@"
+                SELECT
+                    '{0}'::TEXT AS makeup_group
+                    ,'{1}'::TEXT AS school_year
+                    ,'{2}'::TEXT AS semester
+                    ,'{3}'::TEXT AS description                                    
+                    ,'{4}'::TEXT AS log_detail                    
+                    ,'{5}'::TEXT AS ref_makeup_batch_id
+                    ,'{6}'::TEXT AS ref_teacher_id
+                    ,'{7}'::BIGINT AS uid
+                    ,'{8}'::TEXT AS action
+                    ,'{9}'::TEXT AS new_merge_group_id
+                ", group.MakeUp_Group, _schoolYear, _semester, group.Description, logDetail, _selectedBatch.UID, group.Ref_Teacher_ID != null ? group.Ref_Teacher_ID : "", group.UID, group.Action, group.New_Merge_Group_ID);
+
+                    dataList.Add(data);
+                }
+
+
             }
 
 
@@ -777,7 +864,7 @@ WITH data_row AS(
     (   
         SELECT data_row.uid
 		FROM data_row
-        WHERE data_row.action ='刪除'
+        WHERE data_row.action ='刪除' OR data_row.action ='合併'
     )    
 ),check_non_group_id AS
 (
@@ -799,11 +886,15 @@ WITH data_row AS(
 (   
     SELECT 
          * 
+    FROM check_non_group_id  
+    UNION ALL
+    SELECT 
+         * 
     FROM $make.up.group  
     WHERE
         Ref_MakeUp_Batch_ID = '{3}'
         AND MakeUp_Group ='未分群組'
-),update_data_data AS (
+),update_delete_data_data AS (
     Update $make.up.data
     SET
         Ref_MakeUp_Group_ID = non_group_id.uid       
@@ -811,6 +902,14 @@ WITH data_row AS(
     LEFT JOIN non_group_id ON data_row.action ='刪除'
     WHERE $make.up.data.Ref_MakeUp_Group_ID ::BIGINT = data_row.uid  
     AND data_row.action ='刪除'
+)
+,update_merge_data_data AS (
+    Update $make.up.data
+    SET
+        Ref_MakeUp_Group_ID = data_row.new_merge_group_id       
+    FROM data_row    
+    WHERE $make.up.data.Ref_MakeUp_Group_ID ::BIGINT = data_row.uid  
+    AND data_row.action ='合併'
 )
 INSERT INTO log(
 	actor
@@ -894,8 +993,8 @@ FROM
                     lblIsDirty.Visible = true;
                 }
 
-                // 假如 補考群組 是準備要刪除的 就不顯示了
-                if (groupRecord.Action == "刪除")
+                // 假如 補考群組 是準備要刪除、合併的 就不顯示了
+                if (groupRecord.Action == "刪除" || groupRecord.Action == "合併")
                 {
                     continue;
                 }

@@ -46,7 +46,7 @@ namespace MakeUp.HS
         public string StudentCount { get; set; }
 
         /// <summary>
-        /// 本群組　於介面編輯的處理(新增、刪除、修改)
+        /// 本群組　於介面編輯的處理(新增、刪除、修改、合併)
         /// </summary>        
         public string Action { get; set; }
 
@@ -67,6 +67,17 @@ namespace MakeUp.HS
         /// 新閱卷老師(新手動指定的)
         /// </summary>        
         public string New_Ref_Teacher_ID { get; set; }
+
+
+        /// <summary>
+        /// 合併後新群組ID
+        /// </summary>        
+        public string New_Merge_Group_ID { get; set; }
+
+        /// <summary>
+        /// 合併後新群組名稱
+        /// </summary>        
+        public string New_Merge_Group_Name { get; set; }
 
 
 
