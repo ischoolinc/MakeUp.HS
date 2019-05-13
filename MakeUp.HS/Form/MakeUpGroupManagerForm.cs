@@ -46,6 +46,9 @@ namespace MakeUp.HS.Form
         // 學期
         private string _semester;
 
+        // 動作 (管理補考群組、管理補考成績)
+        private string _action;
+
 
         // 現在點在哪一小節
         private DevComponents.AdvTree.Node _node_now;
@@ -61,8 +64,10 @@ namespace MakeUp.HS.Form
         private UDT_MakeUpGroup _selectedGroup;
 
 
-        public MakeUpGroupManagerForm()
+        public MakeUpGroupManagerForm(string action)
         {
+            _action = action;
+
             InitializeComponent();
 
             _batchList = new List<UDT_MakeUpBatch>();
@@ -444,13 +449,23 @@ GROUP BY  $make.up.group.uid ";
                 return;
             }
 
-
             ////  找到選取到的 梯次
             _selectedGroup = _selectedGroupList.Find(x => x.UID == "" + cell.OwningRow.Tag);
 
-            // 修改模式
-            InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "修改", _selectedGroup);
-            iumgf.ShowDialog();
+            if (_action == "管理補考成績")
+            {
+                // 管理補考成績                
+                InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "管理補考成績", _selectedGroup);
+                iumgf.ShowDialog();
+
+            }
+            else
+            {
+                // 修改模式
+                InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "修改群組", _selectedGroup);
+                iumgf.ShowDialog();
+            }
+            
 
             RefreshListView(); //重整畫面
 
@@ -1005,6 +1020,77 @@ FROM
                 dataGridViewX1.Rows.Add(row);
                 
             }
+
+        }
+
+        private void btnExportExcel_Click(object sender, EventArgs e)
+        {
+
+            Workbook book = new Workbook();
+            book.Worksheets.Clear();
+            Worksheet ws = book.Worksheets[book.Worksheets.Add()];
+            ws.Name = _selectedBatch.MakeUp_Batch;
+
+            int index = 0;
+            Dictionary<string, int> map = new Dictionary<string, int>();
+
+            #region 建立標題
+            for (int i = 0; i < dataGridViewX1.Columns.Count; i++)
+            {
+                DataGridViewColumn col = dataGridViewX1.Columns[i];
+                ws.Cells[index, i].PutValue(col.HeaderText);
+                map.Add(col.HeaderText, i);
+            }
+            index++;
+            #endregion
+
+            #region 填入內容
+            foreach (DataGridViewRow row in dataGridViewX1.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    int column = map[cell.OwningColumn.HeaderText];
+                    ws.Cells[index, column].PutValue("" + cell.Value);
+                }
+                index++;
+            }
+            #endregion
+
+            SaveFileDialog sd = new SaveFileDialog();
+            sd.FileName = "高中補考群組資料匯出";
+            sd.Filter = "Excel檔案(*.xlsx)|*.xlsx";
+            if (sd.ShowDialog() == DialogResult.OK)
+            {
+                DialogResult result = new DialogResult();
+
+                try
+                {
+                    book.Save(sd.FileName, SaveFormat.Xlsx);
+                    result = MsgBox.Show("檔案儲存完成，是否開啟檔案?", "是否開啟", MessageBoxButtons.YesNo);
+                }
+                catch (Exception ex)
+                {
+                    MsgBox.Show("儲存失敗。" + ex.Message);
+                }
+
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(sd.FileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MsgBox.Show("開啟檔案發生失敗:" + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+
+
+            }
+
 
         }
     }

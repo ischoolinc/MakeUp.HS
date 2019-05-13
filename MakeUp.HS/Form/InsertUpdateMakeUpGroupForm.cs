@@ -14,12 +14,13 @@ using System.ComponentModel;
 using FISCA.Presentation.Controls;
 using FISCA.Authentication;
 using FISCA.LogAgent;
+using FISCA.DSAUtil;
 
 namespace MakeUp.HS.Form
 {
     public partial class InsertUpdateMakeUpGroupForm : FISCA.Presentation.Controls.BaseForm
     {
-        // 開啟這個視窗的動作別(分為:新增、修改)
+        // 開啟這個視窗的動作別(分為:新增群組、修改群組、管理補考成績)
         private string _action;
 
 
@@ -72,13 +73,13 @@ namespace MakeUp.HS.Form
             foreach (K12.Data.TeacherRecord teacher in _teacherList)
             {
                 // 老師全名 
-                cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");                              
+                cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
             }
 
             K12.Data.TeacherRecord groupTeacher = _teacherList.Find(t => t.ID == group.Ref_Teacher_ID);
 
             // 預設為群組的閱卷老師
-            cboTeacher.Text = groupTeacher != null ? groupTeacher.Name +"(" + groupTeacher.Nickname + ")" : "" ;
+            cboTeacher.Text = groupTeacher != null ? groupTeacher.Name + "(" + groupTeacher.Nickname + ")" : "";
 
             _dataWorker = new BackgroundWorker();
             _dataWorker.DoWork += new DoWorkEventHandler(DataWorker_DoWork);
@@ -91,13 +92,13 @@ namespace MakeUp.HS.Form
             _group = group;
 
             // 只有新增 模式 才可以讓使用者 編輯 
-            if (_action == "新增")
+            if (_action == "新增群組")
             {
 
             }
 
             // 修改模式 使用者只能修改 
-            if (_action == "修改")
+            if (_action == "修改群組")
             {
                 this.Text = "管理補考群組";
                 txtGroupName.Text = _group.MakeUp_Group;
@@ -114,6 +115,26 @@ namespace MakeUp.HS.Form
 
                 _dataWorker.RunWorkerAsync();
             }
+
+            // 修改模式 使用者只能修改 
+            if (_action == "管理補考成績")
+            {
+                this.Text = "管理補考成績";
+                txtGroupName.Text = _group.MakeUp_Group;
+                txtDescription.Text = _group.Description;
+
+                txtGroupName.Enabled = false;
+                txtDescription.Enabled = false;
+                cboTeacher.Enabled = false;
+                btnSave.Enabled = false;
+                btnClose.Enabled = false;
+
+                picLoading.Visible = true;
+
+
+                _dataWorker.RunWorkerAsync();
+            }
+
 
         }
 
@@ -139,7 +160,7 @@ namespace MakeUp.HS.Form
                 cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
             }
 
-            
+
             _dataWorker = new BackgroundWorker();
             _dataWorker.DoWork += new DoWorkEventHandler(DataWorker_DoWork);
             _dataWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DataWorker_RunWorkerCompleted);
@@ -201,6 +222,7 @@ WHERE  $make.up.batch.uid = " + _group.Ref_MakeUp_Batch_ID + " AND $make.up.grou
             string query = @"
 SELECT 
     $make.up.data.uid
+    ,$make.up.data.ref_student_id    
     ,student.name AS student_name
     ,class.class_name
     ,student.seat_no
@@ -216,7 +238,7 @@ SELECT
     ,$make.up.data.makeup_standard 
 FROM $make.up.data
     LEFT JOIN student ON student.id = $make.up.data.ref_student_id :: BIGINT
-    LEFT JOIN class ON class.id = student.ref_class_id
+    LEFT JOIN class ON class.id = student.ref_class_id    
 WHERE
     $make.up.data.Ref_MakeUp_Group_ID = '" + _group.UID + "'";
 
@@ -272,6 +294,16 @@ WHERE
                     //補考標準
                     data.MakeUp_Standard = "" + row["makeup_standard"];
 
+                    // 取得本學生 成績的輸入小數位數規則
+                    // 只有 管理補考成績的情境用得到， 目前會要用比較慢一筆一筆學生查詢，而不直接寫在SQL內的原因
+                    // 是因為要跟 產生補考清單 時 使用的API 邏輯一致
+                    if (_action == "管理補考成績")
+                    {
+                        data.DecimalNumber = GetDecimalNumber("" + row["ref_student_id"]); ;
+
+                        data.HasNewMakeUpScore = false;
+                    }
+                    
 
                     _dataList.Add(data);
                 }
@@ -323,14 +355,32 @@ WHERE
                 dataGridViewX1.Rows.Add(row);
             }
 
-            // 資料 載完後 才可以 讓使用者編輯畫面
-            cboTeacher.Enabled = true;
-            txtGroupName.Enabled = true;
-            txtDescription.Enabled = true;
-            btnSave.Enabled = true;
-            btnClose.Enabled = true;
+            // 管理補考成績 只能輸入 補考資料的分數 其他項目不得編輯
+            if (_action == "管理補考成績")
+            {
+                btnSave.Enabled = true;
+                btnClose.Enabled = true;
 
-            picLoading.Visible = false;
+                // 補考成績輸入的 功能打開
+                dataGridViewX1.Columns[10].ReadOnly = false;
+
+                // 管理補考成績 才看的到此文字
+                labelInputScoreHint.Visible = true;
+
+                picLoading.Visible = false;
+            }
+            else
+            {
+                // 資料 載完後 才可以 讓使用者編輯畫面
+                cboTeacher.Enabled = true;
+                txtGroupName.Enabled = true;
+                txtDescription.Enabled = true;
+                btnSave.Enabled = true;
+                btnClose.Enabled = true;
+
+                picLoading.Visible = false;
+            }
+
         }
 
         private void DataWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -348,20 +398,31 @@ WHERE
         // 儲存
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (txtGroupName.Text == "")
+
+            // 管理補考成績 的專門驗證
+            if (_action == "管理補考成績")
             {
-                FISCA.Presentation.Controls.MsgBox.Show("補考群組名稱必須輸入。");
-                return;
+
+
+
+
             }
-
-
-            if (_groupNameList.Contains(txtGroupName.Text))
+            else
             {
-                FISCA.Presentation.Controls.MsgBox.Show("本補考梯次:『 " + _makeup_batch + "』已有相同補考群組名稱。");
-                return;
+                if (txtGroupName.Text == "")
+                {
+                    FISCA.Presentation.Controls.MsgBox.Show("補考群組名稱必須輸入。");
+                    return;
+                }
+
+
+                if (_groupNameList.Contains(txtGroupName.Text))
+                {
+                    FISCA.Presentation.Controls.MsgBox.Show("本補考梯次:『 " + _makeup_batch + "』已有相同補考群組名稱。");
+                    return;
+                }
+
             }
-
-
 
 
             // LOG 資訊
@@ -374,7 +435,7 @@ WHERE
 
             string sql = "";
 
-            if (_action == "新增")
+            if (_action == "新增群組")
             {
                 string logDetail = @" 高中補考 學年度「" + _school_year +
                     @"」，學期「" + _semester + @"」， 補考梯次「 " + _batch.MakeUp_Batch + @"」， 
@@ -444,7 +505,7 @@ FROM
 
 
             }
-            else
+            else if (_action == "修改群組")
             {
                 string logDetail = @" 高中補考 學年度「" + _school_year +
                     @"」，學期「" + _semester + @"」， 補考梯次「 " + _makeup_batch + @"」， 
@@ -454,11 +515,11 @@ FROM
 
                 K12.Data.TeacherRecord oldTeacher = _teacherList.Find(t => _group.Ref_Teacher_ID == t.ID);
 
-                string old_teacher_name = oldTeacher!= null ?  oldTeacher.Name + "(" + oldTeacher.Nickname + ")" : "";
+                string old_teacher_name = oldTeacher != null ? oldTeacher.Name + "(" + oldTeacher.Nickname + ")" : "";
 
                 if (txtGroupName.Text != _group.MakeUp_Group)
                 {
-                    logDetail +=  "名稱由「 " + _group.MakeUp_Group + "」更改為 「 " + txtGroupName.Text + "」 ";
+                    logDetail += "名稱由「 " + _group.MakeUp_Group + "」更改為 「 " + txtGroupName.Text + "」 ";
                 }
 
                 if (ref_teacher_id != _group.Ref_Teacher_ID)
@@ -474,7 +535,7 @@ FROM
                     logDetail += "群組說明由「 " + _group.Description + "」更改為 「 " + txtDescription.Text + "」 ";
                 }
 
-                
+
 
 
                 string data = string.Format(@"
@@ -531,13 +592,82 @@ FROM
 
 ", dataString, _actor, _client_info);
             }
+            else if (_action == "管理補考成績")
+            {
+
+                foreach (UDT_MakeUpData input_data in _dataList)
+                {
+
+                    string logDetail = @" 高中補考 學年度「" + _group.MakeUpBatch.School_Year +
+                  @"」，學期「" + _group.MakeUpBatch.Semester + @"」， 補考梯次「 " + _group.MakeUpBatch.MakeUp_Batch + @"」， 補考群組「 " + _group.MakeUp_Group + @"」
+                    補考資料 學生「 " + input_data.StudentName + "」，班級「 " + input_data.ClassName + "」，座號「 " + input_data.Seat_no + @"」，
+，科目「 " + input_data.Subject + "」，級別「 " + input_data.Level + "」，學分「 " + input_data.Credit + "」，校部定「 " + input_data.C_Is_Required_By + "」，必選修「 " + input_data.C_Is_Required + @"」，
+，成績分數「 " + input_data.Score + "」，及格標準「 " + input_data.Pass_Standard + "」，補考標準「 " + input_data.MakeUp_Standard + @"」
+。補考分數 自「 " + input_data.MakeUp_Score + "」，更改為 「" + input_data.New_MakeUp_Score + "」。";
+
+
+                    string data = string.Format(@"
+                SELECT                       
+                    '{0}'::BIGINT AS uid
+                    ,'{1}'::TEXT AS makeup_score
+                    ,'{2}'::TEXT AS log_detail
+                ", input_data.UID, input_data.New_MakeUp_Score, logDetail);
+
+                    dataList.Add(data);
+
+                }
+
+                string dataString = string.Join(" UNION ALL", dataList);
+
+                sql = string.Format(@"
+WITH data_row AS(			 
+                {0}     
+)
+,update_data AS (
+    Update $make.up.data
+    SET
+        makeup_score = data_row.makeup_score 
+    FROM data_row     
+    WHERE $make.up.data.uid = data_row.uid
+)
+INSERT INTO log(
+	actor
+	, action_type
+	, action
+	, target_category
+	, target_id
+	, server_time
+	, client_info
+	, action_by
+	, description
+)
+SELECT 
+	'{1}'::TEXT AS actor
+	, 'Record' AS action_type
+	, '高中補考補考分數輸入' AS action
+	, ''::TEXT AS target_category
+	, '' AS target_id
+	, now() AS server_time
+	, '{2}' AS client_info
+	, '高中補考補考分數輸入'AS action_by   
+	,data_row.log_detail  AS description 
+FROM
+	data_row
+
+", dataString, _actor, _client_info);
+
+
+
+
+            }
+
 
             K12.Data.UpdateHelper uh = new UpdateHelper();
 
             //執行sql
             uh.Execute(sql);
 
-          
+
             FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
 
             // 儲存後關閉
@@ -554,7 +684,7 @@ FROM
 
             // 計算 所有被選取的 補考資料 項目數
             foreach (DataGridViewRow row in dataGridViewX1.Rows)
-            {                
+            {
                 if (row.Selected)
                 {
                     selectRows++;
@@ -566,7 +696,7 @@ FROM
                         _selected_dataList.Add(data);
                     }
                 }
-                                
+
             }
 
             if (selectRows < 1)
@@ -575,7 +705,7 @@ FROM
                 return;
             }
 
-            
+
             // 傳進目前 的 補考群組、 選擇 欲轉其他群組的補考資料
             SwapMakeUpGroupForm smuf = new SwapMakeUpGroupForm(_group, _selected_dataList);
 
@@ -654,6 +784,116 @@ FROM
 
 
             }
+        }
+
+        private int GetDecimalNumber(string studentID )
+        {
+            // 預設小數位數為2
+            int DecimalNumber = 2;
+
+            XmlElement scoreCalcRule = SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(studentID) == null ? null : SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(studentID).ScoreCalcRuleElement;
+
+            if (scoreCalcRule != null)
+            {
+                DSXmlHelper helper = new DSXmlHelper(scoreCalcRule);
+
+                // 抓取該學生 成績計算規則 的 科目成績計算位數 
+                foreach (XmlElement element in helper.GetElements("各項成績計算位數/科目成績計算位數"))
+                {
+                    DecimalNumber = int.Parse( element.GetAttribute("位數"));
+                }
+
+            }
+                return DecimalNumber;
+        }
+
+        private void dataGridViewX1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            // 只驗第五格 分數、指標、評語 欄位
+            if (e.ColumnIndex != 10)
+            {
+                return;
+            }
+
+            DataGridViewCell cell = dataGridViewX1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+            // 找到對應的成績資料 以便對出 小數位數計算設定
+            UDT_MakeUpData inputData = _dataList.Find(data => data.UID == "" + cell.OwningRow.Tag);
+
+            cell.ErrorText = String.Empty;
+
+            decimal d = 0;
+
+            if (!decimal.TryParse("" + e.FormattedValue, out d))
+            {
+                if ("" + e.FormattedValue != "缺" && "" + e.FormattedValue != "")
+                {
+                    cell.ErrorText = "缺考請輸入『缺』，本欄無法輸入其他文字。";
+
+                    inputData.HasNewMakeUpScore = false;
+                }                
+                if ("" + e.FormattedValue == "缺" )
+                {
+                    cell.ErrorText = String.Empty;
+
+                    inputData.New_MakeUp_Score = "缺";
+
+                    inputData.HasNewMakeUpScore = true;
+                }
+
+                // 原本有值 填成空白 也要更新
+                if ("" + e.FormattedValue == "" && inputData.MakeUp_Score !="")
+                {
+                    cell.ErrorText = String.Empty;
+
+                    inputData.New_MakeUp_Score = "";
+
+                    inputData.HasNewMakeUpScore = true;
+                }
+            }
+            else
+            {
+                int index = (""+ e.FormattedValue).IndexOf('.');
+                if (index == -1)
+                {
+
+                }
+                if (("" + e.FormattedValue).Substring(index + 1).Length > inputData.DecimalNumber)
+                {
+                    cell.ErrorText = "補考成績小數位數輸入超過計算規則設定值『" + inputData.DecimalNumber + "』。";
+
+                    inputData.HasNewMakeUpScore = false;
+                }
+                else
+                {
+                    // 驗過了 改變值
+                    inputData.New_MakeUp_Score = "" + e.FormattedValue;
+
+                    inputData.HasNewMakeUpScore = true;
+                }
+            }
+        }
+
+        private void dataGridViewX1_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+
+            foreach (DataGridViewRow row in dataGridViewX1.Rows)
+            {
+                //只檢查分數欄，有錯誤就不給存
+                DataGridViewCell cell = dataGridViewX1.Rows[row.Index].Cells[5];
+
+                if (cell.ErrorText != String.Empty)
+                {
+                    btnSave.Enabled = false;
+                    return; // 有一個錯誤，就不給存，跳出檢查迴圈。
+                }
+                else
+                {
+                    btnSave.Enabled = true;
+                }
+
+            }
+
         }
     }
 }

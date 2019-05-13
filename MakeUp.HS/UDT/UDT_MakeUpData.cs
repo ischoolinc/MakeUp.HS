@@ -111,6 +111,24 @@ namespace MakeUp.HS
         /// </summary>
         public string StudentNumber { get; set; }
 
+        /// <summary>
+        /// 成績位數小數限制(非UDT 欄位，此屬性為管理補考成績輸入時的限制，對應學生 成績計算規則「學期科目成績小數位數」)
+        /// </summary>
+        public int DecimalNumber { get; set; }
+
+        /// <summary>
+        /// 有新輸入的補考成績(非UDT 欄位，此屬性為UI介面資料使用)
+        /// </summary>
+        public bool HasNewMakeUpScore { get; set; }
+
+
+        /// <summary>
+        /// 新輸入補考成績(非UDT 欄位，此屬性為UI介面資料使用)
+        /// </summary>
+        public string New_MakeUp_Score { get; set; }
+
+
+
 
     }
 }

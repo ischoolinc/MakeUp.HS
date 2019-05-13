@@ -55,6 +55,7 @@
             this.ColPass_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUp_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnExportExcel = new DevComponents.DotNetBar.ButtonX();
+            this.labelInputScoreHint = new DevComponents.DotNetBar.LabelX();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.SuspendLayout();
@@ -208,6 +209,8 @@
             this.dataGridViewX1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewX1.Size = new System.Drawing.Size(988, 477);
             this.dataGridViewX1.TabIndex = 23;
+            this.dataGridViewX1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewX1_CellValidated);
+            this.dataGridViewX1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridViewX1_CellValidating);
             // 
             // labelX4
             // 
@@ -356,11 +359,27 @@
             this.btnExportExcel.Text = "匯出Excel";
             this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
             // 
+            // labelInputScoreHint
+            // 
+            this.labelInputScoreHint.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelInputScoreHint.BackgroundStyle.Class = "";
+            this.labelInputScoreHint.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelInputScoreHint.Location = new System.Drawing.Point(638, 147);
+            this.labelInputScoreHint.Name = "labelInputScoreHint";
+            this.labelInputScoreHint.Size = new System.Drawing.Size(373, 23);
+            this.labelInputScoreHint.TabIndex = 28;
+            this.labelInputScoreHint.Text = "補考分數小數位數參照成績計算規則，如有缺考請輸入『缺』";
+            this.labelInputScoreHint.Visible = false;
+            // 
             // InsertUpdateMakeUpGroupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1023, 694);
+            this.Controls.Add(this.labelInputScoreHint);
             this.Controls.Add(this.btnExportExcel);
             this.Controls.Add(this.btnSwap);
             this.Controls.Add(this.cboTeacher);
@@ -412,5 +431,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPass_Standard;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Standard;
         private DevComponents.DotNetBar.ButtonX btnExportExcel;
+        private DevComponents.DotNetBar.LabelX labelInputScoreHint;
     }
 }

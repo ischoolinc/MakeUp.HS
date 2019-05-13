@@ -49,7 +49,7 @@ namespace MakeUp.HS
 
                 MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["管理補考群組"].Click += delegate
                 {
-                    Form.MakeUpGroupManagerForm mugmf = new Form.MakeUpGroupManagerForm();
+                    Form.MakeUpGroupManagerForm mugmf = new Form.MakeUpGroupManagerForm("管理補考群組");
 
                     mugmf.ShowDialog();
                 };
@@ -76,7 +76,9 @@ namespace MakeUp.HS
 
                 MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["管理補考成績"].Click += delegate
                 {
+                    Form.MakeUpGroupManagerForm mugmf = new Form.MakeUpGroupManagerForm("管理補考成績");
 
+                    mugmf.ShowDialog();
                 };
             }
 
