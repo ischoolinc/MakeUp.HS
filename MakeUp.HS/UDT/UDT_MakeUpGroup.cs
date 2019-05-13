@@ -80,6 +80,11 @@ namespace MakeUp.HS
         public string New_Merge_Group_Name { get; set; }
 
 
+        /// <summary>
+        /// 本群組 所屬的補考梯次
+        /// </summary>        
+        public UDT_MakeUpBatch MakeUpBatch { get; set; }
+
 
     }
 }

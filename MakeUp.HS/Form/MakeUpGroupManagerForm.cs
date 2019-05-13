@@ -346,6 +346,9 @@ GROUP BY  $make.up.group.uid ";
 
                     group.IsDirty = false;
 
+                    // 把 補考梯次 配對
+                    group.MakeUpBatch = _selectedBatch;
+
                     _groupList.Add(group);
                 }
             }

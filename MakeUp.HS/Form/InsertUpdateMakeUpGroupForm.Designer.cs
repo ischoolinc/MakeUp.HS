@@ -38,6 +38,9 @@
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
+            this.labelX4 = new DevComponents.DotNetBar.LabelX();
+            this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
+            this.btnSwap = new DevComponents.DotNetBar.ButtonX();
             this.ColStudentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColClassName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColSeat_no = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,9 +54,7 @@
             this.ColMakeUp_Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColPass_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUp_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.labelX4 = new DevComponents.DotNetBar.LabelX();
-            this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
-            this.btnSwap = new DevComponents.DotNetBar.ButtonX();
+            this.btnExportExcel = new DevComponents.DotNetBar.ButtonX();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.SuspendLayout();
@@ -208,89 +209,6 @@
             this.dataGridViewX1.Size = new System.Drawing.Size(988, 477);
             this.dataGridViewX1.TabIndex = 23;
             // 
-            // ColStudentName
-            // 
-            this.ColStudentName.FillWeight = 190.4105F;
-            this.ColStudentName.HeaderText = "學生姓名";
-            this.ColStudentName.Name = "ColStudentName";
-            // 
-            // ColClassName
-            // 
-            this.ColClassName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColClassName.FillWeight = 70.76244F;
-            this.ColClassName.HeaderText = "班級";
-            this.ColClassName.Name = "ColClassName";
-            this.ColClassName.ReadOnly = true;
-            // 
-            // ColSeat_no
-            // 
-            this.ColSeat_no.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColSeat_no.FillWeight = 47.71125F;
-            this.ColSeat_no.HeaderText = "座號";
-            this.ColSeat_no.Name = "ColSeat_no";
-            this.ColSeat_no.ReadOnly = true;
-            // 
-            // ColStudentNumber
-            // 
-            this.ColStudentNumber.FillWeight = 138.2111F;
-            this.ColStudentNumber.HeaderText = "學號";
-            this.ColStudentNumber.Name = "ColStudentNumber";
-            this.ColStudentNumber.ReadOnly = true;
-            // 
-            // ColSubject
-            // 
-            this.ColSubject.FillWeight = 92.14074F;
-            this.ColSubject.HeaderText = "科目";
-            this.ColSubject.Name = "ColSubject";
-            // 
-            // ColLevel
-            // 
-            this.ColLevel.FillWeight = 92.14074F;
-            this.ColLevel.HeaderText = "級別";
-            this.ColLevel.Name = "ColLevel";
-            // 
-            // ColCredit
-            // 
-            this.ColCredit.FillWeight = 92.14074F;
-            this.ColCredit.HeaderText = "學分";
-            this.ColCredit.Name = "ColCredit";
-            // 
-            // ColumnRequired_By
-            // 
-            this.ColumnRequired_By.FillWeight = 92.14074F;
-            this.ColumnRequired_By.HeaderText = "校部定";
-            this.ColumnRequired_By.Name = "ColumnRequired_By";
-            // 
-            // ColIs_Required
-            // 
-            this.ColIs_Required.FillWeight = 92.14074F;
-            this.ColIs_Required.HeaderText = "必選修";
-            this.ColIs_Required.Name = "ColIs_Required";
-            // 
-            // ColScore
-            // 
-            this.ColScore.FillWeight = 92.14074F;
-            this.ColScore.HeaderText = "成績分數";
-            this.ColScore.Name = "ColScore";
-            // 
-            // ColMakeUp_Score
-            // 
-            this.ColMakeUp_Score.FillWeight = 92.14074F;
-            this.ColMakeUp_Score.HeaderText = "補考分數";
-            this.ColMakeUp_Score.Name = "ColMakeUp_Score";
-            // 
-            // ColPass_Standard
-            // 
-            this.ColPass_Standard.FillWeight = 92.14074F;
-            this.ColPass_Standard.HeaderText = "及格標準";
-            this.ColPass_Standard.Name = "ColPass_Standard";
-            // 
-            // ColMakeUp_Standard
-            // 
-            this.ColMakeUp_Standard.FillWeight = 92.14074F;
-            this.ColMakeUp_Standard.HeaderText = "補考標準";
-            this.ColMakeUp_Standard.Name = "ColMakeUp_Standard";
-            // 
             // labelX4
             // 
             this.labelX4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -332,11 +250,118 @@
             this.btnSwap.Text = "補考資料移至其他群組";
             this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
             // 
+            // ColStudentName
+            // 
+            this.ColStudentName.FillWeight = 190.4105F;
+            this.ColStudentName.HeaderText = "學生姓名";
+            this.ColStudentName.Name = "ColStudentName";
+            this.ColStudentName.ReadOnly = true;
+            // 
+            // ColClassName
+            // 
+            this.ColClassName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColClassName.FillWeight = 70.76244F;
+            this.ColClassName.HeaderText = "班級";
+            this.ColClassName.Name = "ColClassName";
+            this.ColClassName.ReadOnly = true;
+            // 
+            // ColSeat_no
+            // 
+            this.ColSeat_no.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColSeat_no.FillWeight = 47.71125F;
+            this.ColSeat_no.HeaderText = "座號";
+            this.ColSeat_no.Name = "ColSeat_no";
+            this.ColSeat_no.ReadOnly = true;
+            // 
+            // ColStudentNumber
+            // 
+            this.ColStudentNumber.FillWeight = 138.2111F;
+            this.ColStudentNumber.HeaderText = "學號";
+            this.ColStudentNumber.Name = "ColStudentNumber";
+            this.ColStudentNumber.ReadOnly = true;
+            // 
+            // ColSubject
+            // 
+            this.ColSubject.FillWeight = 92.14074F;
+            this.ColSubject.HeaderText = "科目";
+            this.ColSubject.Name = "ColSubject";
+            this.ColSubject.ReadOnly = true;
+            // 
+            // ColLevel
+            // 
+            this.ColLevel.FillWeight = 92.14074F;
+            this.ColLevel.HeaderText = "級別";
+            this.ColLevel.Name = "ColLevel";
+            this.ColLevel.ReadOnly = true;
+            // 
+            // ColCredit
+            // 
+            this.ColCredit.FillWeight = 92.14074F;
+            this.ColCredit.HeaderText = "學分";
+            this.ColCredit.Name = "ColCredit";
+            this.ColCredit.ReadOnly = true;
+            // 
+            // ColumnRequired_By
+            // 
+            this.ColumnRequired_By.FillWeight = 92.14074F;
+            this.ColumnRequired_By.HeaderText = "校部定";
+            this.ColumnRequired_By.Name = "ColumnRequired_By";
+            this.ColumnRequired_By.ReadOnly = true;
+            // 
+            // ColIs_Required
+            // 
+            this.ColIs_Required.FillWeight = 92.14074F;
+            this.ColIs_Required.HeaderText = "必選修";
+            this.ColIs_Required.Name = "ColIs_Required";
+            this.ColIs_Required.ReadOnly = true;
+            // 
+            // ColScore
+            // 
+            this.ColScore.FillWeight = 92.14074F;
+            this.ColScore.HeaderText = "成績分數";
+            this.ColScore.Name = "ColScore";
+            this.ColScore.ReadOnly = true;
+            // 
+            // ColMakeUp_Score
+            // 
+            this.ColMakeUp_Score.FillWeight = 92.14074F;
+            this.ColMakeUp_Score.HeaderText = "補考分數";
+            this.ColMakeUp_Score.Name = "ColMakeUp_Score";
+            this.ColMakeUp_Score.ReadOnly = true;
+            // 
+            // ColPass_Standard
+            // 
+            this.ColPass_Standard.FillWeight = 92.14074F;
+            this.ColPass_Standard.HeaderText = "及格標準";
+            this.ColPass_Standard.Name = "ColPass_Standard";
+            this.ColPass_Standard.ReadOnly = true;
+            // 
+            // ColMakeUp_Standard
+            // 
+            this.ColMakeUp_Standard.FillWeight = 92.14074F;
+            this.ColMakeUp_Standard.HeaderText = "補考標準";
+            this.ColMakeUp_Standard.Name = "ColMakeUp_Standard";
+            this.ColMakeUp_Standard.ReadOnly = true;
+            // 
+            // btnExportExcel
+            // 
+            this.btnExportExcel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnExportExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExportExcel.BackColor = System.Drawing.Color.Transparent;
+            this.btnExportExcel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnExportExcel.Location = new System.Drawing.Point(194, 659);
+            this.btnExportExcel.Name = "btnExportExcel";
+            this.btnExportExcel.Size = new System.Drawing.Size(160, 23);
+            this.btnExportExcel.TabIndex = 27;
+            this.btnExportExcel.Text = "匯出Excel";
+            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
+            // 
             // InsertUpdateMakeUpGroupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1023, 694);
+            this.Controls.Add(this.btnExportExcel);
             this.Controls.Add(this.btnSwap);
             this.Controls.Add(this.cboTeacher);
             this.Controls.Add(this.labelX4);
@@ -372,6 +397,7 @@
         private DevComponents.DotNetBar.Controls.DataGridViewX dataGridViewX1;
         private DevComponents.DotNetBar.LabelX labelX4;
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboTeacher;
+        private DevComponents.DotNetBar.ButtonX btnSwap;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColStudentName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColClassName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColSeat_no;
@@ -385,6 +411,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Score;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPass_Standard;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Standard;
-        private DevComponents.DotNetBar.ButtonX btnSwap;
+        private DevComponents.DotNetBar.ButtonX btnExportExcel;
     }
 }

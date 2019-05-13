@@ -62,6 +62,8 @@ namespace MakeUp.HS.Form
 
             _dataList = new List<UDT_MakeUpData>();
 
+            _selected_dataList = new List<UDT_MakeUpData>();
+
             _groupNameList = new List<string>();
 
             _teacherList = K12.Data.Teacher.SelectAll();
@@ -163,8 +165,8 @@ namespace MakeUp.HS.Form
 
         private void DataWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-
-            dataGridViewX1.Rows.Clear();
+            // 清空 舊資料
+            _dataList.Clear();
 
             #region 取得本學期得其他補考群組資料 驗證重覆使用
             string query_make_up_group = @"
@@ -280,6 +282,8 @@ WHERE
 
         private void DataWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            dataGridViewX1.Rows.Clear();
+
             // 填寫補考資料
             foreach (UDT_MakeUpData data in _dataList)
             {
@@ -545,23 +549,111 @@ FROM
         {
             int selectRows = 0;
 
+            // 將舊資料清除
+            _selected_dataList.Clear();
+
             // 計算 所有被選取的 補考資料 項目數
             foreach (DataGridViewRow row in dataGridViewX1.Rows)
-            {
+            {                
                 if (row.Selected)
                 {
                     selectRows++;
+
+                    UDT_MakeUpData data = _dataList.Find(d => d.UID == "" + row.Tag);
+
+                    if (data != null)
+                    {
+                        _selected_dataList.Add(data);
+                    }
                 }
+                                
             }
 
-
-            if (selectRows <1)
+            if (selectRows < 1)
             {
                 FISCA.Presentation.Controls.MsgBox.Show("轉移群組功能需選擇 大於1個資料。");
                 return;
             }
 
+            
+            // 傳進目前 的 補考群組、 選擇 欲轉其他群組的補考資料
+            SwapMakeUpGroupForm smuf = new SwapMakeUpGroupForm(_group, _selected_dataList);
 
+            if (DialogResult.OK == smuf.ShowDialog())
+            {
+                _dataWorker.RunWorkerAsync();
+
+            }
+
+
+        }
+
+        private void btnExportExcel_Click(object sender, EventArgs e)
+        {
+            Workbook book = new Workbook();
+            book.Worksheets.Clear();
+            Worksheet ws = book.Worksheets[book.Worksheets.Add()];
+            ws.Name = _group.MakeUp_Group;
+
+            int index = 0;
+            Dictionary<string, int> map = new Dictionary<string, int>();
+
+            #region 建立標題
+            for (int i = 0; i < dataGridViewX1.Columns.Count; i++)
+            {
+                DataGridViewColumn col = dataGridViewX1.Columns[i];
+                ws.Cells[index, i].PutValue(col.HeaderText);
+                map.Add(col.HeaderText, i);
+            }
+            index++;
+            #endregion
+
+            #region 填入內容
+            foreach (DataGridViewRow row in dataGridViewX1.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    int column = map[cell.OwningColumn.HeaderText];
+                    ws.Cells[index, column].PutValue("" + cell.Value);
+                }
+                index++;
+            }
+            #endregion
+
+            SaveFileDialog sd = new SaveFileDialog();
+            sd.FileName = "高中補考名單資料匯出";
+            sd.Filter = "Excel檔案(*.xlsx)|*.xlsx";
+            if (sd.ShowDialog() == DialogResult.OK)
+            {
+                DialogResult result = new DialogResult();
+
+                try
+                {
+                    book.Save(sd.FileName, SaveFormat.Xlsx);
+                    result = MsgBox.Show("檔案儲存完成，是否開啟檔案?", "是否開啟", MessageBoxButtons.YesNo);
+                }
+                catch (Exception ex)
+                {
+                    MsgBox.Show("儲存失敗。" + ex.Message);
+                }
+
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(sd.FileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MsgBox.Show("開啟檔案發生失敗:" + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+
+
+            }
         }
     }
 }
