@@ -594,7 +594,7 @@ GROUP BY  $make.up.group.uid ";
         private void MenuItemInsertGroup_Click(Object sender, System.EventArgs e)
         {
             // 修改模式
-            InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "新增", _selectedBatch);
+            InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "新增群組", _selectedBatch);
             iumgf.ShowDialog();
 
             RefreshListView(); //重整畫面

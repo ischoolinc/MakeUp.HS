@@ -378,9 +378,17 @@ WHERE
             }
             else
             {
+
+
                 // 資料 載完後 才可以 讓使用者編輯畫面
                 cboTeacher.Enabled = true;
-                txtGroupName.Enabled = true;
+
+                // 未分群組 不給調整 群組名稱。
+                if (txtGroupName.Text != "未分群組")
+                {
+                    txtGroupName.Enabled = true;
+                }
+                
                 txtDescription.Enabled = true;
                 btnSave.Enabled = true;
                 btnClose.Enabled = true;
