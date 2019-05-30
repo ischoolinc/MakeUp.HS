@@ -224,6 +224,7 @@ SELECT
     $make.up.data.uid
     ,$make.up.data.ref_student_id    
     ,student.name AS student_name
+    ,dept.name AS department
     ,class.class_name
     ,student.seat_no
     ,student.student_number
@@ -239,6 +240,7 @@ SELECT
 FROM $make.up.data
     LEFT JOIN student ON student.id = $make.up.data.ref_student_id :: BIGINT
     LEFT JOIN class ON class.id = student.ref_class_id    
+    LEFT JOIN dept ON dept.id = student.ref_dept_id OR dept.id = class.ref_dept_id
 WHERE
     $make.up.data.Ref_MakeUp_Group_ID = '" + _group.UID + "'";
 
@@ -254,6 +256,9 @@ WHERE
                     UDT_MakeUpData data = new UDT_MakeUpData();
 
                     data.UID = "" + row["uid"];
+
+                    //學生科別
+                    data.Department = "" + row["department"];
 
                     //學生姓名
                     data.StudentName = "" + row["student_name"];
@@ -328,29 +333,31 @@ WHERE
 
                 row.Cells[0].Value = data.StudentName;
 
-                row.Cells[1].Value = data.ClassName;
+                row.Cells[1].Value = data.Department;
 
-                row.Cells[2].Value = data.Seat_no;
+                row.Cells[2].Value = data.ClassName;
 
-                row.Cells[3].Value = data.StudentNumber;
+                row.Cells[3].Value = data.Seat_no;
 
-                row.Cells[4].Value = data.Subject;
+                row.Cells[4].Value = data.StudentNumber;
 
-                row.Cells[5].Value = data.Level;
+                row.Cells[5].Value = data.Subject;
 
-                row.Cells[6].Value = data.Credit;
+                row.Cells[6].Value = data.Level;
 
-                row.Cells[7].Value = data.C_Is_Required_By;
+                row.Cells[7].Value = data.Credit;
 
-                row.Cells[8].Value = data.C_Is_Required;
+                row.Cells[8].Value = data.C_Is_Required_By;
 
-                row.Cells[9].Value = data.Score;
+                row.Cells[9].Value = data.C_Is_Required;
 
-                row.Cells[10].Value = data.MakeUp_Score;
+                row.Cells[10].Value = data.Score;
 
-                row.Cells[11].Value = data.Pass_Standard;
+                row.Cells[11].Value = data.MakeUp_Score;
 
-                row.Cells[12].Value = data.MakeUp_Standard;
+                row.Cells[12].Value = data.Pass_Standard;
+
+                row.Cells[13].Value = data.MakeUp_Standard;
 
                 dataGridViewX1.Rows.Add(row);
             }
@@ -362,7 +369,7 @@ WHERE
                 btnClose.Enabled = true;
 
                 // 補考成績輸入的 功能打開
-                dataGridViewX1.Columns[10].ReadOnly = false;
+                dataGridViewX1.Columns[11].ReadOnly = false;
 
                 // 管理補考成績 才看的到此文字
                 labelInputScoreHint.Visible = true;
@@ -600,7 +607,7 @@ FROM
 
                     string logDetail = @" 高中補考 學年度「" + _group.MakeUpBatch.School_Year +
                   @"」，學期「" + _group.MakeUpBatch.Semester + @"」， 補考梯次「 " + _group.MakeUpBatch.MakeUp_Batch + @"」， 補考群組「 " + _group.MakeUp_Group + @"」
-                    補考資料 學生「 " + input_data.StudentName + "」，班級「 " + input_data.ClassName + "」，座號「 " + input_data.Seat_no + @"」，
+                    補考資料 學生「 " + input_data.StudentName + "」，科別「 " + input_data.Department + "」，班級「 " + input_data.ClassName + "」，座號「 " + input_data.Seat_no + @"」，
 ，科目「 " + input_data.Subject + "」，級別「 " + input_data.Level + "」，學分「 " + input_data.Credit + "」，校部定「 " + input_data.C_Is_Required_By + "」，必選修「 " + input_data.C_Is_Required + @"」，
 ，成績分數「 " + input_data.Score + "」，及格標準「 " + input_data.Pass_Standard + "」，補考標準「 " + input_data.MakeUp_Standard + @"」
 。補考分數 自「 " + input_data.MakeUp_Score + "」，更改為 「" + input_data.New_MakeUp_Score + "」。";
@@ -809,8 +816,8 @@ FROM
 
         private void dataGridViewX1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            // 只驗第五格 分數、指標、評語 欄位
-            if (e.ColumnIndex != 10)
+            // 只驗 分數
+            if (e.ColumnIndex != 11)
             {
                 return;
             }

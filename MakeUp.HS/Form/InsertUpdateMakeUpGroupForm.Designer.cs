@@ -41,7 +41,10 @@
             this.labelX4 = new DevComponents.DotNetBar.LabelX();
             this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.btnSwap = new DevComponents.DotNetBar.ButtonX();
+            this.btnExportExcel = new DevComponents.DotNetBar.ButtonX();
+            this.labelInputScoreHint = new DevComponents.DotNetBar.LabelX();
             this.ColStudentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColDepartment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColClassName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColSeat_no = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColStudentNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,8 +57,6 @@
             this.ColMakeUp_Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColPass_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUp_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnExportExcel = new DevComponents.DotNetBar.ButtonX();
-            this.labelInputScoreHint = new DevComponents.DotNetBar.LabelX();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.SuspendLayout();
@@ -182,6 +183,7 @@
             this.dataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewX1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColStudentName,
+            this.ColDepartment,
             this.ColClassName,
             this.ColSeat_no,
             this.ColStudentNumber,
@@ -253,12 +255,46 @@
             this.btnSwap.Text = "補考資料移至其他群組";
             this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
             // 
+            // btnExportExcel
+            // 
+            this.btnExportExcel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnExportExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExportExcel.BackColor = System.Drawing.Color.Transparent;
+            this.btnExportExcel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnExportExcel.Location = new System.Drawing.Point(194, 659);
+            this.btnExportExcel.Name = "btnExportExcel";
+            this.btnExportExcel.Size = new System.Drawing.Size(160, 23);
+            this.btnExportExcel.TabIndex = 27;
+            this.btnExportExcel.Text = "匯出Excel";
+            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
+            // 
+            // labelInputScoreHint
+            // 
+            this.labelInputScoreHint.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelInputScoreHint.BackgroundStyle.Class = "";
+            this.labelInputScoreHint.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelInputScoreHint.Location = new System.Drawing.Point(638, 147);
+            this.labelInputScoreHint.Name = "labelInputScoreHint";
+            this.labelInputScoreHint.Size = new System.Drawing.Size(373, 23);
+            this.labelInputScoreHint.TabIndex = 28;
+            this.labelInputScoreHint.Text = "補考分數小數位數參照成績計算規則，如有缺考請輸入『缺』";
+            this.labelInputScoreHint.Visible = false;
+            // 
             // ColStudentName
             // 
             this.ColStudentName.FillWeight = 190.4105F;
             this.ColStudentName.HeaderText = "學生姓名";
             this.ColStudentName.Name = "ColStudentName";
             this.ColStudentName.ReadOnly = true;
+            // 
+            // ColDepartment
+            // 
+            this.ColDepartment.HeaderText = "科別";
+            this.ColDepartment.Name = "ColDepartment";
+            this.ColDepartment.ReadOnly = true;
             // 
             // ColClassName
             // 
@@ -346,34 +382,6 @@
             this.ColMakeUp_Standard.Name = "ColMakeUp_Standard";
             this.ColMakeUp_Standard.ReadOnly = true;
             // 
-            // btnExportExcel
-            // 
-            this.btnExportExcel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnExportExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExportExcel.BackColor = System.Drawing.Color.Transparent;
-            this.btnExportExcel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnExportExcel.Location = new System.Drawing.Point(194, 659);
-            this.btnExportExcel.Name = "btnExportExcel";
-            this.btnExportExcel.Size = new System.Drawing.Size(160, 23);
-            this.btnExportExcel.TabIndex = 27;
-            this.btnExportExcel.Text = "匯出Excel";
-            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
-            // 
-            // labelInputScoreHint
-            // 
-            this.labelInputScoreHint.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelInputScoreHint.BackgroundStyle.Class = "";
-            this.labelInputScoreHint.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelInputScoreHint.Location = new System.Drawing.Point(638, 147);
-            this.labelInputScoreHint.Name = "labelInputScoreHint";
-            this.labelInputScoreHint.Size = new System.Drawing.Size(373, 23);
-            this.labelInputScoreHint.TabIndex = 28;
-            this.labelInputScoreHint.Text = "補考分數小數位數參照成績計算規則，如有缺考請輸入『缺』";
-            this.labelInputScoreHint.Visible = false;
-            // 
             // InsertUpdateMakeUpGroupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -417,7 +425,10 @@
         private DevComponents.DotNetBar.LabelX labelX4;
         private DevComponents.DotNetBar.Controls.ComboBoxEx cboTeacher;
         private DevComponents.DotNetBar.ButtonX btnSwap;
+        private DevComponents.DotNetBar.ButtonX btnExportExcel;
+        private DevComponents.DotNetBar.LabelX labelInputScoreHint;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColStudentName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColDepartment;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColClassName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColSeat_no;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColStudentNumber;
@@ -430,7 +441,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Score;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPass_Standard;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Standard;
-        private DevComponents.DotNetBar.ButtonX btnExportExcel;
-        private DevComponents.DotNetBar.LabelX labelInputScoreHint;
     }
 }

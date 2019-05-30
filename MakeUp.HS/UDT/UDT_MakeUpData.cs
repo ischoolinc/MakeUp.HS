@@ -97,6 +97,11 @@ namespace MakeUp.HS
         public string StudentName { get; set; }
 
         /// <summary>
+        /// 科別
+        /// </summary>
+        public string Department { get; set; }
+
+        /// <summary>
         /// 學生班級名稱(非UDT 欄位，此屬性為UI介面資料使用)
         /// </summary>
         public string ClassName { get; set; }

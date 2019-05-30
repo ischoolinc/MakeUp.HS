@@ -191,6 +191,9 @@ namespace MakeUp.HS.Form
                         // 參考學生系統編號
                         makeUpData.Ref_Student_ID = aStudent.StudentID;
 
+                        // 科別
+                        makeUpData.Department = "";
+
                         // 科目
                         makeUpData.Subject = info.Subject;
 

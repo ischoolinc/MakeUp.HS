@@ -89,7 +89,7 @@ namespace MakeUp.HS.Form
 
                     string logDetail = @" 高中補考 學年度「" + _oldGroup.MakeUpBatch.School_Year +
                   @"」，學期「" + _oldGroup.MakeUpBatch.Semester + @"」， 補考梯次「 " + _oldGroup.MakeUpBatch.MakeUp_Batch + @"」， 
-                    補考資料 學生「 " + makeupdata.StudentName + "」，班級「 " + makeupdata.ClassName + "」，座號「 " + makeupdata.Seat_no + @"」，
+                    補考資料 學生「 " + makeupdata.StudentName + "」，科別「 " + makeupdata.Department + "」，班級「 " + makeupdata.ClassName + "」，座號「 " + makeupdata.Seat_no + @"」，
 ，科目「 " + makeupdata.Subject + "」，級別「 " + makeupdata.Level + "」，學分「 " + makeupdata.Credit + "」，校部定「 " + makeupdata.C_Is_Required_By + "」，必選修「 " + makeupdata.C_Is_Required + @"」，
 ，成績分數「 " + makeupdata.Score + "」，補考分數「 " + makeupdata.MakeUp_Score + "」，及格標準「 " + makeupdata.Pass_Standard + "」，補考標準「 " + makeupdata.MakeUp_Standard + @"」
 。補考群組自「 " + _oldGroup.MakeUp_Group + "」更改為 「"+ cboMakeupGroup.Text + "」。";
@@ -196,16 +196,24 @@ WHERE  $make.up.group.ref_makeup_batch_id ::BIGINT = " + _oldGroup.Ref_MakeUp_Ba
 
         private void GroupWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
-            // 將 Cbo 加入 其他 同梯次的 補考群組
-            foreach (string makeup_group in _makeupDict.Keys)
+            // 假如 本群組 只剩下 '未分群組' 已經沒有其他 補考群組， 就不給轉
+            if (_makeupDict.Count == 0)
             {
-                // 老師全名 
-                cboMakeupGroup.Items.Add(makeup_group);
+                MsgBox.Show("本梯次已沒有其他任何群組可以轉入。");
+
+                this.Close();
             }
+            else
+            {
+                // 將 Cbo 加入 其他 同梯次的 補考群組
+                foreach (string makeup_group in _makeupDict.Keys)
+                {
+                    cboMakeupGroup.Items.Add(makeup_group);
+                }
 
-            cboMakeupGroup.SelectedIndex = 0;
+                cboMakeupGroup.SelectedIndex = 0;
 
+            }            
         }
 
 
