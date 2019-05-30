@@ -357,14 +357,14 @@
             // ColScore
             // 
             this.ColScore.FillWeight = 92.14074F;
-            this.ColScore.HeaderText = "成績分數";
+            this.ColScore.HeaderText = "科目成績";
             this.ColScore.Name = "ColScore";
             this.ColScore.ReadOnly = true;
             // 
             // ColMakeUp_Score
             // 
             this.ColMakeUp_Score.FillWeight = 92.14074F;
-            this.ColMakeUp_Score.HeaderText = "補考分數";
+            this.ColMakeUp_Score.HeaderText = "補考成績";
             this.ColMakeUp_Score.Name = "ColMakeUp_Score";
             this.ColMakeUp_Score.ReadOnly = true;
             // 

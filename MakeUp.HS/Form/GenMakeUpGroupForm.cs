@@ -330,7 +330,7 @@ SELECT
     ,makeUpDataData_row.score::TEXT AS score
     ,makeUpDataData_row.makeup_score::TEXT AS makeup_score
     ,makeUpDataData_row.pass_standard::TEXT AS pass_standard
-    ,makeUpDataData_row.pass_standard::TEXT AS makeup_standard
+    ,makeUpDataData_row.makeup_standard::TEXT AS makeup_standard
 FROM
 	makeUpDataData_row
 LEFT JOIN insert_makeUpGroupData ON insert_makeUpGroupData.makeup_group = makeUpDataData_row.ref_makeup_group_name
