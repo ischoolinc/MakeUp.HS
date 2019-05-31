@@ -64,7 +64,7 @@ namespace MakeUp.HS.Form
             // 預設為學校的當學年度學期
             cboSchoolYear.Text = School.DefaultSchoolYear;
             cbosemester.Text = School.DefaultSemester;
-            
+
         }
 
         private void GetMakeUpBatch()
@@ -123,7 +123,7 @@ school_year = '" + _schoolYear + "'" +
                     {
                         batch.End_Time = et;
                     }
-                    
+
 
                     //補考說明
                     batch.Description = "" + row["description"];
@@ -302,10 +302,27 @@ school_year = '" + _schoolYear + "'" +
 
         private void btnGenMakeUpGroup_Click(object sender, EventArgs e)
         {
-            // 傳入目前選的梯次 來產生群組
-            GenMakeUpGroupForm gmugf = new GenMakeUpGroupForm(_selectedBatch);
+            string sql_check = "SELECT * FROM $make.up.group WHERE ref_makeup_batch_id = '" + _selectedBatch.UID + "'";
 
-            gmugf.ShowDialog();
+            QueryHelper qh = new QueryHelper();
+            DataTable dt = qh.Select(sql_check);
+
+            // 如果目前的補考梯次 已經有補考資料 ，則不給刪除
+            if (dt.Rows.Count > 0)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("本補考梯次已有補考資料，無法重覆產生。");
+
+                return;
+            }
+            else
+            {
+                // 傳入目前選的梯次 來產生群組
+                GenMakeUpGroupForm gmugf = new GenMakeUpGroupForm(_selectedBatch);
+
+                gmugf.ShowDialog();
+
+            }
+            
         }
 
 
@@ -318,7 +335,7 @@ school_year = '" + _schoolYear + "'" +
                 btnGenMakeUpGroup.Enabled = true;
 
                 // 一次只能選一條 Row ，所以是第一個
-                _selectedBatch = _BatchList.Find(x => x.UID == "" + dataGridViewX1.SelectedRows[0].Tag); 
+                _selectedBatch = _BatchList.Find(x => x.UID == "" + dataGridViewX1.SelectedRows[0].Tag);
 
             }
             else
@@ -331,6 +348,20 @@ school_year = '" + _schoolYear + "'" +
         //刪除 補考梯次
         private void MenuItemDelete_Click(Object sender, System.EventArgs e)
         {
+            string sql_check = "SELECT * FROM $make.up.group WHERE ref_makeup_batch_id = '" + _selectedBatch.UID + "'";
+
+            QueryHelper qh = new QueryHelper();
+            DataTable dt = qh.Select(sql_check);
+
+            // 如果目前的補考梯次 已經有補考資料 ，則不給刪除
+            if (dt.Rows.Count > 0)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("本補考梯次已有補考資料，無法刪除。");
+
+                return;
+            }
+
+
             if (FISCA.Presentation.Controls.MsgBox.Show("是否要刪除本補考梯次?", "警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
                 // LOG 資訊
@@ -395,9 +426,9 @@ FROM
 	data_row
 
 ", dataString, _actor, _client_info);
-            
 
-            K12.Data.UpdateHelper uh = new UpdateHelper();
+
+                K12.Data.UpdateHelper uh = new UpdateHelper();
 
                 //執行sql
                 uh.Execute(sql);
@@ -406,7 +437,7 @@ FROM
 
                 // 刷新畫面
                 RefreshListView();
-            }           
+            }
         }
 
         private void dataGridViewX1_MouseDown(object sender, MouseEventArgs e)
