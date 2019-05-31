@@ -54,7 +54,7 @@ namespace MakeUp.HS
                     mugmf.ShowDialog();
                 };
             }
-            
+
             {
                 Catalog ribbon = RoleAclSource.Instance["教務作業"]["補考作業"];
                 ribbon.Add(new RibbonFeature("5AA949A7-7535-42DD-A81C-D4E4DB2B677C", "產生補考公告"));
@@ -64,6 +64,18 @@ namespace MakeUp.HS
                 MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["產生補考公告"].Click += delegate
                 {
 
+                };
+            }
+
+            {
+                Catalog ribbon = RoleAclSource.Instance["教務作業"]["補考作業"];
+                ribbon.Add(new RibbonFeature("6AED85C7-F6CF-49A5-8AAC-C97CF7127AEB", "補考成績輸入狀況"));
+
+                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["補考成績輸入狀況"].Enable = UserAcl.Current["6AED85C7-F6CF-49A5-8AAC-C97CF7127AEB"].Executable;
+
+                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["補考成績輸入狀況"].Click += delegate
+                {
+                    
                 };
             }
 
@@ -79,6 +91,19 @@ namespace MakeUp.HS
                     Form.MakeUpGroupManagerForm mugmf = new Form.MakeUpGroupManagerForm("管理補考成績");
 
                     mugmf.ShowDialog();
+                };
+            }
+
+
+            {
+                Catalog ribbon = RoleAclSource.Instance["教務作業"]["補考作業"];
+                ribbon.Add(new RibbonFeature("E3D987DC-E75C-4472-BAB8-C58EEAA844F9", "補考成績匯入學期科目成績"));
+
+                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["補考成績匯入學期科目成績"].Enable = UserAcl.Current["E3D987DC-E75C-4472-BAB8-C58EEAA844F9"].Executable;
+
+                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["補考成績匯入學期科目成績"].Click += delegate
+                {
+
                 };
             }
 
