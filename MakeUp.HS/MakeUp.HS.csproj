@@ -80,6 +80,10 @@
       <HintPath>Library\FISCA.UDT.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Framework">
+      <HintPath>Library\Framework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="K12.Data">
       <HintPath>Library\K12.Data.dll</HintPath>
       <Private>False</Private>

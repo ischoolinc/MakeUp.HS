@@ -869,23 +869,33 @@ FROM
             else
             {
                 int index = (""+ e.FormattedValue).IndexOf('.');
+                // 輸入整數 (Ex:66， 因為沒有 「.」，所以會回傳-1)
                 if (index == -1)
                 {
+                    // 輸入整數，就不必管任何驗證了。
 
-                }
-                if (("" + e.FormattedValue).Substring(index + 1).Length > inputData.DecimalNumber)
-                {
-                    cell.ErrorText = "補考成績小數位數輸入超過計算規則設定值『" + inputData.DecimalNumber + "』。";
-
-                    inputData.HasNewMakeUpScore = false;
-                }
-                else
-                {
-                    // 驗過了 改變值
                     inputData.New_MakeUp_Score = "" + e.FormattedValue;
 
                     inputData.HasNewMakeUpScore = true;
+
                 }
+                else
+                {
+                    if (("" + e.FormattedValue).Substring(index + 1).Length > inputData.DecimalNumber)
+                    {
+                        cell.ErrorText = "補考成績小數位數輸入超過計算規則設定值『" + inputData.DecimalNumber + "』。";
+
+                        inputData.HasNewMakeUpScore = false;
+                    }
+                    else
+                    {
+                        // 驗過了 改變值
+                        inputData.New_MakeUp_Score = "" + e.FormattedValue;
+
+                        inputData.HasNewMakeUpScore = true;
+                    }
+
+                }                                
             }
         }
 

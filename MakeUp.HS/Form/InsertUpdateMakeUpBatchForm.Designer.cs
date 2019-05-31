@@ -261,6 +261,7 @@
             this.txtStartTime.Name = "txtStartTime";
             this.txtStartTime.Size = new System.Drawing.Size(208, 25);
             this.txtStartTime.TabIndex = 23;
+            this.txtStartTime.Validated += new System.EventHandler(this.txtStartTime_Validated);
             // 
             // txtEndTime
             // 
@@ -273,6 +274,7 @@
             this.txtEndTime.Name = "txtEndTime";
             this.txtEndTime.Size = new System.Drawing.Size(208, 25);
             this.txtEndTime.TabIndex = 24;
+            this.txtEndTime.Validated += new System.EventHandler(this.txtEndTime_Validated);
             // 
             // InsertUpdateMakeUpBatchForm
             // 

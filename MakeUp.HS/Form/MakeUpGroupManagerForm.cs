@@ -15,6 +15,7 @@ using System.ComponentModel;
 using FISCA.Presentation.Controls;
 using FISCA.Authentication;
 using FISCA.LogAgent;
+using Framework;
 
 namespace MakeUp.HS.Form
 {
@@ -583,7 +584,8 @@ GROUP BY  $make.up.group.uid ";
 
             menuItems = new MenuItem[] { menuItems_insertNewGroup, menuItems_deleteGroup, menuItems_MergeGroup, menuItems_assingnTeacher };
 
-            if (e.Button == MouseButtons.Right)
+            // 只有再管理補考群組的模式下，點右鍵 才可以叫出選單
+            if (e.Button == MouseButtons.Right && _action =="管理補考群組")
             {
                 ContextMenu buttonMenu = new ContextMenu(menuItems);
 
@@ -1071,11 +1073,11 @@ FROM
                 try
                 {
                     book.Save(sd.FileName, SaveFormat.Xlsx);
-                    result = MsgBox.Show("檔案儲存完成，是否開啟檔案?", "是否開啟", MessageBoxButtons.YesNo);
+                    result = FISCA.Presentation.Controls.MsgBox.Show("檔案儲存完成，是否開啟檔案?", "是否開啟", MessageBoxButtons.YesNo);
                 }
                 catch (Exception ex)
                 {
-                    MsgBox.Show("儲存失敗。" + ex.Message);
+                    FISCA.Presentation.Controls.MsgBox.Show("儲存失敗。" + ex.Message);
                 }
 
                 if (result == DialogResult.Yes)
@@ -1086,7 +1088,7 @@ FROM
                     }
                     catch (Exception ex)
                     {
-                        MsgBox.Show("開啟檔案發生失敗:" + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        FISCA.Presentation.Controls.MsgBox.Show("開啟檔案發生失敗:" + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
 

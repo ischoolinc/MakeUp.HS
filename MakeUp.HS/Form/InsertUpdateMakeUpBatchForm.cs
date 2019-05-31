@@ -15,6 +15,7 @@ using FISCA.Presentation.Controls;
 using FISCA.Authentication;
 using FISCA.LogAgent;
 
+
 namespace MakeUp.HS.Form
 {
     public partial class InsertUpdateMakeUpBatchForm : FISCA.Presentation.Controls.BaseForm
@@ -410,6 +411,29 @@ FROM
                     Item.Checked = true;
                 }                 
             }
-        } 
+        }
+
+        private void txtStartTime_Validated(object sender, EventArgs e)
+        {
+            TextBox txtBox = (TextBox)sender;
+
+            if (txtBox.Text != "")
+            {                
+                DateTime? dt = DateTimeHelper.ParseGregorian(txtBox.Text , PaddingMethod.First);
+                txtBox.Text = dt.Value.ToString("yyyy/MM/dd HH:mm:ss");
+            }
+
+        }
+
+        private void txtEndTime_Validated(object sender, EventArgs e)
+        {
+            TextBox txtBox = (TextBox)sender;
+
+            if (txtBox.Text != "")
+            {
+                DateTime? dt = DateTimeHelper.ParseGregorian(txtBox.Text, PaddingMethod.Last);
+                txtBox.Text = dt.Value.ToString("yyyy/MM/dd HH:mm:ss");
+            }
+        }
     }
 }
