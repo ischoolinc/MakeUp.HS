@@ -37,11 +37,13 @@
             this.cboSchoolYear = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
-            this.ColMakeUpBatch = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColIncludedClassID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.btnGenMakeUpGroup = new DevComponents.DotNetBar.ButtonX();
+            this.ColMakeUpBatch = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColStartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColIncludedClassID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
@@ -141,6 +143,8 @@
             this.dataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewX1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ColMakeUpBatch,
+            this.ColStartTime,
+            this.ColEndTime,
             this.ColIncludedClassID,
             this.ColDescription});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -165,27 +169,6 @@
             this.dataGridViewX1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewX1_CellMouseDoubleClick);
             this.dataGridViewX1.SelectionChanged += new System.EventHandler(this.dataGridViewX1_SelectionChanged);
             this.dataGridViewX1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridViewX1_MouseDown);
-            // 
-            // ColMakeUpBatch
-            // 
-            this.ColMakeUpBatch.HeaderText = "補考梯次";
-            this.ColMakeUpBatch.Name = "ColMakeUpBatch";
-            this.ColMakeUpBatch.ReadOnly = true;
-            this.ColMakeUpBatch.Width = 200;
-            // 
-            // ColIncludedClassID
-            // 
-            this.ColIncludedClassID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColIncludedClassID.HeaderText = "包含班級";
-            this.ColIncludedClassID.Name = "ColIncludedClassID";
-            this.ColIncludedClassID.ReadOnly = true;
-            // 
-            // ColDescription
-            // 
-            this.ColDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColDescription.HeaderText = "補考說明";
-            this.ColDescription.Name = "ColDescription";
-            this.ColDescription.ReadOnly = true;
             // 
             // picLoading
             // 
@@ -215,6 +198,41 @@
             this.btnGenMakeUpGroup.TabIndex = 11;
             this.btnGenMakeUpGroup.Text = "產生補考群組";
             this.btnGenMakeUpGroup.Click += new System.EventHandler(this.btnGenMakeUpGroup_Click);
+            // 
+            // ColMakeUpBatch
+            // 
+            this.ColMakeUpBatch.HeaderText = "補考梯次";
+            this.ColMakeUpBatch.Name = "ColMakeUpBatch";
+            this.ColMakeUpBatch.ReadOnly = true;
+            this.ColMakeUpBatch.Width = 200;
+            // 
+            // ColStartTime
+            // 
+            this.ColStartTime.HeaderText = "成績輸入開始時間";
+            this.ColStartTime.Name = "ColStartTime";
+            this.ColStartTime.ReadOnly = true;
+            this.ColStartTime.Width = 150;
+            // 
+            // ColEndTime
+            // 
+            this.ColEndTime.HeaderText = "成績輸入結束時間";
+            this.ColEndTime.Name = "ColEndTime";
+            this.ColEndTime.ReadOnly = true;
+            this.ColEndTime.Width = 150;
+            // 
+            // ColIncludedClassID
+            // 
+            this.ColIncludedClassID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColIncludedClassID.HeaderText = "包含班級";
+            this.ColIncludedClassID.Name = "ColIncludedClassID";
+            this.ColIncludedClassID.ReadOnly = true;
+            // 
+            // ColDescription
+            // 
+            this.ColDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColDescription.HeaderText = "補考說明";
+            this.ColDescription.Name = "ColDescription";
+            this.ColDescription.ReadOnly = true;
             // 
             // MakeUpBatchManagerForm
             // 
@@ -252,9 +270,11 @@
         private DevComponents.DotNetBar.LabelX labelX1;
         private DevComponents.DotNetBar.Controls.DataGridViewX dataGridViewX1;
         private System.Windows.Forms.PictureBox picLoading;
+        private DevComponents.DotNetBar.ButtonX btnGenMakeUpGroup;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUpBatch;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColStartTime;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColEndTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColIncludedClassID;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColDescription;
-        private DevComponents.DotNetBar.ButtonX btnGenMakeUpGroup;
     }
 }

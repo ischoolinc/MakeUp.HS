@@ -29,6 +29,19 @@ namespace MakeUp.HS
         [FISCA.UDT.Field]
         public string Semester { get; set; }
 
+
+        /// <summary>
+        /// 本梯次成績輸入開始時間
+        /// </summary>
+        [FISCA.UDT.Field]
+        public DateTime Start_Time { get; set; }
+
+        /// <summary>
+        /// 本梯次成績輸入結束時間
+        /// </summary>
+        [FISCA.UDT.Field]
+        public DateTime End_Time { get; set; }
+
         /// <summary>
         /// 補考說明
         /// </summary>

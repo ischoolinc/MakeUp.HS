@@ -87,6 +87,8 @@ namespace MakeUp.HS.Form
                 this.Text = "管理補考梯次";
                 txtBatchName.Text = _batch.MakeUp_Batch;
                 txtDescription.Text = _batch.Description;
+                txtStartTime.Text = _batch.Start_Time.ToString("yyyy/MM/dd HH:mm:ss");
+                txtEndTime.Text = _batch.End_Time.ToString("yyyy/MM/dd HH:mm:ss");
             }
 
         }
@@ -141,6 +143,49 @@ namespace MakeUp.HS.Form
                 FISCA.Presentation.Controls.MsgBox.Show("補考梯次名稱必須輸入。");
                 return;
             }
+
+            if (txtStartTime.Text == "")
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("成績輸入開始時間必須輸入。");
+                return;
+            }
+
+            if (txtEndTime.Text == "")
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("成績輸入結束時間必須輸入。");
+                return;
+            }
+
+            DateTime st;
+
+            DateTime et;
+
+            if (DateTime.TryParse(txtStartTime.Text, out st))
+            {
+
+            }
+            else
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("成績輸入開始時間格式不正確，請輸入 「2019/01/01 00:00:00 」格式");
+                return;
+            }
+
+            if (DateTime.TryParse(txtEndTime.Text, out et))
+            {
+                
+            }
+            else
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("成績輸入結束時間格式不正確，請輸入 「2019/01/01 00:00:00 」格式");
+                return;
+            }
+
+            if (st > et)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("成績輸入開始時間需早於結束時間");
+                return;
+            }
+
 
 
             //if (txtBatchName.Text == "")
@@ -206,9 +251,11 @@ namespace MakeUp.HS.Form
                     '{0}'::TEXT AS makeup_batch
                     ,'{1}'::TEXT AS school_year
                     ,'{2}'::TEXT AS semester
-                    ,'{3}'::TEXT AS description
-                    ,'{4}'::TEXT AS included_class_id                    
-                ", txtBatchName.Text, _schoolYear, _semester, txtDescription.Text, included_class_id_xml);
+                    ,'{3}'::TIMESTAMP AS start_time
+                    ,'{4}'::TIMESTAMP AS end_time
+                    ,'{5}'::TEXT AS description
+                    ,'{6}'::TEXT AS included_class_id                    
+                ", txtBatchName.Text, _schoolYear, _semester,txtStartTime.Text,txtEndTime.Text,txtDescription.Text, included_class_id_xml);
 
                 dataList.Add(data);
 
@@ -225,6 +272,8 @@ INSERT INTO $make.up.batch(
 	makeup_batch	
 	,school_year
     ,semester
+    ,start_time
+    ,end_time
 	,description
 	,included_class_id
 )
@@ -232,6 +281,8 @@ SELECT
 	data_row.makeup_batch::TEXT AS makeup_batch	
 	,data_row.school_year::TEXT AS school_year	
     ,data_row.semester::TEXT AS semester	
+    ,data_row.start_time::TIMESTAMP AS start_time	
+    ,data_row.end_time::TIMESTAMP AS end_time	
 	,data_row.description::TEXT AS description	
 	,data_row.included_class_id::TEXT AS included_class_id		
 FROM
@@ -257,7 +308,7 @@ SELECT
 	, now() AS server_time
 	, '{2}' AS client_info
 	, '高中補考梯次新增'AS action_by   
-	, ' 新增高中 學年度「'|| data_row.school_year||'」，學期「'|| data_row.semester||'」， 補考梯次「'|| data_row.makeup_batch||'」，補考說明「'|| data_row.description ||'」，包含班級ID「'|| data_row.included_class_id || '」。' AS description 
+	, ' 新增高中 學年度「'|| data_row.school_year||'」，學期「'|| data_row.semester||'」， 補考梯次「'|| data_row.makeup_batch||'」， 成績輸入開始時間「'|| data_row.start_time||'」， 成績輸入結束時間「'|| data_row.end_time||'」，補考說明「'|| data_row.description ||'」，包含班級ID「'|| data_row.included_class_id || '」。' AS description 
 FROM
 	data_row
 
@@ -271,11 +322,13 @@ FROM
                     '{0}'::TEXT AS makeup_batch
                     ,'{1}'::TEXT AS school_year
                     ,'{2}'::TEXT AS semester
-                    ,'{3}'::TEXT AS description
-                    ,'{4}'::TEXT AS included_class_id                    
-                    ,'{5}'::TEXT AS old_description
-                    ,'{6}'::BIGINT AS uid
-                ", txtBatchName.Text, _schoolYear, _semester, txtDescription.Text, _batch.Included_Class_ID, _batch.Description,_batch.UID);
+                    ,'{3}'::TIMESTAMP AS start_time
+                    ,'{4}'::TIMESTAMP AS end_time
+                    ,'{5}'::TEXT AS description
+                    ,'{6}'::TEXT AS included_class_id                    
+                    ,'{7}'::TEXT AS old_description
+                    ,'{8}'::BIGINT AS uid
+                ", txtBatchName.Text, _schoolYear, _semester,txtStartTime.Text,txtEndTime.Text,txtDescription.Text, _batch.Included_Class_ID, _batch.Description,_batch.UID);
 
                 dataList.Add(data);
 
@@ -289,6 +342,8 @@ WITH data_row AS(
     Update $make.up.batch
     SET
         description = data_row.description        
+        ,start_time = data_row.start_time        
+        ,end_time = data_row.end_time        
     FROM data_row     
     WHERE $make.up.batch.uid = data_row.uid
 )

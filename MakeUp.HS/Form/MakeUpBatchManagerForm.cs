@@ -102,6 +102,29 @@ school_year = '" + _schoolYear + "'" +
                     //學期
                     batch.Semester = "" + row["semester"];
 
+                    // 成績輸入開始時間
+                    DateTime st = new DateTime();
+                    if (DateTime.TryParse("" + row["start_time"], out st))
+                    {
+                        batch.Start_Time = st;
+                    }
+                    else
+                    {
+                        batch.Start_Time = st;
+                    }
+
+                    // 成績輸入結束時間
+                    DateTime et = new DateTime();
+                    if (DateTime.TryParse("" + row["end_time"], out et))
+                    {
+                        batch.End_Time = et;
+                    }
+                    else
+                    {
+                        batch.End_Time = et;
+                    }
+                    
+
                     //補考說明
                     batch.Description = "" + row["description"];
 
@@ -193,9 +216,13 @@ school_year = '" + _schoolYear + "'" +
                 // 解析班級XML className
                 batchRecord.ParseClassXMLNameString();
 
-                row.Cells[1].Value = batchRecord.totalclassName;
+                row.Cells[1].Value = batchRecord.Start_Time.ToString("yyyy/MM/dd HH:mm:ss");
 
-                row.Cells[2].Value = batchRecord.Description;
+                row.Cells[2].Value = batchRecord.End_Time.ToString("yyyy/MM/dd HH:mm:ss");
+
+                row.Cells[3].Value = batchRecord.totalclassName;
+
+                row.Cells[4].Value = batchRecord.Description;
 
                 dataGridViewX1.Rows.Add(row);
             }

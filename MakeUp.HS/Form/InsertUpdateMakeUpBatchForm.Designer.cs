@@ -38,6 +38,10 @@
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.lstClass = new DevComponents.DotNetBar.Controls.ListViewEx();
             this.chkSelectAll = new DevComponents.DotNetBar.Controls.CheckBoxX();
+            this.labelX3 = new DevComponents.DotNetBar.LabelX();
+            this.labelX4 = new DevComponents.DotNetBar.LabelX();
+            this.txtStartTime = new DevComponents.DotNetBar.Controls.TextBoxX();
+            this.txtEndTime = new DevComponents.DotNetBar.Controls.TextBoxX();
             this.groupPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
@@ -48,7 +52,7 @@
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
             this.btnClose.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnClose.Location = new System.Drawing.Point(572, 388);
+            this.btnClose.Location = new System.Drawing.Point(572, 445);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(102, 23);
             this.btnClose.TabIndex = 13;
@@ -61,7 +65,7 @@
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.BackColor = System.Drawing.Color.Transparent;
             this.btnSave.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnSave.Location = new System.Drawing.Point(462, 388);
+            this.btnSave.Location = new System.Drawing.Point(462, 445);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(104, 23);
             this.btnSave.TabIndex = 12;
@@ -130,7 +134,7 @@
             this.groupPanel3.Controls.Add(this.picLoading);
             this.groupPanel3.Controls.Add(this.lstClass);
             this.groupPanel3.DrawTitleBox = false;
-            this.groupPanel3.Location = new System.Drawing.Point(14, 143);
+            this.groupPanel3.Location = new System.Drawing.Point(16, 200);
             this.groupPanel3.Name = "groupPanel3";
             this.groupPanel3.Size = new System.Drawing.Size(660, 239);
             // 
@@ -210,7 +214,7 @@
             this.chkSelectAll.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkSelectAll.CheckValue = "Y";
             this.chkSelectAll.Enabled = false;
-            this.chkSelectAll.Location = new System.Drawing.Point(87, 141);
+            this.chkSelectAll.Location = new System.Drawing.Point(89, 198);
             this.chkSelectAll.Name = "chkSelectAll";
             this.chkSelectAll.Size = new System.Drawing.Size(100, 23);
             this.chkSelectAll.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -218,11 +222,67 @@
             this.chkSelectAll.Text = "全選/全不選";
             this.chkSelectAll.CheckedChanged += new System.EventHandler(this.chkSelectAll_CheckedChanged);
             // 
+            // labelX3
+            // 
+            this.labelX3.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX3.BackgroundStyle.Class = "";
+            this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX3.Location = new System.Drawing.Point(22, 160);
+            this.labelX3.Name = "labelX3";
+            this.labelX3.Size = new System.Drawing.Size(126, 23);
+            this.labelX3.TabIndex = 21;
+            this.labelX3.Text = "成績輸入開始時間:";
+            // 
+            // labelX4
+            // 
+            this.labelX4.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX4.BackgroundStyle.Class = "";
+            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX4.Location = new System.Drawing.Point(354, 160);
+            this.labelX4.Name = "labelX4";
+            this.labelX4.Size = new System.Drawing.Size(126, 23);
+            this.labelX4.TabIndex = 22;
+            this.labelX4.Text = "成績輸入結束時間:";
+            // 
+            // txtStartTime
+            // 
+            // 
+            // 
+            // 
+            this.txtStartTime.Border.Class = "TextBoxBorder";
+            this.txtStartTime.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.txtStartTime.Location = new System.Drawing.Point(140, 158);
+            this.txtStartTime.Name = "txtStartTime";
+            this.txtStartTime.Size = new System.Drawing.Size(208, 25);
+            this.txtStartTime.TabIndex = 23;
+            // 
+            // txtEndTime
+            // 
+            // 
+            // 
+            // 
+            this.txtEndTime.Border.Class = "TextBoxBorder";
+            this.txtEndTime.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.txtEndTime.Location = new System.Drawing.Point(466, 158);
+            this.txtEndTime.Name = "txtEndTime";
+            this.txtEndTime.Size = new System.Drawing.Size(208, 25);
+            this.txtEndTime.TabIndex = 24;
+            // 
             // InsertUpdateMakeUpBatchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(688, 423);
+            this.ClientSize = new System.Drawing.Size(688, 480);
+            this.Controls.Add(this.txtEndTime);
+            this.Controls.Add(this.txtStartTime);
+            this.Controls.Add(this.labelX4);
+            this.Controls.Add(this.labelX3);
             this.Controls.Add(this.chkSelectAll);
             this.Controls.Add(this.groupPanel3);
             this.Controls.Add(this.txtDescription);
@@ -253,5 +313,9 @@
         private DevComponents.DotNetBar.Controls.ListViewEx lstClass;
         private DevComponents.DotNetBar.Controls.CheckBoxX chkSelectAll;
         private System.Windows.Forms.PictureBox picLoading;
+        private DevComponents.DotNetBar.LabelX labelX3;
+        private DevComponents.DotNetBar.LabelX labelX4;
+        private DevComponents.DotNetBar.Controls.TextBoxX txtStartTime;
+        private DevComponents.DotNetBar.Controls.TextBoxX txtEndTime;
     }
 }

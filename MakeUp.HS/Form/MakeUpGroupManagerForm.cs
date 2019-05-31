@@ -392,7 +392,10 @@ GROUP BY  $make.up.group.uid ";
             // 暫停畫面控制項
             SuspendAllLayout();
 
-            _groupWorker.RunWorkerAsync();
+            if (!_groupWorker.IsBusy)
+            {
+                _groupWorker.RunWorkerAsync();
+            }            
         }
 
 
