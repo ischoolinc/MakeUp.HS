@@ -107,7 +107,9 @@ namespace MakeUp.HS
 
                 MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["補考成績匯入學期科目成績"].Click += delegate
                 {
+                    Form.ExportMakeUpScoreForm emusf = new Form.ExportMakeUpScoreForm();
 
+                    emusf.ShowDialog();
                 };
             }
 
