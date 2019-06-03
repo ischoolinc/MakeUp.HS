@@ -63,10 +63,16 @@ namespace MakeUp.HS
         public bool IsDirty { get; set; }
 
 
+
         /// <summary>
         /// 新閱卷老師(新手動指定的)
         /// </summary>        
         public string New_Ref_Teacher_ID { get; set; }
+
+        /// <summary>
+        /// 閱卷老師全名
+        /// </summary>        
+        public string TeacherName { get; set; }
 
 
         /// <summary>

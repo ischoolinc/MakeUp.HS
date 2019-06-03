@@ -526,7 +526,7 @@ FROM
                     @"」，學期「" + _semester + @"」， 補考梯次「 " + _makeup_batch + @"」， 
                     補考群組「 " + _group.MakeUp_Group + "」，";
 
-                string ref_teacher_id = _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text)).ID;
+                string ref_teacher_id = _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text))!=null ? _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text)).ID :""; 
 
                 K12.Data.TeacherRecord oldTeacher = _teacherList.Find(t => _group.Ref_Teacher_ID == t.ID);
 

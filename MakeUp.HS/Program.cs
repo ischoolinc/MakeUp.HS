@@ -75,24 +75,28 @@ namespace MakeUp.HS
 
                 MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["補考成績輸入狀況"].Click += delegate
                 {
-                    
+                    Form.MakeUpScoreStatusForm myssf = new Form.MakeUpScoreStatusForm();
+
+                    myssf.ShowDialog();
                 };
             }
 
 
-            {
-                Catalog ribbon = RoleAclSource.Instance["教務作業"]["補考作業"];
-                ribbon.Add(new RibbonFeature("47A870E8-0C03-4DE0-A85E-C2B4551351C8", "管理補考成績"));
 
-                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["管理補考成績"].Enable = UserAcl.Current["47A870E8-0C03-4DE0-A85E-C2B4551351C8"].Executable;
+            // 2019/06/03 穎驊註解， 後來有了 補考成績輸入狀況 檢查， 就把 管理成績輸入 介面一併 併過了去了， 這個專門輸入成績的流程 先隱藏
+            //{
+            //    Catalog ribbon = RoleAclSource.Instance["教務作業"]["補考作業"];
+            //    ribbon.Add(new RibbonFeature("47A870E8-0C03-4DE0-A85E-C2B4551351C8", "管理補考成績"));
 
-                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["管理補考成績"].Click += delegate
-                {
-                    Form.MakeUpGroupManagerForm mugmf = new Form.MakeUpGroupManagerForm("管理補考成績");
+            //    MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["管理補考成績"].Enable = UserAcl.Current["47A870E8-0C03-4DE0-A85E-C2B4551351C8"].Executable;
 
-                    mugmf.ShowDialog();
-                };
-            }
+            //    MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["管理補考成績"].Click += delegate
+            //    {
+            //        Form.MakeUpGroupManagerForm mugmf = new Form.MakeUpGroupManagerForm("管理補考成績");
+
+            //        mugmf.ShowDialog();
+            //    };
+            //}
 
 
             {
