@@ -481,52 +481,37 @@ WHERE
 
                     bool makeUp_ScoreHasValue = decimal.TryParse("" + score.MakeUp_Score, out makeUp_Score);
 
-                    bool ori_scoreHasValue = decimal.TryParse("" + score.Score, out ori_score);
-
                     bool pass_standardHasValue = decimal.TryParse("" + score.Pass_Standard, out pass_standard);
 
-                    // 最後的學期科目成績 預設為 原始分數
-                    decimal subjectScore = ori_score;
 
-                    if (makeUp_ScoreHasValue && ori_scoreHasValue && pass_standardHasValue)
+                    if (makeUp_ScoreHasValue && pass_standardHasValue)
                     {
-                        //補考分數 等於或是 比 及格標準高 ， 則取得學分 ， 科目分數以 及格標準計
+                        //補考分數 等於或是 比 及格標準高 ， 則取得學分 ， 補考分數 及格標準計
                         if (makeUp_Score >= pass_standard)
                         {
                             getCredit = "是";
 
-                            subjectScore = pass_standard;
+                            makeUp_Score = pass_standard;
                         }
-                        // 補考分數 比 及格標準低 ， 沒有取得分數， 科目分數 為  補考分數 原始成績 兩個分數擇優
+                        // 補考分數 比 及格標準低 ， 沒有取得分數，補考分數 以原始分數計
                         else
                         {
-                            if (ori_score > makeUp_Score)
-                            {
-                                subjectScore = ori_score;
-                            }
-                            else
-                            {
-                                subjectScore = makeUp_Score;
-                            }
+                            
                         }
                     }
-
                    
-                    // 科目成績
-                    ws.Cells[index, 10].PutValue(""+ subjectScore);
-
                     // 原始成績
-                    ws.Cells[index, 11].PutValue("" + score.Score);
+                    ws.Cells[index, 10].PutValue("" + score.Score);
 
                     // 補考成績
-                    ws.Cells[index, 12].PutValue("" + score.MakeUp_Score);
+                    ws.Cells[index, 11].PutValue("" + score.MakeUp_Score);
 
                     // 及格標準
-                    ws.Cells[index, 13].PutValue("" + score.Pass_Standard);
+                    ws.Cells[index, 12].PutValue("" + score.Pass_Standard);
 
 
                     // 取得學分
-                    ws.Cells[index, 14].PutValue(getCredit);
+                    ws.Cells[index, 13].PutValue(getCredit);
 
 
                     index++;
@@ -572,22 +557,19 @@ WHERE
 
                 // 學期
                 ws_warning.Cells[index, 9].PutValue(_semester);
-              
-                // 科目成績
-                ws_warning.Cells[index, 10].PutValue("");
-
+                              
                 // 原始成績
-                ws_warning.Cells[index, 11].PutValue("" + score.Score);
+                ws_warning.Cells[index, 10].PutValue("" + score.Score);
 
                 // 補考成績
-                ws_warning.Cells[index, 12].PutValue("" + score.MakeUp_Score);
+                ws_warning.Cells[index, 11].PutValue("" + score.MakeUp_Score);
 
                 // 及格標準
-                ws_warning.Cells[index, 13].PutValue("" + score.Pass_Standard);
+                ws_warning.Cells[index, 12].PutValue("" + score.Pass_Standard);
 
 
                 // 取得學分
-                ws_warning.Cells[index, 14].PutValue("");
+                ws_warning.Cells[index, 13].PutValue("");
 
 
                 index++;
