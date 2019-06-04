@@ -317,6 +317,9 @@ $make.up.group.uid
 ,$make.up.group.makeup_group
 ,$make.up.group.ref_teacher_id
 ,$make.up.group.description
+,$make.up.group.makeup_date
+,$make.up.group.makeup_time
+,$make.up.group.makeup_place
 ,COUNT($make.up.data.uid) AS studentCount
 FROM  $make.up.group
 LEFT JOIN  $make.up.data ON  $make.up.data.ref_makeup_group_id :: BIGINT = $make.up.group.uid
@@ -349,6 +352,15 @@ GROUP BY  $make.up.group.uid ";
 
                     // 描述
                     group.Description = "" + row["description"];
+
+                    // 補考日期
+                    group.MakeUp_Date = "" + row["makeup_date"];
+
+                    // 補考時間
+                    group.MakeUp_Time = "" + row["makeup_time"];
+
+                    // 補考地點
+                    group.MakeUp_Place = "" + row["makeup_place"];
 
                     group.IsDirty = false;
 

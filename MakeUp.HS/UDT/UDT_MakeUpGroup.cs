@@ -36,6 +36,24 @@ namespace MakeUp.HS
         public string Description { get; set; }
 
         /// <summary>
+        /// 補考日期
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string MakeUp_Date { get; set; }
+
+        /// <summary>
+        /// 補考時間
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string MakeUp_Time { get; set; }
+
+        /// <summary>
+        /// 補考場地
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string MakeUp_Place { get; set; }
+
+        /// <summary>
         /// 取代原本 ActiveRecord 不能 Set 的 UID
         /// </summary>
         public string UID { get; set; }

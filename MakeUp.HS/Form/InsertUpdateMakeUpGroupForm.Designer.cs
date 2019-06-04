@@ -38,11 +38,6 @@
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
-            this.labelX4 = new DevComponents.DotNetBar.LabelX();
-            this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
-            this.btnSwap = new DevComponents.DotNetBar.ButtonX();
-            this.btnExportExcel = new DevComponents.DotNetBar.ButtonX();
-            this.labelInputScoreHint = new DevComponents.DotNetBar.LabelX();
             this.ColStudentName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDepartment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColClassName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,6 +52,17 @@
             this.ColMakeUp_Score = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColPass_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUp_Standard = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.labelX4 = new DevComponents.DotNetBar.LabelX();
+            this.cboTeacher = new DevComponents.DotNetBar.Controls.ComboBoxEx();
+            this.btnSwap = new DevComponents.DotNetBar.ButtonX();
+            this.btnExportExcel = new DevComponents.DotNetBar.ButtonX();
+            this.labelInputScoreHint = new DevComponents.DotNetBar.LabelX();
+            this.labelX5 = new DevComponents.DotNetBar.LabelX();
+            this.labelX6 = new DevComponents.DotNetBar.LabelX();
+            this.labelX7 = new DevComponents.DotNetBar.LabelX();
+            this.txtDate = new DevComponents.DotNetBar.Controls.TextBoxX();
+            this.txtTime = new DevComponents.DotNetBar.Controls.TextBoxX();
+            this.txtPlace = new DevComponents.DotNetBar.Controls.TextBoxX();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.SuspendLayout();
@@ -124,7 +130,7 @@
             // 
             this.txtDescription.Border.Class = "TextBoxBorder";
             this.txtDescription.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.txtDescription.Location = new System.Drawing.Point(85, 54);
+            this.txtDescription.Location = new System.Drawing.Point(84, 104);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.Size = new System.Drawing.Size(922, 83);
@@ -138,7 +144,7 @@
             // 
             this.labelX2.BackgroundStyle.Class = "";
             this.labelX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX2.Location = new System.Drawing.Point(18, 52);
+            this.labelX2.Location = new System.Drawing.Point(18, 102);
             this.labelX2.Name = "labelX2";
             this.labelX2.Size = new System.Drawing.Size(80, 23);
             this.labelX2.TabIndex = 16;
@@ -152,7 +158,7 @@
             // 
             this.labelX3.BackgroundStyle.Class = "";
             this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX3.Location = new System.Drawing.Point(18, 147);
+            this.labelX3.Location = new System.Drawing.Point(17, 202);
             this.labelX3.Name = "labelX3";
             this.labelX3.Size = new System.Drawing.Size(61, 23);
             this.labelX3.TabIndex = 18;
@@ -205,83 +211,14 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewX1.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
-            this.dataGridViewX1.Location = new System.Drawing.Point(18, 176);
+            this.dataGridViewX1.Location = new System.Drawing.Point(18, 231);
             this.dataGridViewX1.Name = "dataGridViewX1";
             this.dataGridViewX1.RowTemplate.Height = 24;
             this.dataGridViewX1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewX1.Size = new System.Drawing.Size(988, 477);
+            this.dataGridViewX1.Size = new System.Drawing.Size(988, 422);
             this.dataGridViewX1.TabIndex = 23;
             this.dataGridViewX1.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewX1_CellValidated);
             this.dataGridViewX1.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridViewX1_CellValidating);
-            // 
-            // labelX4
-            // 
-            this.labelX4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelX4.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX4.BackgroundStyle.Class = "";
-            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX4.Location = new System.Drawing.Point(609, 23);
-            this.labelX4.Name = "labelX4";
-            this.labelX4.Size = new System.Drawing.Size(61, 23);
-            this.labelX4.TabIndex = 24;
-            this.labelX4.Text = "閱卷老師:";
-            // 
-            // cboTeacher
-            // 
-            this.cboTeacher.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboTeacher.DisplayMember = "Text";
-            this.cboTeacher.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboTeacher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboTeacher.FormattingEnabled = true;
-            this.cboTeacher.ItemHeight = 19;
-            this.cboTeacher.Location = new System.Drawing.Point(676, 23);
-            this.cboTeacher.Name = "cboTeacher";
-            this.cboTeacher.Size = new System.Drawing.Size(141, 25);
-            this.cboTeacher.TabIndex = 25;
-            // 
-            // btnSwap
-            // 
-            this.btnSwap.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnSwap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSwap.BackColor = System.Drawing.Color.Transparent;
-            this.btnSwap.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnSwap.Location = new System.Drawing.Point(18, 659);
-            this.btnSwap.Name = "btnSwap";
-            this.btnSwap.Size = new System.Drawing.Size(160, 23);
-            this.btnSwap.TabIndex = 26;
-            this.btnSwap.Text = "補考資料移至其他群組";
-            this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
-            // 
-            // btnExportExcel
-            // 
-            this.btnExportExcel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnExportExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExportExcel.BackColor = System.Drawing.Color.Transparent;
-            this.btnExportExcel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnExportExcel.Location = new System.Drawing.Point(194, 659);
-            this.btnExportExcel.Name = "btnExportExcel";
-            this.btnExportExcel.Size = new System.Drawing.Size(160, 23);
-            this.btnExportExcel.TabIndex = 27;
-            this.btnExportExcel.Text = "匯出Excel";
-            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
-            // 
-            // labelInputScoreHint
-            // 
-            this.labelInputScoreHint.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelInputScoreHint.BackgroundStyle.Class = "";
-            this.labelInputScoreHint.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelInputScoreHint.Location = new System.Drawing.Point(638, 147);
-            this.labelInputScoreHint.Name = "labelInputScoreHint";
-            this.labelInputScoreHint.Size = new System.Drawing.Size(373, 23);
-            this.labelInputScoreHint.TabIndex = 28;
-            this.labelInputScoreHint.Text = "補考分數小數位數參照成績計算規則，如有缺考請輸入『缺』";
-            this.labelInputScoreHint.Visible = false;
             // 
             // ColStudentName
             // 
@@ -382,11 +319,170 @@
             this.ColMakeUp_Standard.Name = "ColMakeUp_Standard";
             this.ColMakeUp_Standard.ReadOnly = true;
             // 
+            // labelX4
+            // 
+            this.labelX4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelX4.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX4.BackgroundStyle.Class = "";
+            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX4.Location = new System.Drawing.Point(609, 23);
+            this.labelX4.Name = "labelX4";
+            this.labelX4.Size = new System.Drawing.Size(61, 23);
+            this.labelX4.TabIndex = 24;
+            this.labelX4.Text = "閱卷老師:";
+            // 
+            // cboTeacher
+            // 
+            this.cboTeacher.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboTeacher.DisplayMember = "Text";
+            this.cboTeacher.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboTeacher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboTeacher.FormattingEnabled = true;
+            this.cboTeacher.ItemHeight = 19;
+            this.cboTeacher.Location = new System.Drawing.Point(676, 23);
+            this.cboTeacher.Name = "cboTeacher";
+            this.cboTeacher.Size = new System.Drawing.Size(141, 25);
+            this.cboTeacher.TabIndex = 25;
+            // 
+            // btnSwap
+            // 
+            this.btnSwap.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnSwap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSwap.BackColor = System.Drawing.Color.Transparent;
+            this.btnSwap.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnSwap.Location = new System.Drawing.Point(18, 659);
+            this.btnSwap.Name = "btnSwap";
+            this.btnSwap.Size = new System.Drawing.Size(160, 23);
+            this.btnSwap.TabIndex = 26;
+            this.btnSwap.Text = "補考資料移至其他群組";
+            this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
+            // 
+            // btnExportExcel
+            // 
+            this.btnExportExcel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnExportExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExportExcel.BackColor = System.Drawing.Color.Transparent;
+            this.btnExportExcel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnExportExcel.Location = new System.Drawing.Point(194, 659);
+            this.btnExportExcel.Name = "btnExportExcel";
+            this.btnExportExcel.Size = new System.Drawing.Size(160, 23);
+            this.btnExportExcel.TabIndex = 27;
+            this.btnExportExcel.Text = "匯出Excel";
+            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
+            // 
+            // labelInputScoreHint
+            // 
+            this.labelInputScoreHint.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelInputScoreHint.BackgroundStyle.Class = "";
+            this.labelInputScoreHint.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelInputScoreHint.Location = new System.Drawing.Point(637, 202);
+            this.labelInputScoreHint.Name = "labelInputScoreHint";
+            this.labelInputScoreHint.Size = new System.Drawing.Size(373, 23);
+            this.labelInputScoreHint.TabIndex = 28;
+            this.labelInputScoreHint.Text = "補考分數小數位數參照成績計算規則，如有缺考請輸入『缺』";
+            this.labelInputScoreHint.Visible = false;
+            // 
+            // labelX5
+            // 
+            this.labelX5.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX5.BackgroundStyle.Class = "";
+            this.labelX5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX5.Location = new System.Drawing.Point(18, 66);
+            this.labelX5.Name = "labelX5";
+            this.labelX5.Size = new System.Drawing.Size(61, 23);
+            this.labelX5.TabIndex = 29;
+            this.labelX5.Text = "補考日期:";
+            // 
+            // labelX6
+            // 
+            this.labelX6.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX6.BackgroundStyle.Class = "";
+            this.labelX6.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX6.Location = new System.Drawing.Point(270, 66);
+            this.labelX6.Name = "labelX6";
+            this.labelX6.Size = new System.Drawing.Size(61, 23);
+            this.labelX6.TabIndex = 30;
+            this.labelX6.Text = "補考時間:";
+            // 
+            // labelX7
+            // 
+            this.labelX7.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX7.BackgroundStyle.Class = "";
+            this.labelX7.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX7.Location = new System.Drawing.Point(522, 66);
+            this.labelX7.Name = "labelX7";
+            this.labelX7.Size = new System.Drawing.Size(61, 23);
+            this.labelX7.TabIndex = 31;
+            this.labelX7.Text = "補考場地:";
+            // 
+            // txtDate
+            // 
+            this.txtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.txtDate.Border.Class = "TextBoxBorder";
+            this.txtDate.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.txtDate.Location = new System.Drawing.Point(85, 64);
+            this.txtDate.Name = "txtDate";
+            this.txtDate.Size = new System.Drawing.Size(179, 25);
+            this.txtDate.TabIndex = 32;
+            // 
+            // txtTime
+            // 
+            this.txtTime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.txtTime.Border.Class = "TextBoxBorder";
+            this.txtTime.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.txtTime.Location = new System.Drawing.Point(337, 64);
+            this.txtTime.Name = "txtTime";
+            this.txtTime.Size = new System.Drawing.Size(179, 25);
+            this.txtTime.TabIndex = 33;
+            // 
+            // txtPlace
+            // 
+            this.txtPlace.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            // 
+            // 
+            this.txtPlace.Border.Class = "TextBoxBorder";
+            this.txtPlace.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.txtPlace.Location = new System.Drawing.Point(589, 64);
+            this.txtPlace.Name = "txtPlace";
+            this.txtPlace.Size = new System.Drawing.Size(228, 25);
+            this.txtPlace.TabIndex = 34;
+            // 
             // InsertUpdateMakeUpGroupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1023, 694);
+            this.Controls.Add(this.txtPlace);
+            this.Controls.Add(this.txtTime);
+            this.Controls.Add(this.txtDate);
+            this.Controls.Add(this.labelX7);
+            this.Controls.Add(this.labelX6);
+            this.Controls.Add(this.labelX5);
             this.Controls.Add(this.labelInputScoreHint);
             this.Controls.Add(this.btnExportExcel);
             this.Controls.Add(this.btnSwap);
@@ -441,5 +537,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Score;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColPass_Standard;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUp_Standard;
+        private DevComponents.DotNetBar.LabelX labelX5;
+        private DevComponents.DotNetBar.LabelX labelX6;
+        private DevComponents.DotNetBar.LabelX labelX7;
+        private DevComponents.DotNetBar.Controls.TextBoxX txtDate;
+        private DevComponents.DotNetBar.Controls.TextBoxX txtTime;
+        private DevComponents.DotNetBar.Controls.TextBoxX txtPlace;
     }
 }

@@ -159,6 +159,12 @@ namespace MakeUp.HS.Form
 
                             makeUpGroupRecord.Description = "";
 
+                            makeUpGroupRecord.MakeUp_Date = "";
+
+                            makeUpGroupRecord.MakeUp_Time = "";
+
+                            makeUpGroupRecord.MakeUp_Place = "";
+
                             makeUpGroupRecord.Ref_MakeUp_Batch_ID = _batch.UID;
 
                            
@@ -246,7 +252,10 @@ namespace MakeUp.HS.Form
                     ,'{1}'::TEXT AS makeup_group
                     ,'{2}'::TEXT AS ref_teacher_id
                     ,'{3}'::TEXT AS description                                   
-                ", makeUpGroupRecord.Ref_MakeUp_Batch_ID, makeUpGroupRecord.MakeUp_Group, makeUpGroupRecord.Ref_Teacher_ID, makeUpGroupRecord.Description);
+                    ,'{4}'::TEXT AS makeup_date    
+                    ,'{5}'::TEXT AS makeup_time
+                    ,'{6}'::TEXT AS makeup_place
+                ", makeUpGroupRecord.Ref_MakeUp_Batch_ID, makeUpGroupRecord.MakeUp_Group, makeUpGroupRecord.Ref_Teacher_ID, makeUpGroupRecord.Description, makeUpGroupRecord.MakeUp_Date, makeUpGroupRecord.MakeUp_Time, makeUpGroupRecord.MakeUp_Place);
 
                 makeUpGroupDataList.Add(data);
             }
@@ -293,12 +302,18 @@ INSERT INTO $make.up.group(
 	,makeup_group
     ,ref_teacher_id
 	,description	
+    ,makeup_date	
+    ,makeup_time	
+    ,makeup_place	
 )
 SELECT 
 	makeUpGroupData_row.ref_makeup_batch_id::TEXT AS ref_makeup_batch_id	
 	,makeUpGroupData_row.makeup_group::TEXT AS makeup_group	
     ,makeUpGroupData_row.ref_teacher_id::TEXT AS ref_teacher_id	
 	,makeUpGroupData_row.description::TEXT AS description		
+    ,makeUpGroupData_row.makeup_date::TEXT AS makeup_date		
+    ,makeUpGroupData_row.makeup_time::TEXT AS makeup_time		
+    ,makeUpGroupData_row.makeup_place::TEXT AS makeup_place		
 FROM
 	makeUpGroupData_row
 RETURNING $make.up.group.*
@@ -455,4 +470,5 @@ SELECT 0
 
     }
 }
+
 

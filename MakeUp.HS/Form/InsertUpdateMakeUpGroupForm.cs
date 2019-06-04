@@ -102,7 +102,15 @@ namespace MakeUp.HS.Form
             {
                 this.Text = "管理補考群組";
                 txtGroupName.Text = _group.MakeUp_Group;
+
                 txtDescription.Text = _group.Description;
+
+                txtDate.Text = _group.MakeUp_Date;
+
+                txtTime.Text = _group.MakeUp_Time;
+
+                txtPlace.Text = _group.MakeUp_Place;
+
 
                 txtGroupName.Enabled = false;
                 txtDescription.Enabled = false;
@@ -454,7 +462,7 @@ WHERE
             {
                 string logDetail = @" 高中補考 學年度「" + _school_year +
                     @"」，學期「" + _semester + @"」， 補考梯次「 " + _batch.MakeUp_Batch + @"」， 
-                    新增補考群組「 " + txtGroupName.Text + "」，閱卷老師「 " + cboTeacher.Text + "」，群組說明「 " + txtDescription.Text + "」";
+                    新增補考群組「 " + txtGroupName.Text + "」，閱卷老師「 " + cboTeacher.Text + "」，群組說明「 " + txtDescription.Text + "」，補考日期「 " + txtDate.Text + "」，補考時間「 " + txtTime.Text + "」，補考地點「 " + txtPlace.Text + "」";
 
 
                 string ref_teacher_id = _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text)).ID;
@@ -465,10 +473,13 @@ WHERE
                     ,'{1}'::TEXT AS school_year
                     ,'{2}'::TEXT AS semester
                     ,'{3}'::TEXT AS description                                    
-                    ,'{4}'::TEXT AS log_detail                    
-                    ,'{5}'::TEXT AS ref_makeup_batch_id
-                    ,'{6}'::TEXT AS ref_teacher_id
-                ", txtGroupName.Text, _school_year, _semester, txtDescription.Text, logDetail, _batch.UID, ref_teacher_id);
+                    ,'{4}'::TEXT AS makeup_date        
+                    ,'{5}'::TEXT AS makeup_time        
+                    ,'{6}'::TEXT AS makeup_place        
+                    ,'{7}'::TEXT AS log_detail                    
+                    ,'{8}'::TEXT AS ref_makeup_batch_id
+                    ,'{9}'::TEXT AS ref_teacher_id
+                ", txtGroupName.Text, _school_year, _semester, txtDescription.Text, txtDate.Text,txtTime.Text,txtPlace.Text, logDetail, _batch.UID, ref_teacher_id);
 
                 dataList.Add(data);
 
@@ -482,12 +493,18 @@ WITH data_row AS(
     INSERT INTO $make.up.group(
         makeup_group
         ,description
+        ,makeup_date
+        ,makeup_time
+        ,makeup_place
         ,ref_makeup_batch_id
         ,ref_teacher_id
     )
     SELECT
         data_row.makeup_group
         ,data_row.description
+        ,data_row.makeup_date
+        ,data_row.makeup_time
+        ,data_row.makeup_place
         ,data_row.ref_makeup_batch_id
         ,data_row.ref_teacher_id
     FROM data_row         
@@ -550,6 +567,24 @@ FROM
                     logDetail += "群組說明由「 " + _group.Description + "」更改為 「 " + txtDescription.Text + "」 ";
                 }
 
+                if (txtDate.Text != _group.MakeUp_Date)
+                {
+
+                    logDetail += "補考日期由「 " + _group.MakeUp_Date + "」更改為 「 " + txtDate.Text + "」 ";
+                }
+
+                if (txtTime.Text != _group.MakeUp_Time)
+                {
+
+                    logDetail += "補考時間由「 " + _group.MakeUp_Time + "」更改為 「 " + txtTime.Text + "」 ";
+                }
+
+                if (txtPlace.Text != _group.MakeUp_Place)
+                {
+
+                    logDetail += "補考地點由「 " + _group.MakeUp_Place + "」更改為 「 " + txtPlace.Text + "」 ";
+                }
+
 
 
 
@@ -558,11 +593,14 @@ FROM
                     '{0}'::TEXT AS makeup_group
                     ,'{1}'::TEXT AS school_year
                     ,'{2}'::TEXT AS semester
-                    ,'{3}'::TEXT AS description                                    
-                    ,'{4}'::TEXT AS log_detail
-                    ,'{5}'::BIGINT AS uid
-                    ,'{6}'::BIGINT AS ref_teacher_id
-                ", txtGroupName.Text, _school_year, _semester, txtDescription.Text, logDetail, _group.UID, ref_teacher_id);
+                    ,'{3}'::TEXT AS description
+                    ,'{4}'::TEXT AS makeup_date
+                    ,'{5}'::TEXT AS makeup_time
+                    ,'{6}'::TEXT AS makeup_place
+                    ,'{7}'::TEXT AS log_detail
+                    ,'{8}'::BIGINT AS uid
+                    ,'{9}'::BIGINT AS ref_teacher_id
+                ", txtGroupName.Text, _school_year, _semester, txtDescription.Text, txtDate.Text, txtTime.Text, txtPlace.Text, logDetail, _group.UID, ref_teacher_id);
 
                 dataList.Add(data);
 
@@ -577,6 +615,9 @@ WITH data_row AS(
     SET
         makeup_group = data_row.makeup_group
         ,description = data_row.description        
+        ,makeup_date = data_row.makeup_date
+        ,makeup_time = data_row.makeup_time
+        ,makeup_place = data_row.makeup_place
         ,ref_teacher_id = data_row.ref_teacher_id    
     FROM data_row     
     WHERE $make.up.group.uid = data_row.uid
