@@ -21,21 +21,10 @@ namespace MakeUp.HS.Form
     {
         private List<UDT_MakeUpBatch> _batchList = new List<UDT_MakeUpBatch>();
 
-        private bool _isFirstLoad = true;
-
-        // 學年度
-        private string _schoolYear;
-
-        // 學期
-        private string _semester;
-
         // 目標梯次 ID
         private string _targetBatchID;
 
-        // 目標梯次ID (listItem tag 、DataGridViewRow Tag)
-        private string _targetGroupID;
-
-        // 列印方式
+        // 列印方式 (依群組、依學生)
         private string _printMode;
 
         private BackgroundWorker _worker;
@@ -395,9 +384,6 @@ WHERE
             } 
             #endregion
 
-
-
-
             #region 列印
             _dataTable = new DataTable();
 
@@ -565,7 +551,6 @@ WHERE
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
 
-
             if (e.Cancelled)
             {
                 this.Close();
@@ -636,19 +621,15 @@ WHERE
             this.Close();
         }
 
-
         /// <summary>
-        /// 按下「匯出到 Excel」時觸發
+        /// 按下「列印」時觸發
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnExport_Click(object sender, EventArgs e)
         {
             _worker.RunWorkerAsync();
-
-
         }
-
 
         // 下載合併欄位 功能變數總表
         private void linklabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -713,8 +694,6 @@ WHERE
                 }
             }
             #endregion
-
-
 
         }
 
@@ -792,7 +771,7 @@ WHERE
 
         }
 
-        // 產生功能變數小工具 很好用
+        // 產生大量功能變數小工具 很好用
         private void CreateFieldTemplate()
         {
             Aspose.Words.Document doc = new Aspose.Words.Document();

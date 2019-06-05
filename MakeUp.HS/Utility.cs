@@ -27,7 +27,9 @@ namespace MakeUp.HS
 
                 //補考標準<年及,及格標準>
                 Dictionary<int, decimal> resitLimit = new Dictionary<int, decimal>();
-                                
+
+                // 預設兩位輸入限制
+                string DecimalNumber = "2";
 
                 #region 處理計算規則
                 XmlElement scoreCalcRule = SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(var.StudentID) == null ? null : SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(var.StudentID).ScoreCalcRuleElement;
@@ -125,8 +127,18 @@ namespace MakeUp.HS
                             }
                         }
                     }
+
+
+                    // 抓取該學生 成績計算規則 的 科目成績計算位數 
+                    foreach (XmlElement element in helper.GetElements("各項成績計算位數/科目成績計算位數"))
+                    {
+                        DecimalNumber = element.GetAttribute("位數");
+                    }
                 }
                 #endregion
+
+
+
                 foreach (SemesterSubjectScoreInfo score in var.SemesterSubjectScoreList)
                 {
                     bool canResit = false;
@@ -149,6 +161,7 @@ namespace MakeUp.HS
                     score.Detail.SetAttribute("及格標準", passStandard.ToString());
                     score.Detail.SetAttribute("達補考標準", canResit ? "是" : "否");
                     score.Detail.SetAttribute("補考標準", makeUpStandard.ToString());
+                    score.Detail.SetAttribute("位數限制", DecimalNumber);
                 }
             }
         }

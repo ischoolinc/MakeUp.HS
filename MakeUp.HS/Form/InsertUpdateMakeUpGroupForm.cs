@@ -245,6 +245,7 @@ SELECT
     ,$make.up.data.makeup_score 
     ,$make.up.data.pass_standard 
     ,$make.up.data.makeup_standard 
+    ,$make.up.data.decimalnumber 
 FROM $make.up.data
     LEFT JOIN student ON student.id = $make.up.data.ref_student_id :: BIGINT
     LEFT JOIN class ON class.id = student.ref_class_id    
@@ -312,7 +313,7 @@ WHERE
                     // 是因為要跟 產生補考清單 時 使用的API 邏輯一致
                     if (_action == "管理補考成績")
                     {
-                        data.DecimalNumber = GetDecimalNumber("" + row["ref_student_id"]); ;
+                        data.DecimalNumber = "" + row["decimalnumber"];
 
                         data.HasNewMakeUpScore = false;
                     }
@@ -922,7 +923,9 @@ FROM
                 }
                 else
                 {
-                    if (("" + e.FormattedValue).Substring(index + 1).Length > inputData.DecimalNumber)
+                    decimal dn = decimal.Parse(inputData.DecimalNumber);
+
+                    if (("" + e.FormattedValue).Substring(index + 1).Length > dn)
                     {
                         cell.ErrorText = "補考成績小數位數輸入超過計算規則設定值『" + inputData.DecimalNumber + "』。";
 

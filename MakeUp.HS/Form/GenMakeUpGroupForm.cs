@@ -227,6 +227,9 @@ namespace MakeUp.HS.Form
                         // 補考標準
                         makeUpData.MakeUp_Standard = info.Detail.HasAttribute("補考標準") ? info.Detail.GetAttribute("補考標準") : "";
 
+                        // 輸入小數位數限制
+                        makeUpData.DecimalNumber = info.Detail.HasAttribute("位數限制") ? info.Detail.GetAttribute("位數限制") : "";
+
                         UDT_MakeUpDataList.Add(makeUpData);
                     }
                 }
@@ -281,7 +284,8 @@ namespace MakeUp.HS.Form
                     ,'{9}'::TEXT AS makeup_score                                   
                     ,'{10}'::TEXT AS pass_standard                                                                              
                     ,'{11}'::TEXT AS makeup_standard      
-                ", makeUpData.Ref_MakeUp_Batch_ID, makeUpData.Ref_MakeUp_Group_Name, makeUpData.Ref_Student_ID, makeUpData.Subject, makeUpData.Level, makeUpData.Credit, makeUpData.C_Is_Required_By, makeUpData.C_Is_Required, makeUpData.Score, makeUpData.MakeUp_Score, makeUpData.Pass_Standard, makeUpData.MakeUp_Standard);
+                    ,'{12}'::TEXT AS decimalnumber   
+                ", makeUpData.Ref_MakeUp_Batch_ID, makeUpData.Ref_MakeUp_Group_Name, makeUpData.Ref_Student_ID, makeUpData.Subject, makeUpData.Level, makeUpData.Credit, makeUpData.C_Is_Required_By, makeUpData.C_Is_Required, makeUpData.Score, makeUpData.MakeUp_Score, makeUpData.Pass_Standard, makeUpData.MakeUp_Standard, makeUpData.DecimalNumber);
 
                 UDT_MakeUpDataDataList.Add(data);
             }
@@ -332,6 +336,7 @@ INSERT INTO $make.up.data(
     ,makeup_score
     ,pass_standard    
     ,makeup_standard
+    ,decimalnumber
 )
 SELECT 
 	makeUpDataData_row.ref_makeup_batch_id::TEXT AS ref_makeup_batch_id	
@@ -346,6 +351,7 @@ SELECT
     ,makeUpDataData_row.makeup_score::TEXT AS makeup_score
     ,makeUpDataData_row.pass_standard::TEXT AS pass_standard
     ,makeUpDataData_row.makeup_standard::TEXT AS makeup_standard
+    ,makeUpDataData_row.decimalnumber::TEXT AS decimalnumber
 FROM
 	makeUpDataData_row
 LEFT JOIN insert_makeUpGroupData ON insert_makeUpGroupData.makeup_group = makeUpDataData_row.ref_makeup_group_name
