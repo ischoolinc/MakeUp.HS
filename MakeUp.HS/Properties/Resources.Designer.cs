@@ -19,7 +19,7 @@ namespace MakeUp.HS.Properties {
     // 類別透過 ResGen 或 Visual Studio 這類工具。
     // 若要加入或移除成員，請編輯您的 .ResX 檔，然後重新執行 ResGen
     // (利用 /str 選項)，或重建您的 VS 專案。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -86,6 +86,46 @@ namespace MakeUp.HS.Properties {
         internal static byte[] 匯入學期科目成績_補考成績_ {
             get {
                 object obj = ResourceManager.GetObject("匯入學期科目成績_補考成績_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Byte[] 的當地語系化資源。
+        /// </summary>
+        internal static byte[] 補考公告功能變數_依學生_ {
+            get {
+                object obj = ResourceManager.GetObject("補考公告功能變數_依學生_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Byte[] 的當地語系化資源。
+        /// </summary>
+        internal static byte[] 補考公告功能變數_依群組_ {
+            get {
+                object obj = ResourceManager.GetObject("補考公告功能變數_依群組_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Byte[] 的當地語系化資源。
+        /// </summary>
+        internal static byte[] 補考公告樣板_依學生_ {
+            get {
+                object obj = ResourceManager.GetObject("補考公告樣板_依學生_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Byte[] 的當地語系化資源。
+        /// </summary>
+        internal static byte[] 補考公告樣板_依群組_ {
+            get {
+                object obj = ResourceManager.GetObject("補考公告樣板_依群組_", resourceCulture);
                 return ((byte[])(obj));
             }
         }

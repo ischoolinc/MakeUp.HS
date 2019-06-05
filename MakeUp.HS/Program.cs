@@ -21,6 +21,7 @@ namespace MakeUp.HS
             accessHelper.Select<UDT_MakeUpBatch>();
             accessHelper.Select<UDT_MakeUpGroup>();
             accessHelper.Select<UDT_MakeUpData>();
+            accessHelper.Select<UDT_ReportTemplate>();
 
 
             MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"].Size = RibbonBarButton.MenuButtonSize.Large;
@@ -63,7 +64,9 @@ namespace MakeUp.HS
 
                 MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["產生補考公告"].Click += delegate
                 {
+                    Form.ExportMakeUpReportForm emurf = new Form.ExportMakeUpReportForm();
 
+                    emurf.ShowDialog();
                 };
             }
 
