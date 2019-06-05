@@ -102,6 +102,12 @@ namespace MakeUp.HS
         public string Department { get; set; }
 
         /// <summary>
+        /// 年級
+        /// </summary>
+        public string GradeYear { get; set; }
+
+
+        /// <summary>
         /// 學生班級名稱(非UDT 欄位，此屬性為UI介面資料使用)
         /// </summary>
         public string ClassName { get; set; }
@@ -132,7 +138,10 @@ namespace MakeUp.HS
         /// </summary>
         public string New_MakeUp_Score { get; set; }
 
-
+        /// <summary>
+        /// 本資料 所屬的補考群組
+        /// </summary>        
+        public UDT_MakeUpGroup MakeUpGroup { get; set; }
 
 
     }

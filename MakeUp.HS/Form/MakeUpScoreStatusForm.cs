@@ -200,15 +200,15 @@ namespace MakeUp.HS.Form
             // 清表頭
             dataGridViewX1.Columns.Clear();
 
-            // 課程名稱表頭
-            DataGridViewColumn colCourseName = new DataGridViewColumn();
+            // 補考群組名稱表頭
+            DataGridViewColumn colGroupName = new DataGridViewColumn();
 
-            colCourseName.CellTemplate = new DataGridViewTextBoxCell();
-            colCourseName.Name = "colCourseName";
-            colCourseName.HeaderText = "課程名稱";
-            colCourseName.ReadOnly = true;
-            colCourseName.Width = 200;
-            dataGridViewX1.Columns.Add(colCourseName);
+            colGroupName.CellTemplate = new DataGridViewTextBoxCell();
+            colGroupName.Name = "colGroupName";
+            colGroupName.HeaderText = "補考群組名稱";
+            colGroupName.ReadOnly = true;
+            colGroupName.Width = 200;
+            dataGridViewX1.Columns.Add(colGroupName);
 
             // 閱卷老師表頭
             DataGridViewColumn colRefTeacher = new DataGridViewColumn();
