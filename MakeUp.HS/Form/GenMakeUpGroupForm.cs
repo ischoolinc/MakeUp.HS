@@ -230,6 +230,9 @@ namespace MakeUp.HS.Form
                         // 輸入小數位數限制
                         makeUpData.DecimalNumber = info.Detail.HasAttribute("位數限制") ? info.Detail.GetAttribute("位數限制") : "";
 
+                        // 成績身分
+                        makeUpData.CalRole = info.Detail.HasAttribute("成績身分") ? info.Detail.GetAttribute("成績身分") : "";
+
                         UDT_MakeUpDataList.Add(makeUpData);
                     }
                 }
@@ -285,7 +288,8 @@ namespace MakeUp.HS.Form
                     ,'{10}'::TEXT AS pass_standard                                                                              
                     ,'{11}'::TEXT AS makeup_standard      
                     ,'{12}'::TEXT AS decimalnumber   
-                ", makeUpData.Ref_MakeUp_Batch_ID, makeUpData.Ref_MakeUp_Group_Name, makeUpData.Ref_Student_ID, makeUpData.Subject, makeUpData.Level, makeUpData.Credit, makeUpData.C_Is_Required_By, makeUpData.C_Is_Required, makeUpData.Score, makeUpData.MakeUp_Score, makeUpData.Pass_Standard, makeUpData.MakeUp_Standard, makeUpData.DecimalNumber);
+                    ,'{13}'::TEXT AS calrole  
+                ", makeUpData.Ref_MakeUp_Batch_ID, makeUpData.Ref_MakeUp_Group_Name, makeUpData.Ref_Student_ID, makeUpData.Subject, makeUpData.Level, makeUpData.Credit, makeUpData.C_Is_Required_By, makeUpData.C_Is_Required, makeUpData.Score, makeUpData.MakeUp_Score, makeUpData.Pass_Standard, makeUpData.MakeUp_Standard, makeUpData.DecimalNumber, makeUpData.CalRole);
 
                 UDT_MakeUpDataDataList.Add(data);
             }
@@ -337,6 +341,7 @@ INSERT INTO $make.up.data(
     ,pass_standard    
     ,makeup_standard
     ,decimalnumber
+    ,calrole
 )
 SELECT 
 	makeUpDataData_row.ref_makeup_batch_id::TEXT AS ref_makeup_batch_id	
@@ -352,6 +357,7 @@ SELECT
     ,makeUpDataData_row.pass_standard::TEXT AS pass_standard
     ,makeUpDataData_row.makeup_standard::TEXT AS makeup_standard
     ,makeUpDataData_row.decimalnumber::TEXT AS decimalnumber
+    ,makeUpDataData_row.calrole::TEXT AS calrole
 FROM
 	makeUpDataData_row
 LEFT JOIN insert_makeUpGroupData ON insert_makeUpGroupData.makeup_group = makeUpDataData_row.ref_makeup_group_name

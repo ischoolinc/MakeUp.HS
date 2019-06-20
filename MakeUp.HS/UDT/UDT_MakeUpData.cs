@@ -89,6 +89,13 @@ namespace MakeUp.HS
         [FISCA.UDT.Field]
         public string DecimalNumber { get; set; }
 
+        /// <summary>
+        /// 成績身分(紀錄 產生補考資料當下的資料)
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string CalRole { get; set; }
+        
+
 
         // 取代原本 ActiveRecord 不能 Set 的 UID
         public string UID { get; set; }

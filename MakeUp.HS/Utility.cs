@@ -31,6 +31,9 @@ namespace MakeUp.HS
                 // 預設兩位輸入限制
                 string DecimalNumber = "2";
 
+                // 學生的成績身分
+                string calRole = "";
+
                 #region 處理計算規則
                 XmlElement scoreCalcRule = SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(var.StudentID) == null ? null : SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(var.StudentID).ScoreCalcRuleElement;
                 if (scoreCalcRule == null)
@@ -125,6 +128,8 @@ namespace MakeUp.HS
                                         break;
                                 }
                             }
+
+                            calRole = cat;
                         }
                     }
 
@@ -162,6 +167,7 @@ namespace MakeUp.HS
                     score.Detail.SetAttribute("達補考標準", canResit ? "是" : "否");
                     score.Detail.SetAttribute("補考標準", makeUpStandard.ToString());
                     score.Detail.SetAttribute("位數限制", DecimalNumber);
+                    score.Detail.SetAttribute("成績身分", calRole);
                 }
             }
         }
@@ -170,3 +176,4 @@ namespace MakeUp.HS
 
     }
 }
+

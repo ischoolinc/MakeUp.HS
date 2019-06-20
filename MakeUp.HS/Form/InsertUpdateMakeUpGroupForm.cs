@@ -316,6 +316,9 @@ WHERE
                         data.DecimalNumber = "" + row["decimalnumber"];
 
                         data.HasNewMakeUpScore = false;
+
+                        // 成績身分
+                        data.CalRole = "" + row["calrole"];
                     }
                     
 
