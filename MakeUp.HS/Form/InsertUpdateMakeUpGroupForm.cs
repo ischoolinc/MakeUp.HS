@@ -246,6 +246,7 @@ SELECT
     ,$make.up.data.pass_standard 
     ,$make.up.data.makeup_standard 
     ,$make.up.data.decimalnumber 
+    ,$make.up.data.calrole 
 FROM $make.up.data
     LEFT JOIN student ON student.id = $make.up.data.ref_student_id :: BIGINT
     LEFT JOIN class ON class.id = student.ref_class_id    
