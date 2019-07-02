@@ -294,7 +294,7 @@ school_year = '" + _schoolYear + "'" +
         private void btnInsertBatch_Click(object sender, EventArgs e)
         {
             // 新增模式
-            InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("新增", cboSchoolYear.Text, cbosemester.Text);
+            InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("新增", cboSchoolYear.Text, cbosemester.Text, _BatchList);
             iumbf.ShowDialog();
 
             RefreshListView();

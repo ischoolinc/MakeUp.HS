@@ -34,6 +34,13 @@ namespace MakeUp.HS
                 // 學生的成績身分
                 string calRole = "";
 
+
+                // 2019/07/02 穎驊註解， 此高中補考判斷邏輯 是從 原高中補考系統搬過來
+                // 研究其精神後， 其為擇優判斷， 會先以 "預設"類別的分數 當頂， 然後不斷下行尋找符合的類別， 假如其標準較低， 則將之當作新標準
+                // 此缺點為，如果有類別 的標準分數設定 較 "預設" 高， 將無法被正確顯示，
+                // 與佳樺討論過後，基本上這狀況比較不會發生， 因為 特殊生分的學生(體保、原住民、身心障礙)的計算標準 只會更低 頂多打平
+                // 所以不會有問題， 
+
                 #region 處理計算規則
                 XmlElement scoreCalcRule = SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(var.StudentID) == null ? null : SmartSchool.Evaluation.ScoreCalcRule.ScoreCalcRule.Instance.GetStudentScoreCalcRuleInfo(var.StudentID).ScoreCalcRuleElement;
                 if (scoreCalcRule == null)

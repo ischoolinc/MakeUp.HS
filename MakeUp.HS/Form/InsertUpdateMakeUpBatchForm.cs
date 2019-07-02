@@ -14,7 +14,8 @@ using System.ComponentModel;
 using FISCA.Presentation.Controls;
 using FISCA.Authentication;
 using FISCA.LogAgent;
-
+using DevComponents.DotNetBar.Controls;
+using SmartSchool.Common;
 
 namespace MakeUp.HS.Form
 {
@@ -33,9 +34,12 @@ namespace MakeUp.HS.Form
         private UDT_MakeUpBatch _batch;
 
         // 本學期 已經有的補考梯次名稱(驗證重覆用)
-        private List<string> _batchNameList;
+        private List<string> _batchNameList ;
 
-        public InsertUpdateMakeUpBatchForm(string action, string schoolYear, string semester)
+        private EnhancedErrorProvider _errors;
+
+        //新增模式傳  目前已有的補考梯次 驗證使用
+        public InsertUpdateMakeUpBatchForm(string action, string schoolYear, string semester, List<UDT_MakeUpBatch> batchList)
         {
             InitializeComponent();
 
@@ -44,6 +48,17 @@ namespace MakeUp.HS.Form
             _schoolYear = schoolYear;
 
             _semester = semester;
+
+            _errors = new EnhancedErrorProvider();
+
+            _batchNameList = new List<string>();
+
+            //整理補考名稱 驗證重覆
+            foreach (UDT_MakeUpBatch batch in batchList)
+            {
+                _batchNameList.Add(batch.MakeUp_Batch);
+            }
+            
 
             // 只有新增 模式 才可以讓使用者 編輯 補考梯次名稱、包含班級
             if (_action == "新增")
@@ -62,6 +77,7 @@ namespace MakeUp.HS.Form
 
         }
 
+        //更新模式傳  目前的補考梯次 直接對該補考梯次更新
         public InsertUpdateMakeUpBatchForm(string action, string schoolYear, string semester, UDT_MakeUpBatch batch)
         {
             InitializeComponent();
@@ -73,6 +89,10 @@ namespace MakeUp.HS.Form
             _semester = semester;
 
             _batch = batch;
+
+            _errors = new EnhancedErrorProvider();
+
+            _batchNameList = new List<string>();
 
             // 只有新增 模式 才可以讓使用者 編輯 補考梯次名稱、包含班級
             if (_action == "新增")
@@ -144,6 +164,13 @@ namespace MakeUp.HS.Form
                 FISCA.Presentation.Controls.MsgBox.Show("補考梯次名稱必須輸入。");
                 return;
             }
+
+            if (_batchNameList.Contains(txtBatchName.Text))
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("本學期已有相同補考梯次名稱，請改名。");
+                return;
+            }
+
 
             if (txtStartTime.Text == "")
             {
@@ -413,14 +440,45 @@ FROM
             }
         }
 
+        private void txtStartTime_Validating(object sender, CancelEventArgs e)
+        {
+            TextBoxX txtBox = (TextBoxX)sender;
+
+            ValidTextTime(txtBox, PaddingMethod.First);
+        }
+
+        private void txtEndTime_Validating(object sender, CancelEventArgs e)
+        {
+            TextBoxX txtBox = (TextBoxX)sender;
+
+            ValidTextTime(txtBox, PaddingMethod.Last);
+        }
+
+        private void ValidTextTime(TextBoxX textbox, PaddingMethod method)
+        {
+            if (textbox.Text == string.Empty)
+                _errors.SetError(textbox, "");
+            else
+            {
+                DateTime? objStart = DateTimeHelper.ParseGregorian(textbox.Text, method);
+                if (!objStart.HasValue)
+                    _errors.SetError(textbox, "您必須輸入合法的日期格式。");
+                else
+                    _errors.SetError(textbox, "");
+            }
+        }
+
         private void txtStartTime_Validated(object sender, EventArgs e)
         {
             TextBox txtBox = (TextBox)sender;
 
-            if (txtBox.Text != "")
-            {                
-                DateTime? dt = DateTimeHelper.ParseGregorian(txtBox.Text , PaddingMethod.First);
-                txtBox.Text = dt.Value.ToString("yyyy/MM/dd HH:mm:ss");
+            if (txtBox.Text  != string.Empty)
+            {
+                if (_errors.GetError(txtBox) == string.Empty)
+                {
+                    DateTime? dt = DateTimeHelper.ParseGregorian(txtBox.Text, PaddingMethod.First);
+                    txtBox.Text = dt.Value.ToString("yyyy/MM/dd HH:mm:ss");
+                }                
             }
 
         }
@@ -429,11 +487,14 @@ FROM
         {
             TextBox txtBox = (TextBox)sender;
 
-            if (txtBox.Text != "")
+            if (txtBox.Text != string.Empty)
             {
-                DateTime? dt = DateTimeHelper.ParseGregorian(txtBox.Text, PaddingMethod.Last);
-                txtBox.Text = dt.Value.ToString("yyyy/MM/dd HH:mm:ss");
-            }
+                if (_errors.GetError(txtBox) == string.Empty)
+                {
+                    DateTime? dt = DateTimeHelper.ParseGregorian(txtBox.Text, PaddingMethod.Last);
+                    txtBox.Text = dt.Value.ToString("yyyy/MM/dd HH:mm:ss");
+                }
+            }            
         }
     }
 }

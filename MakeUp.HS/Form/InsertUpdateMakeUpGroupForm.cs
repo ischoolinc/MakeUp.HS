@@ -136,6 +136,9 @@ namespace MakeUp.HS.Form
                 cboTeacher.Enabled = false;
                 btnSave.Enabled = false;
                 btnClose.Enabled = false;
+                txtDate.Enabled = false;
+                txtTime.Enabled = false;
+                txtPlace.Enabled = false;
 
                 picLoading.Visible = true;
 
@@ -658,6 +661,11 @@ FROM
 
                 foreach (UDT_MakeUpData input_data in _dataList)
                 {
+                    // 假如分數沒有改變 則不更新
+                    if (!input_data.HasNewMakeUpScore)
+                    {
+                        continue;
+                    }
 
                     string logDetail = @" 高中補考 學年度「" + _group.MakeUpBatch.School_Year +
                   @"」，學期「" + _group.MakeUpBatch.Semester + @"」， 補考梯次「 " + _group.MakeUpBatch.MakeUp_Batch + @"」， 補考群組「 " + _group.MakeUp_Group + @"」
@@ -953,7 +961,7 @@ FROM
             foreach (DataGridViewRow row in dataGridViewX1.Rows)
             {
                 //只檢查分數欄，有錯誤就不給存
-                DataGridViewCell cell = dataGridViewX1.Rows[row.Index].Cells[5];
+                DataGridViewCell cell = dataGridViewX1.Rows[row.Index].Cells[11];
 
                 if (cell.ErrorText != String.Empty)
                 {

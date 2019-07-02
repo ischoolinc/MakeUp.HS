@@ -204,8 +204,25 @@ namespace MakeUp.HS.Form
                 printMode = "依學生";
             }
 
-            // 在本視窗選完梯次後， 進入下一個視窗正式列印 分兩種模式 (依群組、依學生)
-            ExportMakeUpReportSettingForm emursf = new ExportMakeUpReportSettingForm(_targetBatchID, printMode);
+            #region 取得 該補考梯次 是否有補考群組，假如無，則不給列印補考公告
+            string query = @"
+                    SELECT* FROM  $make.up.group WHERE ref_makeup_batch_id = '" + _targetBatchID + "'" ;
+
+            QueryHelper qh = new QueryHelper();
+            DataTable dt = qh.Select(query);
+
+            if (dt.Rows.Count == 0)
+            {
+                MsgBox.Show("本梯次尚未建立補考群組，請至教務作業/補考作業 建立。", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+            #endregion
+
+            
+
+           // 在本視窗選完梯次後， 進入下一個視窗正式列印 分兩種模式 (依群組、依學生)
+           ExportMakeUpReportSettingForm emursf = new ExportMakeUpReportSettingForm(_targetBatchID, printMode);
 
             emursf.ShowDialog();
 

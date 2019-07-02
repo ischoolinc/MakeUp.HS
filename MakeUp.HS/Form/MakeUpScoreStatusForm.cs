@@ -482,14 +482,20 @@ WHERE
         /// </summary>
         private void FillGroups(List<GroupDataGridViewRow> list)
         {
-            if (list.Count <= 0) return;
+            // 有東西 才更新，沒項目 就全部清掉
+            if (list.Count > 0)
+            {
+                dataGridViewX1.SuspendLayout();
+                dataGridViewX1.Rows.Clear();
+                dataGridViewX1.Rows.AddRange(list.ToArray());
+                dataGridViewX1.ResumeLayout();
 
-
-            dataGridViewX1.SuspendLayout();
-            dataGridViewX1.Rows.Clear();
-            dataGridViewX1.Rows.AddRange(list.ToArray());
-            dataGridViewX1.ResumeLayout();
-
+            }
+            else
+            {
+                dataGridViewX1.Rows.Clear();
+            }
+            
         }
 
 

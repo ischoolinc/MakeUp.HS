@@ -583,14 +583,14 @@ WHERE
 
             SaveFileDialog sd = new SaveFileDialog();
             sd.FileName = "匯入學期科目成績(補考成績)";
-            sd.Filter = "Excel檔案(*.xlsx)|*.xlsx";
+            sd.Filter = "Excel檔案(*.xls)|*.xls";
             if (sd.ShowDialog() == DialogResult.OK)
             {
                 DialogResult result = new DialogResult();
 
                 try
                 {
-                    book.Save(sd.FileName, SaveFormat.Xlsx);
+                    book.Save(sd.FileName, SaveFormat.Excel97To2003);
                     result = MsgBox.Show("檔案儲存完成，是否開啟檔案? 本補考成績匯入由系統自動以成績計算規則判斷，建議須人工檢查後再做匯入", "是否開啟", MessageBoxButtons.YesNo);
                 }
                 catch (Exception ex)

@@ -13,7 +13,7 @@ using SmartSchool.Customization.Data.StudentExtension;
 using SmartSchool.Evaluation;
 using SmartSchool;
 using FISCA.Presentation;
-
+using System.Windows.Forms;
 
 namespace MakeUp.HS.Form
 {
@@ -463,7 +463,17 @@ SELECT 0
             FISCA.Data.QueryHelper qh = new FISCA.Data.QueryHelper();
 
             //執行sql
-            qh.Select(sql);
+
+            // 有補考群組才執行SQL
+            if (makeUpGroupDataList.Count > 0)
+            {
+                qh.Select(sql);
+            }
+            else
+            {
+                MsgBox.Show("本梯次班級沒有任何學生需要補考，故本梯次沒有任何補考群組。", "提醒", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            
 
         }
 

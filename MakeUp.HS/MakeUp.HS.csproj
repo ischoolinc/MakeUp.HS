@@ -92,6 +92,10 @@
       <HintPath>Library\K12.Presentation.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SmartSchool.Common">
+      <HintPath>Library\SmartSchool.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SmartSchool.Core">
       <HintPath>Library\SmartSchool.Core.dll</HintPath>
       <Private>False</Private>

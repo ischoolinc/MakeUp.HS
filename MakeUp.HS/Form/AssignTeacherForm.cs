@@ -32,6 +32,9 @@ namespace MakeUp.HS.Form
                 // 老師全名 
                 cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
             }
+
+            // 預設選第一個老師
+            cboTeacher.SelectedIndex = 0;
         }
 
         private void btnClose_Click(object sender, EventArgs e)

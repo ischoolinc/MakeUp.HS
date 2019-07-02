@@ -257,10 +257,12 @@
             // 
             this.txtStartTime.Border.Class = "TextBoxBorder";
             this.txtStartTime.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.txtStartTime.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.txtStartTime.Location = new System.Drawing.Point(140, 158);
             this.txtStartTime.Name = "txtStartTime";
-            this.txtStartTime.Size = new System.Drawing.Size(208, 25);
+            this.txtStartTime.Size = new System.Drawing.Size(187, 25);
             this.txtStartTime.TabIndex = 23;
+            this.txtStartTime.Validating += new System.ComponentModel.CancelEventHandler(this.txtStartTime_Validating);
             this.txtStartTime.Validated += new System.EventHandler(this.txtStartTime_Validated);
             // 
             // txtEndTime
@@ -270,10 +272,12 @@
             // 
             this.txtEndTime.Border.Class = "TextBoxBorder";
             this.txtEndTime.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.txtEndTime.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.txtEndTime.Location = new System.Drawing.Point(466, 158);
             this.txtEndTime.Name = "txtEndTime";
-            this.txtEndTime.Size = new System.Drawing.Size(208, 25);
+            this.txtEndTime.Size = new System.Drawing.Size(190, 25);
             this.txtEndTime.TabIndex = 24;
+            this.txtEndTime.Validating += new System.ComponentModel.CancelEventHandler(this.txtEndTime_Validating);
             this.txtEndTime.Validated += new System.EventHandler(this.txtEndTime_Validated);
             // 
             // InsertUpdateMakeUpBatchForm
