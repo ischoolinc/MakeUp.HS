@@ -401,7 +401,7 @@ WHERE
                 _dataTable.Columns.Add("補考時間");
                 _dataTable.Columns.Add("補考地點");
                 _dataTable.Columns.Add("補考描述");
-
+                _dataTable.Columns.Add("補考人次");
                 #endregion
 
                 #region 補考學生資訊
@@ -456,6 +456,9 @@ WHERE
                         i++;
                     }
 
+                    // 看本群組有多少筆補考資料人次
+                    row["補考人次"] = i-1;
+
                     _dataTable.Rows.Add(row);
                 } 
                 #endregion
@@ -476,7 +479,7 @@ WHERE
                 _dataTable.Columns.Add("姓名");
                 _dataTable.Columns.Add("電子報表辨識編號");
                 _dataTable.Columns.Add("補考梯次別");
-
+                _dataTable.Columns.Add("補考群組數");
                 #endregion
 
                 #region 補考群組資訊
@@ -527,6 +530,9 @@ WHERE
 
                         i++;
                     }
+
+                    // 看此學生 有多少個要參加的補考群組數
+                    row["補考群組數"] = i-1;
 
                     _dataTable.Rows.Add(row);
                 }

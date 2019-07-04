@@ -34,7 +34,7 @@ namespace MakeUp.HS.Form
             }
 
             // 預設選第一個老師
-            cboTeacher.SelectedIndex = 0;
+            //cboTeacher.SelectedIndex = 0;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -44,8 +44,17 @@ namespace MakeUp.HS.Form
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            assignteacherID = _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text)).ID;
 
+            // 假如沒有選擇老師，其ID 為空白
+            if (cboTeacher.Text == "")
+            {
+                assignteacherID = "";
+            }
+            else
+            {
+                assignteacherID = _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text)).ID;
+            }
+            
             this.DialogResult = DialogResult.OK;            
         }
     }

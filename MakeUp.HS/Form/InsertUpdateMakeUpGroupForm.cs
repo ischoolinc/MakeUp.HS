@@ -69,12 +69,17 @@ namespace MakeUp.HS.Form
 
             _teacherList = K12.Data.Teacher.SelectAll();
 
+            // 加入空白教師，提供使用者可以取消
+            cboTeacher.Items.Add("");
+
             //將教師加入清單
             foreach (K12.Data.TeacherRecord teacher in _teacherList)
             {
                 // 老師全名 
                 cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
             }
+
+
 
             K12.Data.TeacherRecord groupTeacher = _teacherList.Find(t => t.ID == group.Ref_Teacher_ID);
 
@@ -607,7 +612,7 @@ FROM
                     ,'{6}'::TEXT AS makeup_place
                     ,'{7}'::TEXT AS log_detail
                     ,'{8}'::BIGINT AS uid
-                    ,'{9}'::BIGINT AS ref_teacher_id
+                    ,'{9}'::TEXT AS ref_teacher_id
                 ", txtGroupName.Text, _school_year, _semester, txtDescription.Text, txtDate.Text, txtTime.Text, txtPlace.Text, logDetail, _group.UID, ref_teacher_id);
 
                 dataList.Add(data);
@@ -730,17 +735,26 @@ FROM
 
             }
 
+            if (dataList.Count == 0)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("未修正任何補考成績。");
 
-            K12.Data.UpdateHelper uh = new UpdateHelper();
+                // 儲存後關閉
+                this.Close();
+            }
+            else
+            {
+                K12.Data.UpdateHelper uh = new UpdateHelper();
 
-            //執行sql
-            uh.Execute(sql);
+                //執行sql
+                uh.Execute(sql);
 
 
-            FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
+                FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
 
-            // 儲存後關閉
-            this.Close();
+                // 儲存後關閉
+                this.Close();
+            }
         }
 
         // 將補考資料 移至其他群組
