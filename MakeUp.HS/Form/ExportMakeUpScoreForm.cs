@@ -496,10 +496,13 @@ WHERE
                         // 補考分數 比 及格標準低 ， 沒有取得分數，補考分數 以原始分數計
                         else
                         {
-                            
+
                         }
                     }
-                   
+
+                    // 指定成新的補考分數
+                    score.MakeUp_Score = ""+ makeUp_Score;
+
                     // 原始成績
                     ws.Cells[index, 10].PutValue("" + score.Score);
 

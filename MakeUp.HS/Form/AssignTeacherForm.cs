@@ -26,6 +26,9 @@ namespace MakeUp.HS.Form
 
             _teacherList = K12.Data.Teacher.SelectAll();
 
+            // 老師 依教師姓名排序
+            _teacherList.Sort((x, y) => { return x.Name.CompareTo(y.Name); });
+
             //將教師加入清單
             foreach (K12.Data.TeacherRecord teacher in _teacherList)
             {

@@ -69,6 +69,9 @@ namespace MakeUp.HS.Form
 
             _teacherList = K12.Data.Teacher.SelectAll();
 
+            // 老師 依教師姓名排序
+            _teacherList.Sort((x, y) => { return x.Name.CompareTo(y.Name); });
+
             // 加入空白教師，提供使用者可以取消
             cboTeacher.Items.Add("");
 
@@ -136,6 +139,7 @@ namespace MakeUp.HS.Form
                 txtGroupName.Text = _group.MakeUp_Group;
                 txtDescription.Text = _group.Description;
 
+                btnSwap.Enabled = false;
                 txtGroupName.Enabled = false;
                 txtDescription.Enabled = false;
                 cboTeacher.Enabled = false;
@@ -168,6 +172,9 @@ namespace MakeUp.HS.Form
             _groupNameList = new List<string>();
 
             _teacherList = K12.Data.Teacher.SelectAll();
+
+            // 老師 依教師姓名排序
+            _teacherList.Sort((x, y) => { return x.Name.CompareTo(y.Name); });
 
             //將教師加入清單
             foreach (K12.Data.TeacherRecord teacher in _teacherList)
