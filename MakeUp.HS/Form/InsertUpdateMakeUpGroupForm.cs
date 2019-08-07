@@ -79,7 +79,10 @@ namespace MakeUp.HS.Form
             foreach (K12.Data.TeacherRecord teacher in _teacherList)
             {
                 // 老師全名 
-                cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
+                if (!string.IsNullOrEmpty(teacher.Nickname))
+                    cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
+                else
+                    cboTeacher.Items.Add(teacher.Name);
             }
 
 
@@ -87,7 +90,15 @@ namespace MakeUp.HS.Form
             K12.Data.TeacherRecord groupTeacher = _teacherList.Find(t => t.ID == group.Ref_Teacher_ID);
 
             // 預設為群組的閱卷老師
-            cboTeacher.Text = groupTeacher != null ? groupTeacher.Name + "(" + groupTeacher.Nickname + ")" : "";
+            if (groupTeacher != null)
+            {
+                if (!string.IsNullOrEmpty(groupTeacher.Nickname))
+                    cboTeacher.Text = groupTeacher.Name + "(" + groupTeacher.Nickname + ")";
+                else
+                    cboTeacher.Text = "";
+            }
+            else
+                cboTeacher.Text = "";
 
             _dataWorker = new BackgroundWorker();
             _dataWorker.DoWork += new DoWorkEventHandler(DataWorker_DoWork);
@@ -180,7 +191,10 @@ namespace MakeUp.HS.Form
             foreach (K12.Data.TeacherRecord teacher in _teacherList)
             {
                 // 老師全名 
-                cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
+                if (!string.IsNullOrEmpty(teacher.Nickname))
+                    cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
+                else
+                    cboTeacher.Items.Add(teacher.Name);
             }
 
 
@@ -336,7 +350,7 @@ WHERE
                         // 成績身分
                         data.CalRole = "" + row["calrole"];
                     }
-                    
+
 
                     _dataList.Add(data);
                 }
@@ -416,7 +430,7 @@ WHERE
                 {
                     txtGroupName.Enabled = true;
                 }
-                
+
                 txtDescription.Enabled = true;
                 btnSave.Enabled = true;
                 btnClose.Enabled = true;
@@ -484,8 +498,24 @@ WHERE
                     @"」，學期「" + _semester + @"」， 補考梯次「 " + _batch.MakeUp_Batch + @"」， 
                     新增補考群組「 " + txtGroupName.Text + "」，閱卷老師「 " + cboTeacher.Text + "」，群組說明「 " + txtDescription.Text + "」，補考日期「 " + txtDate.Text + "」，補考時間「 " + txtTime.Text + "」，補考地點「 " + txtPlace.Text + "」";
 
-
-                string ref_teacher_id = _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text)).ID;
+                string ref_teacher_id = "";
+                foreach (TeacherRecord tr in _teacherList)
+                {
+                    if (!string.IsNullOrEmpty(tr.Nickname))
+                    {
+                        if (tr.Name + "(" + tr.Nickname + ")" == cboTeacher.Text)
+                        {
+                            ref_teacher_id = tr.ID;
+                        }
+                    }
+                    else
+                    {
+                        if (tr.Name == cboTeacher.Text)
+                        {
+                            ref_teacher_id = tr.ID;
+                        }
+                    }
+                }
 
                 string data = string.Format(@"
                 SELECT
@@ -499,7 +529,7 @@ WHERE
                     ,'{7}'::TEXT AS log_detail                    
                     ,'{8}'::TEXT AS ref_makeup_batch_id
                     ,'{9}'::TEXT AS ref_teacher_id
-                ", txtGroupName.Text, _school_year, _semester, txtDescription.Text, txtDate.Text,txtTime.Text,txtPlace.Text, logDetail, _batch.UID, ref_teacher_id);
+                ", txtGroupName.Text, _school_year, _semester, txtDescription.Text, txtDate.Text, txtTime.Text, txtPlace.Text, logDetail, _batch.UID, ref_teacher_id);
 
                 dataList.Add(data);
 
@@ -563,11 +593,35 @@ FROM
                     @"」，學期「" + _semester + @"」， 補考梯次「 " + _makeup_batch + @"」， 
                     補考群組「 " + _group.MakeUp_Group + "」，";
 
-                string ref_teacher_id = _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text))!=null ? _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text)).ID :""; 
+                string ref_teacher_id = "";
+                foreach (TeacherRecord tr in _teacherList)
+                {
+                    if (!string.IsNullOrEmpty(tr.Nickname))
+                    {
+                        if (tr.Name + "(" + tr.Nickname + ")" == cboTeacher.Text)
+                        {
+                            ref_teacher_id = tr.ID;
+                        }
+                    }
+                    else
+                    {
+                        if (tr.Name == cboTeacher.Text)
+                        {
+                            ref_teacher_id = tr.ID;
+                        }
+                    }
+                }
 
                 K12.Data.TeacherRecord oldTeacher = _teacherList.Find(t => _group.Ref_Teacher_ID == t.ID);
 
-                string old_teacher_name = oldTeacher != null ? oldTeacher.Name + "(" + oldTeacher.Nickname + ")" : "";
+                string old_teacher_name = "";
+                if (oldTeacher != null)
+                {
+                    if (string.IsNullOrEmpty(oldTeacher.Nickname))
+                        old_teacher_name = oldTeacher.Name + "(" + oldTeacher.Nickname + ")";
+                    else
+                        old_teacher_name = oldTeacher.Name;
+                }
 
                 if (txtGroupName.Text != _group.MakeUp_Group)
                 {
@@ -876,7 +930,7 @@ FROM
             }
         }
 
-        private int GetDecimalNumber(string studentID )
+        private int GetDecimalNumber(string studentID)
         {
             // 預設小數位數為2
             int DecimalNumber = 2;
@@ -890,11 +944,11 @@ FROM
                 // 抓取該學生 成績計算規則 的 科目成績計算位數 
                 foreach (XmlElement element in helper.GetElements("各項成績計算位數/科目成績計算位數"))
                 {
-                    DecimalNumber = int.Parse( element.GetAttribute("位數"));
+                    DecimalNumber = int.Parse(element.GetAttribute("位數"));
                 }
 
             }
-                return DecimalNumber;
+            return DecimalNumber;
         }
 
         private void dataGridViewX1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -921,8 +975,8 @@ FROM
                     cell.ErrorText = "缺考請輸入『缺』，本欄無法輸入其他文字。";
 
                     inputData.HasNewMakeUpScore = false;
-                }                
-                if ("" + e.FormattedValue == "缺" )
+                }
+                if ("" + e.FormattedValue == "缺")
                 {
                     cell.ErrorText = String.Empty;
 
@@ -932,7 +986,7 @@ FROM
                 }
 
                 // 原本有值 填成空白 也要更新
-                if ("" + e.FormattedValue == "" && inputData.MakeUp_Score !="")
+                if ("" + e.FormattedValue == "" && inputData.MakeUp_Score != "")
                 {
                     cell.ErrorText = String.Empty;
 
@@ -943,7 +997,7 @@ FROM
             }
             else
             {
-                int index = (""+ e.FormattedValue).IndexOf('.');
+                int index = ("" + e.FormattedValue).IndexOf('.');
                 // 輸入整數 (Ex:66， 因為沒有 「.」，所以會回傳-1)
                 if (index == -1)
                 {
@@ -972,7 +1026,7 @@ FROM
                         inputData.HasNewMakeUpScore = true;
                     }
 
-                }                                
+                }
             }
         }
 
