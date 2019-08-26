@@ -85,8 +85,6 @@ namespace MakeUp.HS.Form
                     cboTeacher.Items.Add(teacher.Name);
             }
 
-
-
             K12.Data.TeacherRecord groupTeacher = _teacherList.Find(t => t.ID == group.Ref_Teacher_ID);
 
             // 預設為群組的閱卷老師
@@ -95,7 +93,7 @@ namespace MakeUp.HS.Form
                 if (!string.IsNullOrEmpty(groupTeacher.Nickname))
                     cboTeacher.Text = groupTeacher.Name + "(" + groupTeacher.Nickname + ")";
                 else
-                    cboTeacher.Text = "";
+                    cboTeacher.Text = groupTeacher.Name;
             }
             else
                 cboTeacher.Text = "";
@@ -617,7 +615,7 @@ FROM
                 string old_teacher_name = "";
                 if (oldTeacher != null)
                 {
-                    if (string.IsNullOrEmpty(oldTeacher.Nickname))
+                    if (!string.IsNullOrEmpty(oldTeacher.Nickname))
                         old_teacher_name = oldTeacher.Name + "(" + oldTeacher.Nickname + ")";
                     else
                         old_teacher_name = oldTeacher.Name;

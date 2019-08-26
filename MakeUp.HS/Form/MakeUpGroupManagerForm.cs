@@ -215,7 +215,21 @@ namespace MakeUp.HS.Form
 
                 K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == groupRecord.Ref_Teacher_ID);
 
-                row.Cells[1].Value = tr != null ? tr.Name + "(" + tr.Nickname + ")" : "";
+                if (tr != null)
+                {
+                    if (!string.IsNullOrEmpty(tr.Nickname))
+                    {
+                        row.Cells[1].Value = tr.Name + "(" + tr.Nickname + ")";
+                    }
+                    else
+                    {
+                        row.Cells[1].Value = tr.Name;
+                    }
+                }
+                else
+                {
+                    row.Cells[1].Value = "";
+                }
 
                 row.Cells[2].Value = groupRecord.StudentCount;
 
@@ -408,7 +422,7 @@ GROUP BY  $make.up.group.uid ";
             if (!_groupWorker.IsBusy)
             {
                 _groupWorker.RunWorkerAsync();
-            }            
+            }
         }
 
 
@@ -481,7 +495,7 @@ GROUP BY  $make.up.group.uid ";
                 InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "修改群組", _selectedGroup);
                 iumgf.ShowDialog();
             }
-            
+
 
             RefreshListView(); //重整畫面
 
@@ -597,7 +611,7 @@ GROUP BY  $make.up.group.uid ";
             menuItems = new MenuItem[] { menuItems_insertNewGroup, menuItems_deleteGroup, menuItems_MergeGroup, menuItems_assingnTeacher };
 
             // 只有再管理補考群組的模式下，點右鍵 才可以叫出選單
-            if (e.Button == MouseButtons.Right && _action =="管理補考群組")
+            if (e.Button == MouseButtons.Right && _action == "管理補考群組")
             {
                 ContextMenu buttonMenu = new ContextMenu(menuItems);
 
@@ -638,7 +652,7 @@ GROUP BY  $make.up.group.uid ";
 
                 selectGroup.IsDirty = true;
 
-                selectGroup.Action = "刪除";                
+                selectGroup.Action = "刪除";
             }
 
             RefreshUIGroupListView();
@@ -784,9 +798,37 @@ GROUP BY  $make.up.group.uid ";
 
                     K12.Data.TeacherRecord new_tr = _teacherList.Find(t => t.ID == groupRecord.New_Ref_Teacher_ID);
 
-                    old_teacher_name = old_tr != null ? old_tr.Name + "(" + old_tr.Nickname + ")" : "";
+                    if (old_tr != null)
+                    {
+                        if (!string.IsNullOrEmpty(old_tr.Nickname))
+                        {
+                            old_teacher_name = old_tr.Name + "(" + old_tr.Nickname + ")";
+                        }
+                        else
+                        {
+                            old_teacher_name = old_tr.Name;
+                        }
+                    }
+                    else
+                    {
+                        old_teacher_name = "";
+                    }
 
-                    new_teacher_name = new_tr != null ? new_tr.Name + "(" + new_tr.Nickname + ")" : "";
+                    if (new_tr != null)
+                    {
+                        if (!string.IsNullOrEmpty(new_tr.Nickname))
+                        {
+                            new_teacher_name = new_tr.Name + "(" + new_tr.Nickname + ")";
+                        }
+                        else
+                        {
+                            new_teacher_name = new_tr.Name;
+                        }
+                    }
+                    else
+                    {
+                        new_teacher_name = "";
+                    }
                 }
 
                 if (groupRecord.Ref_Teacher_ID != groupRecord.New_Ref_Teacher_ID)
@@ -850,7 +892,7 @@ GROUP BY  $make.up.group.uid ";
                   @"」，學期「" + _semester + @"」， 補考梯次「 " + _selectedBatch.MakeUp_Batch + @"」， 補考群組「 " + group.MakeUp_Group + @"」
                     ";
 
-                    logDetail += " 合併 至【" + group.New_Merge_Group_Name +"】群組。";
+                    logDetail += " 合併 至【" + group.New_Merge_Group_Name + "】群組。";
 
                     string data = string.Format(@"
                 SELECT
@@ -970,7 +1012,7 @@ SELECT
 FROM
 	data_row
 
-", dataString, _actor, _client_info,_selectedBatch.UID);
+", dataString, _actor, _client_info, _selectedBatch.UID);
 
 
             K12.Data.UpdateHelper uh = new UpdateHelper();
@@ -1009,13 +1051,41 @@ FROM
                 {
                     K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == groupRecord.New_Ref_Teacher_ID);
 
-                    row.Cells[1].Value = tr != null ? tr.Name + "(" + tr.Nickname + ")" : "";
+                    if (tr != null)
+                    {
+                        if (!string.IsNullOrEmpty(tr.Nickname))
+                        {
+                            row.Cells[1].Value = tr.Name + "(" + tr.Nickname + ")";
+                        }
+                        else
+                        {
+                            row.Cells[1].Value = tr.Name;
+                        }
+                    }
+                    else
+                    {
+                        row.Cells[1].Value = "";
+                    }
                 }
                 else
                 {
                     K12.Data.TeacherRecord tr = _teacherList.Find(t => t.ID == groupRecord.Ref_Teacher_ID);
 
-                    row.Cells[1].Value = tr != null ? tr.Name + "(" + tr.Nickname + ")" : "";
+                    if (tr != null)
+                    {
+                        if (!string.IsNullOrEmpty(tr.Nickname))
+                        {
+                            row.Cells[1].Value = tr.Name + "(" + tr.Nickname + ")";
+                        }
+                        else
+                        {
+                            row.Cells[1].Value = tr.Name;
+                        }
+                    }
+                    else
+                    {
+                        row.Cells[1].Value = "";
+                    }
                 }
 
                 row.Cells[2].Value = groupRecord.StudentCount;
@@ -1035,7 +1105,7 @@ FROM
                 }
 
                 dataGridViewX1.Rows.Add(row);
-                
+
             }
 
         }

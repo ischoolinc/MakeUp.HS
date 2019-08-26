@@ -33,7 +33,14 @@ namespace MakeUp.HS.Form
             foreach (K12.Data.TeacherRecord teacher in _teacherList)
             {
                 // 老師全名 
-                cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
+                if (!string.IsNullOrEmpty(teacher.Nickname))
+                {
+                    cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
+                }
+                else
+                {
+                    cboTeacher.Items.Add(teacher.Name);
+                }
             }
 
             // 預設選第一個老師
@@ -55,10 +62,29 @@ namespace MakeUp.HS.Form
             }
             else
             {
-                assignteacherID = _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text)).ID;
+                foreach (TeacherRecord t in _teacherList)
+                {
+                    string teacher_name = "";
+                    if (!string.IsNullOrEmpty(t.Nickname))
+                    {
+                        teacher_name = t.Name + "(" + t.Nickname + ")";
+                    }
+                    else
+                    {
+                        teacher_name = t.Name;
+                    }
+
+                    if (cboTeacher.Text == teacher_name)
+                    {
+                        assignteacherID = t.ID;
+                        continue;
+                    }
+                }
+                
+                //assignteacherID = _teacherList.Find(t => (t.Name + "(" + t.Nickname + ")" == cboTeacher.Text)).ID;
             }
-            
-            this.DialogResult = DialogResult.OK;            
+
+            this.DialogResult = DialogResult.OK;
         }
     }
 }
