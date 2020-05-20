@@ -18,7 +18,7 @@ using FISCA.Presentation.Controls;
 namespace MakeUp.HS.Form
 {
     public partial class ExportMakeUpScoreForm : FISCA.Presentation.Controls.BaseForm
-    {        
+    {
         private List<UDT_MakeUpBatch> _batchList = new List<UDT_MakeUpBatch>();
 
         private List<UDT_MakeUpGroup> _makeUpGroupList = new List<UDT_MakeUpGroup>();
@@ -84,7 +84,7 @@ namespace MakeUp.HS.Form
 
         private void GetMakeUpBatch()
         {
-            
+
             #region 取得 該學年度學期的 補考梯次            
             string query = @"
                     SELECT 
@@ -134,7 +134,7 @@ namespace MakeUp.HS.Form
 
         private void FillCboMakeUpbatch()
         {
-            
+
             cboMakeUpBatch.Items.Clear();
 
             foreach (UDT_MakeUpBatch batch in _batchList)
@@ -171,13 +171,14 @@ namespace MakeUp.HS.Form
         {
 
             _worker.ReportProgress(0, "取得補考群組、補考資料...");
-            
+
             _scoreDict.Clear();
-;
+            ;
+            if (targetBatchID != "")
+            {
+                #region 取得補考群組
 
-            #region 取得補考群組
-
-            string query = @"
+                string query = @"
 SELECT 
 $make.up.group.uid
 ,$make.up.group.ref_makeup_batch_id
@@ -191,61 +192,69 @@ WHERE  $make.up.group.ref_makeup_batch_id = '" + targetBatchID + @"'
 GROUP BY  $make.up.group.uid 
 ORDER BY $make.up.group.makeup_group";
 
-            QueryHelper qh = new QueryHelper();
-            DataTable dt = qh.Select(query);
+                QueryHelper qh = new QueryHelper();
+                DataTable dt = qh.Select(query);
 
-            //整理目前的補考梯次 資料
-            if (dt.Rows.Count > 0)
-            {
-                foreach (DataRow row in dt.Rows)
+                //整理目前的補考梯次 資料
+                if (dt.Rows.Count > 0)
                 {
-                    UDT_MakeUpGroup group = new UDT_MakeUpGroup();
-
-                    group.UID = "" + row["uid"];
-
-                    //補考群組
-                    group.MakeUp_Group = "" + row["makeup_group"];
-
-                    //補考群組 參考梯次uid
-                    group.Ref_MakeUp_Batch_ID = "" + row["ref_makeup_batch_id"];
-
-                    //閱卷老師 ID
-                    group.Ref_Teacher_ID = "" + row["ref_teacher_id"];
-                    
-                    //補考人數
-                    group.StudentCount = "" + row["studentCount"]; ;
-
-                    // 描述
-                    group.Description = "" + row["description"];
-
-
-                    if (!_scoreDict.ContainsKey(group.UID))
+                    _makeUpGroupList.Clear();
+                    foreach (DataRow row in dt.Rows)
                     {
-                        _scoreDict.Add(group.UID, new List<UDT_MakeUpData>());
+                        UDT_MakeUpGroup group = new UDT_MakeUpGroup();
+
+                        group.UID = "" + row["uid"];
+
+                        //補考群組
+                        group.MakeUp_Group = "" + row["makeup_group"];
+
+                        //補考群組 參考梯次uid
+                        group.Ref_MakeUp_Batch_ID = "" + row["ref_makeup_batch_id"];
+
+                        //閱卷老師 ID
+                        group.Ref_Teacher_ID = "" + row["ref_teacher_id"];
+
+                        //補考人數
+                        group.StudentCount = "" + row["studentCount"]; ;
+
+                        // 描述
+                        group.Description = "" + row["description"];
+
+
+                        if (!_scoreDict.ContainsKey(group.UID))
+                        {
+                            _scoreDict.Add(group.UID, new List<UDT_MakeUpData>());
+                        }
+
+                        // 所屬補考梯次
+                        group.MakeUpBatch = _batchList.Find(b => b.UID == "" + row["ref_makeup_batch_id"]);
+
+                        _makeUpGroupList.Add(group);
+
                     }
-
-                    // 所屬補考梯次
-                    group.MakeUpBatch = _batchList.Find(b => b.UID == "" + row["ref_makeup_batch_id"]);
-
-                    _makeUpGroupList.Add(group);
-
                 }
-            } 
-            #endregion
+                #endregion
 
-            #region 取得補考資料
+                #region 取得補考資料
 
-            List<string> groupIDList = new List<string>();
+                List<string> groupIDList = new List<string>();
 
-            foreach (UDT_MakeUpGroup group in _makeUpGroupList)
-            {
-                groupIDList.Add("'" + group.UID + "'");
-            }
+                foreach (UDT_MakeUpGroup group in _makeUpGroupList)
+                {
+                    groupIDList.Add("'" + group.UID + "'");
+                }
 
-            string groupIDs = string.Join(",", groupIDList);
+                string groupIDs = string.Join(",", groupIDList);
 
 
-            query = @"
+                if (groupIDs != "")
+                {
+                    //透過 group_id 取得學生修課及格與補考標準
+                    Utility uti = new Utility();
+                    Dictionary<string, DataRow> studPassScoreDict = uti.GetStudentMakeupPassScoreByGroupIDs(groupIDList);
+
+
+                    query = @"
 SELECT 
     $make.up.data.uid
     ,$make.up.data.ref_student_id    
@@ -269,79 +278,102 @@ FROM $make.up.data
     LEFT JOIN class ON class.id = student.ref_class_id    
     LEFT JOIN dept ON dept.id = student.ref_dept_id OR dept.id = class.ref_dept_id
 WHERE
-    $make.up.data.Ref_MakeUp_Group_ID IN (" + groupIDs + ")";
+    $make.up.data.ref_makeup_group_id IN (" + groupIDs + ")";
+
+                    qh = new QueryHelper();
+                    dt = qh.Select(query);
+
+                    // 取得學生學年度學期修課標準， 如果沒有使用預設，比對後填入
 
 
-            qh = new QueryHelper();
-            dt = qh.Select(query);
-
-            //整理目前的補考資料
-            if (dt.Rows.Count > 0)
-            {
-                foreach (DataRow row in dt.Rows)
-                {
-                    UDT_MakeUpData data = new UDT_MakeUpData();
-
-                    data.UID = "" + row["uid"];
-
-                    // 參考 補考群組 id
-                    data.Ref_MakeUp_Group_ID = "" + row["ref_makeup_group_id"];
-
-
-                    //學生ID 
-                    data.Ref_Student_ID = "" + row["ref_student_id"];
-
-                    //學生科別
-                    data.Department = "" + row["department"];
-
-                    //學生姓名
-                    data.StudentName = "" + row["student_name"];
-
-                    //學生班級
-                    data.ClassName = "" + row["class_name"];
-
-                    //學生座號
-                    data.Seat_no = "" + row["seat_no"];
-
-                    //學生學號
-                    data.StudentNumber = "" + row["student_number"];
-
-                    //科目
-                    data.Subject = "" + row["subject"];
-
-                    //科目
-                    data.Level = "" + row["level"];
-
-                    //學分
-                    data.Credit = "" + row["credit"];
-
-                    //校部定
-                    data.C_Is_Required_By = "" + row["c_is_required_by"];
-
-                    //必選修
-                    data.C_Is_Required = "" + row["c_is_required"];
-
-                    //成績分數(原始成績)
-                    data.Score = "" + row["score"];
-
-                    //補考分數
-                    data.MakeUp_Score = "" + row["makeup_score"];
-
-                    //及格標準
-                    data.Pass_Standard = "" + row["pass_standard"];
-
-                    //補考標準
-                    data.MakeUp_Standard = "" + row["makeup_standard"];
-
-
-                    if (_scoreDict.ContainsKey(data.Ref_MakeUp_Group_ID))
+                    //整理目前的補考資料
+                    if (dt.Rows.Count > 0)
                     {
-                        _scoreDict[data.Ref_MakeUp_Group_ID].Add(data);
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            UDT_MakeUpData data = new UDT_MakeUpData();
+
+                            data.UID = "" + row["uid"];
+
+                            // 參考 補考群組 id
+                            data.Ref_MakeUp_Group_ID = "" + row["ref_makeup_group_id"];
+
+
+                            //學生ID 
+                            data.Ref_Student_ID = "" + row["ref_student_id"];
+
+                            //學生科別
+                            data.Department = "" + row["department"];
+
+                            //學生姓名
+                            data.StudentName = "" + row["student_name"];
+
+                            //學生班級
+                            data.ClassName = "" + row["class_name"];
+
+                            //學生座號
+                            data.Seat_no = "" + row["seat_no"];
+
+                            //學生學號
+                            data.StudentNumber = "" + row["student_number"];
+
+                            //科目
+                            data.Subject = "" + row["subject"];
+
+                            //科目
+                            data.Level = "" + row["level"];
+
+                            //學分
+                            data.Credit = "" + row["credit"];
+
+                            //校部定
+                            data.C_Is_Required_By = "" + row["c_is_required_by"];
+
+                            //必選修
+                            data.C_Is_Required = "" + row["c_is_required"];
+
+                            //成績分數(原始成績)
+                            data.Score = "" + row["score"];
+
+                            //補考分數
+                            data.MakeUp_Score = "" + row["makeup_score"];
+
+
+                            string key = data.Ref_MakeUp_Group_ID + "_" + data.Ref_Student_ID + "_" + data.Subject + "_" + data.Level;
+
+                            if (studPassScoreDict.ContainsKey(key))
+                            {
+                                //及格標準
+                                if (studPassScoreDict[key]["passing_standard"] != null)
+                                    data.Pass_Standard = studPassScoreDict[key]["passing_standard"].ToString();
+
+                                //補考標準
+                                if (studPassScoreDict[key]["makeup_standard"] != null)
+                                    data.MakeUp_Standard = studPassScoreDict[key]["makeup_standard"].ToString();
+                            }
+
+                            ////及格標準
+                            //data.Pass_Standard = "" + row["pass_standard"];
+
+                            ////補考標準
+                            //data.MakeUp_Standard = "" + row["makeup_standard"];
+
+
+                            if (_scoreDict.ContainsKey(data.Ref_MakeUp_Group_ID))
+                            {
+                                _scoreDict[data.Ref_MakeUp_Group_ID].Add(data);
+                            }
+                        }
                     }
                 }
+
+                #endregion
             }
-            #endregion
-            
+
+
+
+
+
         }
 
 
@@ -357,7 +389,7 @@ WHERE
             this.Close();
         }
 
-        
+
 
 
 
@@ -371,7 +403,7 @@ WHERE
         private void btnExport_Click(object sender, EventArgs e)
         {
             // 暫停畫面控制項
-            
+
             cboMakeUpBatch.SuspendLayout();
             cboSchoolYear.SuspendLayout();
             cbosemester.SuspendLayout();
@@ -394,7 +426,7 @@ WHERE
 
         }
 
-        
+
 
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
@@ -407,15 +439,15 @@ WHERE
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // 繼續 畫面控制項       
-            
+
             cboMakeUpBatch.ResumeLayout();
             cboSchoolYear.ResumeLayout();
             cbosemester.ResumeLayout();
-            
+
             // 取得 系統預設的樣板            
-            Workbook book = new Workbook(new MemoryStream(Properties.Resources.匯入學期科目成績_補考成績_));            
+            Workbook book = new Workbook(new MemoryStream(Properties.Resources.匯入學期科目成績_補考成績_));
             Worksheet ws = book.Worksheets[0];
-            
+
 
             int index = 1;
 
@@ -429,7 +461,7 @@ WHERE
                 foreach (UDT_MakeUpData score in _scoreDict[groupID])
                 {
                     // 沒有補考分數 另外處理 不在匯出名單中
-                    if (score.MakeUp_Score == null || score.MakeUp_Score =="")
+                    if (score.MakeUp_Score == null || score.MakeUp_Score == "")
                     {
                         noMakeUpscoreList.Add(score);
 
@@ -501,7 +533,7 @@ WHERE
                     }
 
                     // 指定成新的補考分數
-                    score.MakeUp_Score = ""+ makeUp_Score;
+                    score.MakeUp_Score = "" + makeUp_Score;
 
                     // 原始成績
                     ws.Cells[index, 10].PutValue("" + score.Score);
@@ -560,7 +592,7 @@ WHERE
 
                 // 學期
                 ws_warning.Cells[index, 9].PutValue(_semester);
-                              
+
                 // 原始成績
                 ws_warning.Cells[index, 10].PutValue("" + score.Score);
 
@@ -655,7 +687,7 @@ WHERE
             }
         }
 
-        
+
     }
 }
 

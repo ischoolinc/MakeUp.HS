@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using SmartSchool.Customization.Data;
 using SmartSchool.Customization.Data.StudentExtension;
 using FISCA.DSAUtil;
-
+using FISCA.Data;
+using System.Data;
 
 namespace MakeUp.HS
 {
@@ -179,6 +180,60 @@ namespace MakeUp.HS
             }
         }
 
+
+
+
+        /// <summary>
+        /// 透過 groupid取得高中補考模組 課程及格與補考標準
+        /// </summary>
+        /// <param name="GroupIDs"></param>
+        /// <returns></returns>
+        public Dictionary<string, DataRow> GetStudentMakeupPassScoreByGroupIDs(List<string> GroupIDs)
+        {
+            //       -- 取得高中補考模組 課程及格與補考標準
+           
+            Dictionary<string, DataRow> value = new Dictionary<string, DataRow>();
+
+            if (GroupIDs.Count > 0)
+            {
+                QueryHelper qh = new QueryHelper();
+                string strSQL = @"
+SELECT ref_makeup_group_id AS group_id
+, student.id AS student_id
+,course.subject
+,course.subj_level
+,sc_attend.passing_standard
+,sc_attend.makeup_standard 
+ FROM 
+student 
+INNER JOIN 
+sc_attend 
+ON student.id = sc_attend.ref_student_id 
+INNER JOIN course 
+ON sc_attend.ref_course_id = course.id 
+INNER JOIN $make.up.data 
+ON student.id = $make.up.data.ref_student_id :: BIGINT AND course.subject = $make.up.data.subject AND (course.subj_level::TEXT = $make.up.data.level OR (course.subj_level is null AND $make.up.data.level ='') )  
+WHERE ref_makeup_group_id in(" + string.Join(",", GroupIDs.ToArray()) + @")
+";
+
+                DataTable dt = qh.Select(strSQL);
+
+                if (dt.Rows.Count > 0)
+                {
+                    foreach(DataRow dr in dt.Rows)
+                    {
+                        string key = dr["group_id"] + "_" + dr["student_id"] + "_" + dr["subject"] + "_" + dr["subj_level"];
+
+                        if (!value.ContainsKey(key))
+                            value.Add(key, dr); 
+                    }
+                }
+
+            }
+                     
+
+            return value;
+        }
 
 
     }
