@@ -42,6 +42,9 @@ namespace MakeUp.HS.Form
         // 選取的補考資料
         private List<UDT_MakeUpData> _selected_dataList;
 
+
+        List<string> tmpGroupIDList = new List<string>();
+
         // 教師清單
         private List<K12.Data.TeacherRecord> _teacherList;
 
@@ -254,6 +257,13 @@ WHERE  $make.up.batch.uid = " + _group.Ref_MakeUp_Batch_ID + " AND $make.up.grou
 
             #region 取得補考資料
 
+            tmpGroupIDList.Clear();
+            tmpGroupIDList.Add("'" + _group.UID + "'");
+            //透過 group_id 取得學生修課及格與補考標準
+            Utility uti = new Utility();
+            Dictionary<string, DataRow> studPassScoreDict = uti.GetStudentMakeupPassScoreByGroupIDs(tmpGroupIDList);
+            
+
             string query = @"
 SELECT 
     $make.up.data.uid
@@ -330,11 +340,24 @@ WHERE
                     //補考分數
                     data.MakeUp_Score = "" + row["makeup_score"];
 
-                    //及格標準
-                    data.Pass_Standard = "" + row["pass_standard"];
+                    string key = _group.UID + "_" + row["ref_student_id"] + "_" + data.Subject + "_" + data.Level;
 
-                    //補考標準
-                    data.MakeUp_Standard = "" + row["makeup_standard"];
+                    if (studPassScoreDict.ContainsKey(key))
+                    {
+                        //及格標準
+                        if (studPassScoreDict[key]["passing_standard"] != null)
+                            data.Pass_Standard = studPassScoreDict[key]["passing_standard"].ToString();
+
+                        //補考標準
+                        if (studPassScoreDict[key]["makeup_standard"] != null)
+                            data.MakeUp_Standard = studPassScoreDict[key]["makeup_standard"].ToString();
+                    }
+
+                    ////及格標準
+                    //data.Pass_Standard = "" + row["pass_standard"];
+
+                    ////補考標準
+                    //data.MakeUp_Standard = "" + row["makeup_standard"];
 
                     // 取得本學生 成績的輸入小數位數規則
                     // 只有 管理補考成績的情境用得到， 目前會要用比較慢一筆一筆學生查詢，而不直接寫在SQL內的原因
@@ -799,7 +822,8 @@ FROM
                 FISCA.Presentation.Controls.MsgBox.Show("未修正任何補考成績。");
 
                 // 儲存後關閉
-                this.Close();
+                //this.Close();
+                this.DialogResult = DialogResult.Yes;
             }
             else
             {
@@ -812,7 +836,8 @@ FROM
                 FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
 
                 // 儲存後關閉
-                this.Close();
+                //   this.Close();
+                this.DialogResult = DialogResult.Yes;
             }
         }
 

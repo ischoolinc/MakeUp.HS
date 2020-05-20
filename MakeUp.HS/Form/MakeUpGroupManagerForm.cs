@@ -486,18 +486,24 @@ GROUP BY  $make.up.group.uid ";
             {
                 // 管理補考成績                
                 InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "管理補考成績", _selectedGroup);
-                iumgf.ShowDialog();
+                if (iumgf.ShowDialog() == DialogResult.Yes)
+                {
+                    RefreshListView(); //重整畫面
+                }
 
             }
             else
             {
                 // 修改模式
                 InsertUpdateMakeUpGroupForm iumgf = new InsertUpdateMakeUpGroupForm(_schoolYear, _semester, "修改群組", _selectedGroup);
-                iumgf.ShowDialog();
+                if (iumgf.ShowDialog() == DialogResult.Yes)
+                {
+                    RefreshListView(); //重整畫面
+                }
+
             }
 
-
-            RefreshListView(); //重整畫面
+            //RefreshListView(); //重整畫面
 
         }
 
@@ -1014,18 +1020,35 @@ FROM
 
 ", dataString, _actor, _client_info, _selectedBatch.UID);
 
+            //沒有資料不處理
+            if (!string.IsNullOrWhiteSpace(dataString))
+            {
+                try
+                {
+                    K12.Data.UpdateHelper uh = new UpdateHelper();
 
-            K12.Data.UpdateHelper uh = new UpdateHelper();
-
-            //執行sql
-            uh.Execute(sql);
+                    //執行sql
+                    uh.Execute(sql);
 
 
-            FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
+                    FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
 
 
-            // 儲存完畢 重新整理 介面
-            RefreshListView();
+                    // 儲存完畢 重新整理 介面
+                    RefreshListView();
+                }
+                catch (Exception ex)
+                {
+                    FISCA.Presentation.Controls.MsgBox.Show("儲存失敗," + ex.Message);
+                    picLoadingDgvXMakeUpGroup.Visible = false;
+                }
+            }
+            else
+            {
+                picLoadingDgvXMakeUpGroup.Visible = false;
+            }
+
+
         }
 
 
