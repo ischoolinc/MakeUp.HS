@@ -64,7 +64,9 @@ namespace MakeUp.HS.Form
         // 目前選的單一群組 
         private UDT_MakeUpGroup _selectedGroup;
 
-
+        // 群組 UID 畫面回來排序使用
+        List<string> GroupUIDList = new List<string>();
+                
         public MakeUpGroupManagerForm(string action)
         {
             _action = action;
@@ -144,6 +146,10 @@ namespace MakeUp.HS.Form
             // 將 補考梯次　子 node　批次 加入 　學年度學期父 node
             foreach (UDT_MakeUpBatch batchRecord in _batchList)
             {
+                // 封存不出現
+                if (!string.IsNullOrWhiteSpace(batchRecord.is_archive))
+                    continue;
+
                 string batchNodeString = batchRecord.MakeUp_Batch;
 
                 DevComponents.AdvTree.Node batchNode = new DevComponents.AdvTree.Node(batchNodeString);
@@ -283,7 +289,7 @@ SELECT
 FROM $make.up.batch
 WHERE
 school_year = '" + _schoolYear + "'" +
-"AND semester = '" + _semester + "'";
+"AND semester = '" + _semester + "' ORDER BY makeup_batch ASC";
 
             QueryHelper qh = new QueryHelper();
             DataTable dt = qh.Select(query);
@@ -338,7 +344,7 @@ $make.up.group.uid
 FROM  $make.up.group
 LEFT JOIN  $make.up.data ON  $make.up.data.ref_makeup_group_id :: BIGINT = $make.up.group.uid
 WHERE  $make.up.group.ref_makeup_batch_id = '" + _selectedBatch.UID + @"'
-GROUP BY  $make.up.group.uid ";
+GROUP BY  $make.up.group.uid ORDER BY makeup_group ASC";
 
             QueryHelper qh = new QueryHelper();
             DataTable dt = qh.Select(query);
@@ -384,6 +390,13 @@ GROUP BY  $make.up.group.uid ";
                     _groupList.Add(group);
                 }
             }
+
+            // 如果已有 UID List 排序
+            if (GroupUIDList.Count > 0)
+            {
+                _groupList = _groupList.OrderBy(d => GroupUIDList.IndexOf(d.UID)).ToList();
+            }
+            
 
             //另存份  原本的list 作為比較
             _groupListOri = new List<UDT_MakeUpGroup>(_groupList.ToArray());
@@ -477,6 +490,17 @@ GROUP BY  $make.up.group.uid ";
             {
                 FISCA.Presentation.Controls.MsgBox.Show("編輯群組資料前，請先儲存。");
                 return;
+            }
+
+            // 紀錄目前 UID
+            GroupUIDList.Clear();
+            foreach(DataGridViewRow drv in dataGridViewX1.Rows)
+            {
+                if (drv.IsNewRow)
+                    continue;
+
+                string uid = drv.Tag.ToString();
+                GroupUIDList.Add(uid);
             }
 
             ////  找到選取到的 梯次

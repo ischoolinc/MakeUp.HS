@@ -37,13 +37,14 @@
             this.cboSchoolYear = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
-            this.picLoading = new System.Windows.Forms.PictureBox();
-            this.btnGenMakeUpGroup = new DevComponents.DotNetBar.ButtonX();
+            this.colIsArchive = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUpBatch = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColStartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColEndTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColIncludedClassID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.picLoading = new System.Windows.Forms.PictureBox();
+            this.btnGenMakeUpGroup = new DevComponents.DotNetBar.ButtonX();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
@@ -142,6 +143,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewX1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewX1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colIsArchive,
             this.ColMakeUpBatch,
             this.ColStartTime,
             this.ColEndTime,
@@ -170,34 +172,12 @@
             this.dataGridViewX1.SelectionChanged += new System.EventHandler(this.dataGridViewX1_SelectionChanged);
             this.dataGridViewX1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.dataGridViewX1_MouseDown);
             // 
-            // picLoading
+            // colIsArchive
             // 
-            this.picLoading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.picLoading.BackColor = System.Drawing.Color.Transparent;
-            this.picLoading.Image = global::MakeUp.HS.Properties.Resources.loading;
-            this.picLoading.InitialImage = null;
-            this.picLoading.Location = new System.Drawing.Point(473, 227);
-            this.picLoading.Name = "picLoading";
-            this.picLoading.Size = new System.Drawing.Size(44, 46);
-            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picLoading.TabIndex = 10;
-            this.picLoading.TabStop = false;
-            // 
-            // btnGenMakeUpGroup
-            // 
-            this.btnGenMakeUpGroup.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnGenMakeUpGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenMakeUpGroup.BackColor = System.Drawing.Color.Transparent;
-            this.btnGenMakeUpGroup.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnGenMakeUpGroup.Enabled = false;
-            this.btnGenMakeUpGroup.Location = new System.Drawing.Point(779, 14);
-            this.btnGenMakeUpGroup.Name = "btnGenMakeUpGroup";
-            this.btnGenMakeUpGroup.Size = new System.Drawing.Size(189, 23);
-            this.btnGenMakeUpGroup.TabIndex = 11;
-            this.btnGenMakeUpGroup.Text = "產生補考群組";
-            this.btnGenMakeUpGroup.Click += new System.EventHandler(this.btnGenMakeUpGroup_Click);
+            this.colIsArchive.HeaderText = "封存";
+            this.colIsArchive.Name = "colIsArchive";
+            this.colIsArchive.ReadOnly = true;
+            this.colIsArchive.Width = 60;
             // 
             // ColMakeUpBatch
             // 
@@ -234,6 +214,35 @@
             this.ColDescription.Name = "ColDescription";
             this.ColDescription.ReadOnly = true;
             // 
+            // picLoading
+            // 
+            this.picLoading.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.picLoading.BackColor = System.Drawing.Color.Transparent;
+            this.picLoading.Image = global::MakeUp.HS.Properties.Resources.loading;
+            this.picLoading.InitialImage = null;
+            this.picLoading.Location = new System.Drawing.Point(473, 227);
+            this.picLoading.Name = "picLoading";
+            this.picLoading.Size = new System.Drawing.Size(44, 46);
+            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picLoading.TabIndex = 10;
+            this.picLoading.TabStop = false;
+            // 
+            // btnGenMakeUpGroup
+            // 
+            this.btnGenMakeUpGroup.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnGenMakeUpGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGenMakeUpGroup.BackColor = System.Drawing.Color.Transparent;
+            this.btnGenMakeUpGroup.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnGenMakeUpGroup.Enabled = false;
+            this.btnGenMakeUpGroup.Location = new System.Drawing.Point(779, 14);
+            this.btnGenMakeUpGroup.Name = "btnGenMakeUpGroup";
+            this.btnGenMakeUpGroup.Size = new System.Drawing.Size(189, 23);
+            this.btnGenMakeUpGroup.TabIndex = 11;
+            this.btnGenMakeUpGroup.Text = "產生補考群組";
+            this.btnGenMakeUpGroup.Click += new System.EventHandler(this.btnGenMakeUpGroup_Click);
+            // 
             // MakeUpBatchManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -252,7 +261,7 @@
             this.MaximizeBox = true;
             this.MinimumSize = new System.Drawing.Size(520, 300);
             this.Name = "MakeUpBatchManagerForm";
-            this.Text = "補考梯次管理";
+            this.Text = "管理補考梯次";
             this.Load += new System.EventHandler(this.MakeUpBatchManagerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();
@@ -271,6 +280,7 @@
         private DevComponents.DotNetBar.Controls.DataGridViewX dataGridViewX1;
         private System.Windows.Forms.PictureBox picLoading;
         private DevComponents.DotNetBar.ButtonX btnGenMakeUpGroup;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colIsArchive;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColMakeUpBatch;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColStartTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColEndTime;

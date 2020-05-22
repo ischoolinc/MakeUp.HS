@@ -70,7 +70,19 @@ namespace MakeUp.HS.Form
 
             _groupNameList = new List<string>();
 
-            _teacherList = K12.Data.Teacher.SelectAll();
+            var tList = K12.Data.Teacher.SelectAll();
+            _teacherList = new List<TeacherRecord>();
+
+            foreach (K12.Data.TeacherRecord rec in tList)
+            {
+
+                if (rec.Status == TeacherRecord.TeacherStatus.刪除)
+                    continue;
+
+                _teacherList.Add(rec);
+            }
+
+            //_teacherList = K12.Data.Teacher.SelectAll();
 
             // 老師 依教師姓名排序
             _teacherList.Sort((x, y) => { return x.Name.CompareTo(y.Name); });
@@ -81,6 +93,7 @@ namespace MakeUp.HS.Form
             //將教師加入清單
             foreach (K12.Data.TeacherRecord teacher in _teacherList)
             {
+
                 // 老師全名 
                 if (!string.IsNullOrEmpty(teacher.Nickname))
                     cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");
@@ -190,7 +203,7 @@ namespace MakeUp.HS.Form
 
             //將教師加入清單
             foreach (K12.Data.TeacherRecord teacher in _teacherList)
-            {
+            {                
                 // 老師全名 
                 if (!string.IsNullOrEmpty(teacher.Nickname))
                     cboTeacher.Items.Add(teacher.Name + "(" + teacher.Nickname + ")");

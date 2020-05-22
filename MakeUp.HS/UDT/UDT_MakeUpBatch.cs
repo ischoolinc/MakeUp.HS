@@ -93,5 +93,18 @@ namespace MakeUp.HS
             }            
         }
 
+        /// <summary>
+        /// 是否封存
+        /// </summary>
+        [FISCA.UDT.Field]
+        public string is_archive { get; set; }
+
+        /// <summary>
+        /// 封存時間(畫面上不顯示但是Web會使用)
+        /// </summary>
+        [FISCA.UDT.Field]
+        public DateTime archive_time { get; set; }
+
+
     }
 }

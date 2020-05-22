@@ -79,7 +79,7 @@ SELECT
 FROM $make.up.batch
 WHERE
 school_year = '" + _schoolYear + "'" +
-"AND semester = '" + _semester + "'";
+"AND semester = '" + _semester + "' ORDER BY makeup_batch ASC";
 
             QueryHelper qh = new QueryHelper();
             DataTable dt = qh.Select(query);
@@ -130,6 +130,9 @@ school_year = '" + _schoolYear + "'" +
 
                     //包含班級id
                     batch.Included_Class_ID = "" + row["included_class_id"];
+
+                    // 是否封存
+                    batch.is_archive = "" + row["is_archive"];
 
                     _BatchList.Add(batch);
                 }
@@ -211,18 +214,20 @@ school_year = '" + _schoolYear + "'" +
                 // row 的 Tag 為 補考梯次的系統編號
                 row.Tag = batchRecord.UID;
 
-                row.Cells[0].Value = batchRecord.MakeUp_Batch;
+
+                row.Cells[colIsArchive.Index].Value = batchRecord.is_archive;
+                row.Cells[ColMakeUpBatch.Index].Value = batchRecord.MakeUp_Batch;
 
                 // 解析班級XML className
                 batchRecord.ParseClassXMLNameString();
 
-                row.Cells[1].Value = batchRecord.Start_Time.ToString("yyyy/MM/dd HH:mm:ss");
+                row.Cells[ColStartTime.Index].Value = batchRecord.Start_Time.ToString("yyyy/MM/dd HH:mm:ss");
 
-                row.Cells[2].Value = batchRecord.End_Time.ToString("yyyy/MM/dd HH:mm:ss");
+                row.Cells[ColEndTime.Index].Value = batchRecord.End_Time.ToString("yyyy/MM/dd HH:mm:ss");
 
-                row.Cells[3].Value = batchRecord.totalclassName;
+                row.Cells[ColIncludedClassID.Index].Value = batchRecord.totalclassName;
 
-                row.Cells[4].Value = batchRecord.Description;
+                row.Cells[ColDescription.Index].Value = batchRecord.Description;
 
                 dataGridViewX1.Rows.Add(row);
             }
@@ -258,9 +263,37 @@ school_year = '" + _schoolYear + "'" +
 
             // 修改模式
             InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("修改", cboSchoolYear.Text, cbosemester.Text, _selectedBatch);
-            iumbf.ShowDialog();
+            if (iumbf.ShowDialog() == DialogResult.OK)
+            {
+                _selectedBatch = iumbf.GetCurrentBatch();
 
-            RefreshListView(); //重整畫面
+                // 回寫畫面資料
+                foreach (DataGridViewRow drv in dataGridViewX1.Rows)
+                {
+                    if (drv.IsNewRow)
+                        continue;
+
+                    string uid = drv.Tag.ToString();
+                    if (uid == _selectedBatch.UID)
+                    {
+                        drv.Cells[colIsArchive.Index].Value = _selectedBatch.is_archive;
+                        drv.Cells[ColMakeUpBatch.Index].Value = _selectedBatch.MakeUp_Batch;
+
+
+                        drv.Cells[ColStartTime.Index].Value = _selectedBatch.Start_Time.ToString("yyyy/MM/dd HH:mm:ss");
+
+                        drv.Cells[ColEndTime.Index].Value = _selectedBatch.End_Time.ToString("yyyy/MM/dd HH:mm:ss");
+
+                        drv.Cells[ColIncludedClassID.Index].Value = _selectedBatch.totalclassName;
+
+                        drv.Cells[ColDescription.Index].Value = _selectedBatch.Description;
+                        break;
+                    }
+                }
+
+            }
+
+            //  RefreshListView(); //重整畫面
         }
 
         private void MakeUpBatchManagerForm_Load(object sender, EventArgs e)
@@ -295,9 +328,10 @@ school_year = '" + _schoolYear + "'" +
         {
             // 新增模式
             InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("新增", cboSchoolYear.Text, cbosemester.Text, _BatchList);
-            iumbf.ShowDialog();
-
-            RefreshListView();
+            if (iumbf.ShowDialog() == DialogResult.Yes)
+            {
+                RefreshListView();
+            }
         }
 
         private void btnGenMakeUpGroup_Click(object sender, EventArgs e)
@@ -322,7 +356,7 @@ school_year = '" + _schoolYear + "'" +
                 gmugf.ShowDialog();
 
             }
-            
+
         }
 
 
@@ -440,13 +474,128 @@ FROM
             }
         }
 
+        private void MenuItemArchive_Click(Object sender, System.EventArgs e)
+        {
+            #region 封存資料
+
+            string tiMsg = "解封存";
+            if (string.IsNullOrEmpty(_selectedBatch.is_archive))
+            {
+                tiMsg = "封存";
+            }
+
+            // 仿照刪除做法，先寫入log再更新封存欄位。
+            if (FISCA.Presentation.Controls.MsgBox.Show("是否要" + tiMsg + "本補考梯次?", "警告", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            {
+                // LOG 資訊
+                string _actor = DSAServices.UserAccount; ;
+                string _client_info = ClientInfo.GetCurrentClientInfo().OutputResult().OuterXml;
+
+                List<string> dataList = new List<string>();
+
+
+                string data = string.Format(@"
+                SELECT
+                    '{0}'::TEXT AS makeup_batch
+                    ,'{1}'::TEXT AS school_year
+                    ,'{2}'::TEXT AS semester
+                    ,'{3}'::TEXT AS description
+                    ,'{4}'::TEXT AS included_class_id                    
+                    ,'{5}'::BIGINT AS uid
+                    ,'{6}'::TEXT AS included_class_id
+                ", _selectedBatch.MakeUp_Batch, _schoolYear, _semester, _selectedBatch.Description, _selectedBatch.Included_Class_ID, _selectedBatch.UID, _selectedBatch.is_archive);
+                dataList.Add(data);
+
+                string dataString = string.Join(" UNION ALL", dataList);
+                ;
+
+                // 調整封存資料
+                if (string.IsNullOrEmpty(_selectedBatch.is_archive))
+                {
+                    _selectedBatch.is_archive = "是";
+                }
+                else
+                {
+                    _selectedBatch.is_archive = "";
+                }
+
+                string sql = string.Format(@"
+WITH data_row AS
+(
+    {0}
+)
+,update_data AS(			 
+UPDATE 
+$make.up.batch 
+SET last_update=now()
+,archive_time=now()
+,is_archive= '" + _selectedBatch.is_archive + @"' 
+WHERE $make.up.batch.uid IN
+(
+    SELECT 
+        data_row.uid 
+    FROM data_row
+)
+)
+INSERT INTO log(
+	actor
+	, action_type
+	, action
+	, target_category
+	, target_id
+	, server_time
+	, client_info
+	, action_by
+	, description
+)
+SELECT 
+	'{1}'::TEXT AS actor
+	, 'Record' AS action_type
+	, '封存高中補考梯次' AS action
+	, ''::TEXT AS target_category
+	, '' AS target_id
+	, now() AS server_time
+	, '{2}' AS client_info
+	, '封存高中補考梯次'AS action_by   
+	, '封存 高中補考 學年度「'|| data_row.school_year||'」，學期「'|| data_row.semester||'」， 補考梯次「'|| data_row.makeup_batch||'」，補考說明 「'|| data_row.description ||'」。' AS description 
+FROM
+	data_row
+
+", dataString, _actor, _client_info);
+
+
+                try
+                {
+                    K12.Data.UpdateHelper uh = new UpdateHelper();
+
+                    //執行sql
+                    uh.Execute(sql);
+
+                    FISCA.Presentation.Controls.MsgBox.Show("更新成功。");
+
+                    // 刷新畫面
+                    RefreshListView();
+                }
+                catch (Exception ex)
+                {
+                    MsgBox.Show("更新失敗", ex.Message);
+                }
+
+            }
+            #endregion
+        }
+
+
+
         private void dataGridViewX1_MouseDown(object sender, MouseEventArgs e)
         {
-            MenuItem[] menuItems = new MenuItem[0];
+            MenuItem[] menuItems = new MenuItem[1];
 
             MenuItem menuItems_delete = new MenuItem("刪除", MenuItemDelete_Click);
+            MenuItem menuItems_archive = new MenuItem("封存/解封存", MenuItemArchive_Click);
 
-            menuItems = new MenuItem[] { menuItems_delete };
+
+            menuItems = new MenuItem[] { menuItems_delete, menuItems_archive };
 
             if (e.Button == MouseButtons.Right && dataGridViewX1.SelectedRows.Count > 0)
             {

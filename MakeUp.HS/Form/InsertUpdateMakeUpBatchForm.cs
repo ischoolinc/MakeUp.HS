@@ -34,7 +34,7 @@ namespace MakeUp.HS.Form
         private UDT_MakeUpBatch _batch;
 
         // 本學期 已經有的補考梯次名稱(驗證重覆用)
-        private List<string> _batchNameList ;
+        private List<string> _batchNameList;
 
         private EnhancedErrorProvider _errors;
 
@@ -58,7 +58,7 @@ namespace MakeUp.HS.Form
             {
                 _batchNameList.Add(batch.MakeUp_Batch);
             }
-            
+
 
             // 只有新增 模式 才可以讓使用者 編輯 補考梯次名稱、包含班級
             if (_action == "新增")
@@ -76,6 +76,16 @@ namespace MakeUp.HS.Form
             }
 
         }
+
+        /// <summary>
+        /// 取得目前補考梯次
+        /// </summary>
+        /// <returns></returns>
+        public UDT_MakeUpBatch GetCurrentBatch()
+        {
+            return _batch;
+        }
+
 
         //更新模式傳  目前的補考梯次 直接對該補考梯次更新
         public InsertUpdateMakeUpBatchForm(string action, string schoolYear, string semester, UDT_MakeUpBatch batch)
@@ -135,8 +145,8 @@ namespace MakeUp.HS.Form
 
             // 修改模式 將 原本選得班級勾起
             if (_action == "修改")
-            {              
-                selectCheckedClass(_batch.Included_Class_ID);               
+            {
+                selectCheckedClass(_batch.Included_Class_ID);
             }
 
             picLoading.Visible = false;
@@ -200,7 +210,7 @@ namespace MakeUp.HS.Form
 
             if (DateTime.TryParse(txtEndTime.Text, out et))
             {
-                
+
             }
             else
             {
@@ -283,7 +293,7 @@ namespace MakeUp.HS.Form
                     ,'{4}'::TIMESTAMP AS end_time
                     ,'{5}'::TEXT AS description
                     ,'{6}'::TEXT AS included_class_id                    
-                ", txtBatchName.Text, _schoolYear, _semester,txtStartTime.Text,txtEndTime.Text,txtDescription.Text, included_class_id_xml);
+                ", txtBatchName.Text, _schoolYear, _semester, txtStartTime.Text, txtEndTime.Text, txtDescription.Text, included_class_id_xml);
 
                 dataList.Add(data);
 
@@ -356,7 +366,7 @@ FROM
                     ,'{6}'::TEXT AS included_class_id                    
                     ,'{7}'::TEXT AS old_description
                     ,'{8}'::BIGINT AS uid
-                ", txtBatchName.Text, _schoolYear, _semester,txtStartTime.Text,txtEndTime.Text,txtDescription.Text, _batch.Included_Class_ID, _batch.Description,_batch.UID);
+                ", txtBatchName.Text, _schoolYear, _semester, txtStartTime.Text, txtEndTime.Text, txtDescription.Text, _batch.Included_Class_ID, _batch.Description, _batch.UID);
 
                 dataList.Add(data);
 
@@ -402,15 +412,39 @@ FROM
 ", dataString, _actor, _client_info);
             }
 
-            K12.Data.UpdateHelper uh = new UpdateHelper();
+            try
+            {
+                K12.Data.UpdateHelper uh = new UpdateHelper();
 
-            //執行sql
-            uh.Execute(sql);
+                //執行sql
+                uh.Execute(sql);
 
-            FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
+                // 取得畫面可變動資料回存物件
+                _batch.Start_Time = st;
+                _batch.End_Time = et;
+                _batch.Description = txtDescription.Text;
 
-            // 儲存後關閉
-            this.Close();
+
+
+                FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
+
+                // 儲存後關閉
+                //this.Close();
+                if (_action == "新增")
+                {
+                    this.DialogResult = DialogResult.Yes; // 回傳 Yes 需要重新整理
+                }
+                else
+                {
+                    this.DialogResult = DialogResult.OK;
+                }
+              
+            }
+            catch (Exception ex)
+            {
+                FISCA.Presentation.Controls.MsgBox.Show("儲存失敗,"+ ex.Message);
+            }
+        
         }
 
         // 將傳入的 梯次 的包含班級勾起來
@@ -425,7 +459,7 @@ FROM
 
             foreach (XElement ele_class in elmRoot.Elements("ClassID"))
             {
-                string classID= ele_class.Value;
+                string classID = ele_class.Value;
 
                 classIDList.Add(classID);
             }
@@ -436,7 +470,7 @@ FROM
                 if (classIDList.Contains("" + Item.Tag))
                 {
                     Item.Checked = true;
-                }                 
+                }
             }
         }
 
@@ -472,13 +506,13 @@ FROM
         {
             TextBox txtBox = (TextBox)sender;
 
-            if (txtBox.Text  != string.Empty)
+            if (txtBox.Text != string.Empty)
             {
                 if (_errors.GetError(txtBox) == string.Empty)
                 {
                     DateTime? dt = DateTimeHelper.ParseGregorian(txtBox.Text, PaddingMethod.First);
                     txtBox.Text = dt.Value.ToString("yyyy/MM/dd HH:mm:ss");
-                }                
+                }
             }
 
         }
@@ -494,7 +528,7 @@ FROM
                     DateTime? dt = DateTimeHelper.ParseGregorian(txtBox.Text, PaddingMethod.Last);
                     txtBox.Text = dt.Value.ToString("yyyy/MM/dd HH:mm:ss");
                 }
-            }            
+            }
         }
     }
 }

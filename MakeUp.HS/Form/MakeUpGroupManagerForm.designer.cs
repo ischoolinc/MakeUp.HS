@@ -31,6 +31,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.expandablePanel1 = new DevComponents.DotNetBar.ExpandablePanel();
+            this.btnExportExcel = new DevComponents.DotNetBar.ButtonX();
             this.btnUpdate = new DevComponents.DotNetBar.ButtonX();
             this.picLoadingAdvTreeMakeUpBatch = new System.Windows.Forms.PictureBox();
             this.advTreeMakeUpBatch = new DevComponents.AdvTree.AdvTree();
@@ -57,7 +58,6 @@
             this.ColRefTeacher = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColMakeUpStudentCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColDesription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnExportExcel = new DevComponents.DotNetBar.ButtonX();
             this.expandablePanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoadingAdvTreeMakeUpBatch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.advTreeMakeUpBatch)).BeginInit();
@@ -106,6 +106,18 @@
             this.expandablePanel1.TitleText = "補考梯次";
             this.expandablePanel1.ExpandedChanged += new DevComponents.DotNetBar.ExpandChangeEventHandler(this.expandablePanel1_ExpandedChanged);
             this.expandablePanel1.Click += new System.EventHandler(this.cbosemester_SelectedIndexChanged);
+            // 
+            // btnExportExcel
+            // 
+            this.btnExportExcel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            this.btnExportExcel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
+            this.btnExportExcel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnExportExcel.Location = new System.Drawing.Point(0, 666);
+            this.btnExportExcel.Name = "btnExportExcel";
+            this.btnExportExcel.Size = new System.Drawing.Size(200, 20);
+            this.btnExportExcel.TabIndex = 15;
+            this.btnExportExcel.Text = "匯出補考群組Excel";
+            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
             // 
             // btnUpdate
             // 
@@ -452,18 +464,6 @@
             this.ColDesription.Name = "ColDesription";
             this.ColDesription.ReadOnly = true;
             // 
-            // btnExportExcel
-            // 
-            this.btnExportExcel.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnExportExcel.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnExportExcel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnExportExcel.Location = new System.Drawing.Point(0, 666);
-            this.btnExportExcel.Name = "btnExportExcel";
-            this.btnExportExcel.Size = new System.Drawing.Size(200, 20);
-            this.btnExportExcel.TabIndex = 15;
-            this.btnExportExcel.Text = "匯出補考群組Excel";
-            this.btnExportExcel.Click += new System.EventHandler(this.btnExportExcel_Click);
-            // 
             // MakeUpGroupManagerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -476,7 +476,7 @@
             this.MaximizeBox = true;
             this.MinimumSize = new System.Drawing.Size(520, 300);
             this.Name = "MakeUpGroupManagerForm";
-            this.Text = "補考群組管理";
+            this.Text = "管理補考群組";
             this.expandablePanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLoadingAdvTreeMakeUpBatch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.advTreeMakeUpBatch)).EndInit();
