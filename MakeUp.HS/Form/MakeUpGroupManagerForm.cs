@@ -80,7 +80,15 @@ namespace MakeUp.HS.Form
             _selectedGroupList = new List<UDT_MakeUpGroup>();
 
             // 取得教師清單
-            _teacherList = K12.Data.Teacher.SelectAll();
+            List<TeacherRecord> trList = K12.Data.Teacher.SelectAll();
+            _teacherList = new List<TeacherRecord>();
+            foreach(TeacherRecord tr in trList)
+            {
+                if (tr.Status == TeacherRecord.TeacherStatus.刪除)
+                    continue;
+
+                _teacherList.Add(tr);
+            }
 
             _batchWorker = new BackgroundWorker();
             _batchWorker.DoWork += new DoWorkEventHandler(BatchWorker_DoWork);
@@ -299,6 +307,13 @@ school_year = '" + _schoolYear + "'" +
             {
                 foreach (DataRow row in dt.Rows)
                 {
+                    // 判斷是封存不顯示
+                    if (row["is_archive"] != null )
+                    {
+                        if (row["is_archive"].ToString() == "是")
+                            continue;
+                    }
+
                     UDT_MakeUpBatch batch = new UDT_MakeUpBatch();
 
                     batch.UID = "" + row["uid"];

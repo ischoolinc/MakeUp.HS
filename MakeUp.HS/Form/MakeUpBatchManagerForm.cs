@@ -326,16 +326,19 @@ school_year = '" + _schoolYear + "'" +
 
         private void btnInsertBatch_Click(object sender, EventArgs e)
         {
+            btnInsertBatch.Enabled = false;
             // 新增模式
             InsertUpdateMakeUpBatchForm iumbf = new InsertUpdateMakeUpBatchForm("新增", cboSchoolYear.Text, cbosemester.Text, _BatchList);
             if (iumbf.ShowDialog() == DialogResult.Yes)
             {
                 RefreshListView();
             }
+            btnInsertBatch.Enabled = true;
         }
 
         private void btnGenMakeUpGroup_Click(object sender, EventArgs e)
         {
+            btnGenMakeUpGroup.Enabled = false;
             string sql_check = "SELECT * FROM $make.up.group WHERE ref_makeup_batch_id = '" + _selectedBatch.UID + "'";
 
             QueryHelper qh = new QueryHelper();
@@ -357,6 +360,7 @@ school_year = '" + _schoolYear + "'" +
 
             }
 
+            btnGenMakeUpGroup.Enabled = true;
         }
 
 

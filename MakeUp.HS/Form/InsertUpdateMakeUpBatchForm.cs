@@ -420,11 +420,14 @@ FROM
                 uh.Execute(sql);
 
                 // 取得畫面可變動資料回存物件
-                _batch.Start_Time = st;
-                _batch.End_Time = et;
-                _batch.Description = txtDescription.Text;
+                if (_batch != null)
+                {
+                    // 更新
+                    _batch.Start_Time = st;
+                    _batch.End_Time = et;
+                    _batch.Description = txtDescription.Text;
 
-
+                }
 
                 FISCA.Presentation.Controls.MsgBox.Show("儲存成功。");
 

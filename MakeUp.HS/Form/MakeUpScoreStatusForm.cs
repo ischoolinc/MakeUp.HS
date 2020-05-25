@@ -278,9 +278,15 @@ namespace MakeUp.HS.Form
 
 
             // 取得所有教師資料 之後可以對照出 閱卷老師
-            _teacherList = K12.Data.Teacher.SelectAll();
+            List<TeacherRecord> trList = K12.Data.Teacher.SelectAll();
+            foreach(TeacherRecord tr in trList)
+            {
+                if (tr.Status == TeacherRecord.TeacherStatus.刪除)
+                    continue;
 
-
+                _teacherList.Add(tr);
+            }
+                  
             string query = @"
 SELECT 
 $make.up.group.uid

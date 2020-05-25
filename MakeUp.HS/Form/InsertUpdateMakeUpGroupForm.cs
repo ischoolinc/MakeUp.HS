@@ -196,7 +196,15 @@ namespace MakeUp.HS.Form
 
             _groupNameList = new List<string>();
 
-            _teacherList = K12.Data.Teacher.SelectAll();
+            List<TeacherRecord> tRlist = K12.Data.Teacher.SelectAll();
+            _teacherList = new List<TeacherRecord>();
+
+            foreach(TeacherRecord tr in tRlist)
+            {
+                if (tr.Status == TeacherRecord.TeacherStatus.刪除)
+                    continue;
+                _teacherList.Add(tr);
+            }
 
             // 老師 依教師姓名排序
             _teacherList.Sort((x, y) => { return x.Name.CompareTo(y.Name); });

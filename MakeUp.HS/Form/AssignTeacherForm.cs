@@ -24,7 +24,16 @@ namespace MakeUp.HS.Form
         {
             InitializeComponent();
 
-            _teacherList = K12.Data.Teacher.SelectAll();
+            List<TeacherRecord> trList = K12.Data.Teacher.SelectAll();
+            _teacherList = new List<TeacherRecord>();
+
+            foreach (TeacherRecord tr in trList)
+            {
+                if (tr.Status == TeacherRecord.TeacherStatus.刪除)
+                    continue;
+
+                _teacherList.Add(tr);
+            }           
 
             // 老師 依教師姓名排序
             _teacherList.Sort((x, y) => { return x.Name.CompareTo(y.Name); });
