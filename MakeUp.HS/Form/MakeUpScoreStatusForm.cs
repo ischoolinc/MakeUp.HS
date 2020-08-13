@@ -296,8 +296,10 @@ $make.up.group.uid
 ,$make.up.group.description
 ,COUNT($make.up.data.uid) AS studentCount
 FROM  $make.up.group
-LEFT JOIN  $make.up.data ON  $make.up.data.ref_makeup_group_id :: BIGINT = $make.up.group.uid
-WHERE  $make.up.group.ref_makeup_batch_id = '" + targetBatchID + @"'
+LEFT JOIN  $make.up.data ON  $make.up.data.ref_makeup_group_id :: BIGINT = $make.up.group.uid 
+LEFT JOIN  $make.up.batch ON  $make.up.batch.uid = $make.up.group.ref_makeup_batch_id :: BIGINT
+WHERE  $make.up.group.ref_makeup_batch_id = '" + targetBatchID + @"' 
+ AND $make.up.batch.is_archive != '是' 
 GROUP BY  $make.up.group.uid 
 ORDER BY $make.up.group.makeup_group";
 

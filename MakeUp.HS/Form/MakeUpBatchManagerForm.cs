@@ -241,6 +241,8 @@ school_year = '" + _schoolYear + "'" +
 
             dataGridViewX1.ResumeLayout();
 
+            SchoolSemesterEnable(true);
+
             FISCA.Presentation.MotherForm.SetStatusBarMessage("取得補考梯次完成");
 
         }
@@ -301,6 +303,10 @@ school_year = '" + _schoolYear + "'" +
 
         }
 
+        private void SchoolSemesterEnable(bool bo)
+        {
+            cboSchoolYear.Enabled = cbosemester.Enabled = bo;
+        }
 
         private void cbosemester_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -309,7 +315,7 @@ school_year = '" + _schoolYear + "'" +
                 return;
             }
 
-
+            SchoolSemesterEnable(false);
 
             RefreshListView();
         }
@@ -320,7 +326,7 @@ school_year = '" + _schoolYear + "'" +
             {
                 return;
             }
-
+            SchoolSemesterEnable(false);
             RefreshListView();
         }
 

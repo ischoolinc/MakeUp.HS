@@ -412,14 +412,21 @@ WHERE
             // 選擇的項目
             DevComponents.DotNetBar.ComboBoxItem selectedItem = (DevComponents.DotNetBar.ComboBoxItem)cboMakeUpBatch.SelectedItem;
 
-            if ("" + selectedItem.Text == "")
+            if (selectedItem == null)
             {
                 MsgBox.Show("梯次別不得空白", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 return;
             }
+            else
+            {
+                if ("" + selectedItem.Text == "")
+                {
+                    MsgBox.Show("梯次別不得空白", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
 
-
+            btnExport.Enabled = false;
             _targetBatchID = "" + selectedItem.Tag;
 
             _worker.RunWorkerAsync();
@@ -439,7 +446,7 @@ WHERE
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // 繼續 畫面控制項       
-
+            btnExport.Enabled = true;
             cboMakeUpBatch.ResumeLayout();
             cboSchoolYear.ResumeLayout();
             cbosemester.ResumeLayout();

@@ -104,11 +104,11 @@ namespace MakeUp.HS
 
             {
                 Catalog ribbon = RoleAclSource.Instance["教務作業"]["補考作業"];
-                ribbon.Add(new RibbonFeature("E3D987DC-E75C-4472-BAB8-C58EEAA844F9", "補考成績匯入學期科目成績"));
+                ribbon.Add(new RibbonFeature("E3D987DC-E75C-4472-BAB8-C58EEAA844F9", "產生學期科目成績匯入檔"));
 
-                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["補考成績匯入學期科目成績"].Enable = UserAcl.Current["E3D987DC-E75C-4472-BAB8-C58EEAA844F9"].Executable;
+                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["產生學期科目成績匯入檔"].Enable = UserAcl.Current["E3D987DC-E75C-4472-BAB8-C58EEAA844F9"].Executable;
 
-                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["補考成績匯入學期科目成績"].Click += delegate
+                MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["產生學期科目成績匯入檔"].Click += delegate
                 {
                     Form.ExportMakeUpScoreForm emusf = new Form.ExportMakeUpScoreForm();
 

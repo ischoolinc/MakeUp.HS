@@ -184,7 +184,7 @@
             this.MaximumSize = new System.Drawing.Size(353, 228);
             this.MinimumSize = new System.Drawing.Size(353, 228);
             this.Name = "ExportMakeUpScoreForm";
-            this.Text = "補考成績匯入學期科目成績";
+            this.Text = "產生學期科目成績匯入檔";
             this.ResumeLayout(false);
 
         }

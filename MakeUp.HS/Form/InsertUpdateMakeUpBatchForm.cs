@@ -43,6 +43,7 @@ namespace MakeUp.HS.Form
         {
             InitializeComponent();
 
+            this.MaximumSize = this.MinimumSize = this.Size;
             _action = action;
 
             _schoolYear = schoolYear;

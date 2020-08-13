@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.chkDisplayNotFinish = new System.Windows.Forms.CheckBox();
             this.btnExport = new DevComponents.DotNetBar.ButtonX();
             this.btnClose = new DevComponents.DotNetBar.ButtonX();
@@ -37,15 +37,15 @@
             this.cboMakeUpBatch = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.dataGridViewX1 = new DevComponents.DotNetBar.Controls.DataGridViewX();
+            this.ColCourseName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColRefTeacher = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColTotalStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.cboSchoolYear = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
             this.cbosemester = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
-            this.ColCourseName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColRefTeacher = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColTotalStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
@@ -115,9 +115,11 @@
             this.cboMakeUpBatch.DisplayMember = "Text";
             this.cboMakeUpBatch.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cboMakeUpBatch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboMakeUpBatch.DropDownWidth = 500;
             this.cboMakeUpBatch.FormattingEnabled = true;
             this.cboMakeUpBatch.ItemHeight = 19;
             this.cboMakeUpBatch.Location = new System.Drawing.Point(110, 45);
+            this.cboMakeUpBatch.MaxDropDownItems = 30;
             this.cboMakeUpBatch.Name = "cboMakeUpBatch";
             this.cboMakeUpBatch.Size = new System.Drawing.Size(216, 25);
             this.cboMakeUpBatch.TabIndex = 7;
@@ -150,14 +152,14 @@
             this.ColRefTeacher,
             this.ColTotalStatus,
             this.ColDescription});
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewX1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridViewX1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridViewX1.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
             this.dataGridViewX1.ImeMode = System.Windows.Forms.ImeMode.Off;
@@ -170,6 +172,33 @@
             this.dataGridViewX1.Size = new System.Drawing.Size(980, 362);
             this.dataGridViewX1.TabIndex = 9;
             this.dataGridViewX1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewX1_CellMouseDoubleClick);
+            // 
+            // ColCourseName
+            // 
+            this.ColCourseName.HeaderText = "補考群組名稱";
+            this.ColCourseName.Name = "ColCourseName";
+            this.ColCourseName.ReadOnly = true;
+            this.ColCourseName.Width = 200;
+            // 
+            // ColRefTeacher
+            // 
+            this.ColRefTeacher.HeaderText = "閱卷老師";
+            this.ColRefTeacher.Name = "ColRefTeacher";
+            this.ColRefTeacher.ReadOnly = true;
+            // 
+            // ColTotalStatus
+            // 
+            this.ColTotalStatus.HeaderText = "填寫完畢項目";
+            this.ColTotalStatus.Name = "ColTotalStatus";
+            this.ColTotalStatus.ReadOnly = true;
+            this.ColTotalStatus.Width = 130;
+            // 
+            // ColDescription
+            // 
+            this.ColDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColDescription.HeaderText = "描述";
+            this.ColDescription.Name = "ColDescription";
+            this.ColDescription.ReadOnly = true;
             // 
             // picLoading
             // 
@@ -240,33 +269,6 @@
             this.labelX3.Size = new System.Drawing.Size(36, 23);
             this.labelX3.TabIndex = 14;
             this.labelX3.Text = "學期";
-            // 
-            // ColCourseName
-            // 
-            this.ColCourseName.HeaderText = "補考群組名稱";
-            this.ColCourseName.Name = "ColCourseName";
-            this.ColCourseName.ReadOnly = true;
-            this.ColCourseName.Width = 200;
-            // 
-            // ColRefTeacher
-            // 
-            this.ColRefTeacher.HeaderText = "閱卷老師";
-            this.ColRefTeacher.Name = "ColRefTeacher";
-            this.ColRefTeacher.ReadOnly = true;
-            // 
-            // ColTotalStatus
-            // 
-            this.ColTotalStatus.HeaderText = "填寫完畢項目";
-            this.ColTotalStatus.Name = "ColTotalStatus";
-            this.ColTotalStatus.ReadOnly = true;
-            this.ColTotalStatus.Width = 130;
-            // 
-            // ColDescription
-            // 
-            this.ColDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColDescription.HeaderText = "描述";
-            this.ColDescription.Name = "ColDescription";
-            this.ColDescription.ReadOnly = true;
             // 
             // MakeUpScoreStatusForm
             // 
