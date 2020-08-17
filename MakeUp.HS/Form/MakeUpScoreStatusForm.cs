@@ -138,6 +138,9 @@ namespace MakeUp.HS.Form
                     //包含班級id
                     batch.Included_Class_ID = "" + dr["included_class_id"];
 
+                    // 是否封存 是=封存
+                    batch.is_archive = "" + dr["is_archive"];
+
                     _batchList.Add(batch);
 
                 }
@@ -163,6 +166,9 @@ namespace MakeUp.HS.Form
 
             foreach (UDT_MakeUpBatch batch in _batchList)
             {
+                if (batch.is_archive == "是")
+                    continue;
+
                 object item = new object();
 
                 DevComponents.DotNetBar.ComboBoxItem cboI = new DevComponents.DotNetBar.ComboBoxItem();
@@ -279,14 +285,14 @@ namespace MakeUp.HS.Form
 
             // 取得所有教師資料 之後可以對照出 閱卷老師
             List<TeacherRecord> trList = K12.Data.Teacher.SelectAll();
-            foreach(TeacherRecord tr in trList)
+            foreach (TeacherRecord tr in trList)
             {
                 if (tr.Status == TeacherRecord.TeacherStatus.刪除)
                     continue;
 
                 _teacherList.Add(tr);
             }
-                  
+
             string query = @"
 SELECT 
 $make.up.group.uid
@@ -327,9 +333,9 @@ ORDER BY $make.up.group.makeup_group";
                     //由於老師暱稱為空值時
                     //不要顯示( ) 
                     //By 俊威 2019/8/26
-    //                group.TeacherName = _teacherList.Find(t => t.ID == "" + row["ref_teacher_id"]) != null ?
-    //_teacherList.Find(t => t.ID == "" + row["ref_teacher_id"]).Name + "(" +
-    //_teacherList.Find(t => t.ID == "" + row["ref_teacher_id"]).Nickname + ")" : "";
+                    //                group.TeacherName = _teacherList.Find(t => t.ID == "" + row["ref_teacher_id"]) != null ?
+                    //_teacherList.Find(t => t.ID == "" + row["ref_teacher_id"]).Name + "(" +
+                    //_teacherList.Find(t => t.ID == "" + row["ref_teacher_id"]).Nickname + ")" : "";
 
                     // 閱卷老師全名 老師名字(綽號)
                     foreach (TeacherRecord t in _teacherList)
@@ -479,7 +485,7 @@ WHERE
                 }
                 #endregion
             }
-            
+
 
             int scoreCount = 0;
 
