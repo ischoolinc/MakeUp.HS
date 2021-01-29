@@ -305,7 +305,7 @@ FROM  $make.up.group
 LEFT JOIN  $make.up.data ON  $make.up.data.ref_makeup_group_id :: BIGINT = $make.up.group.uid 
 LEFT JOIN  $make.up.batch ON  $make.up.batch.uid = $make.up.group.ref_makeup_batch_id :: BIGINT
 WHERE  $make.up.group.ref_makeup_batch_id = '" + targetBatchID + @"' 
- AND $make.up.batch.is_archive != '是' 
+ AND ($make.up.batch.is_archive is null OR $make.up.batch.is_archive != '是' )
 GROUP BY  $make.up.group.uid 
 ORDER BY $make.up.group.makeup_group";
 
