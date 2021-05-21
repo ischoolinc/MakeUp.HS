@@ -406,7 +406,7 @@ WHERE
 
                 #region 補考學生資訊
 
-                for (int i = 1; i <= 50; i++)
+                for (int i = 1; i <= 350; i++)
                 {
                     _dataTable.Columns.Add("科別" + i);
                     _dataTable.Columns.Add("年級" + i);
