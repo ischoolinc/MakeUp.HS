@@ -163,6 +163,9 @@ namespace MakeUp.HS
                     // 及格標準
                     decimal passStandard = 60;
 
+                    decimal mScore;
+                    decimal pScore;
+
                     if (decimal.TryParse(score.Detail.GetAttribute("原始成績"), out s))
                     {
                         if (resitLimit.ContainsKey(score.GradeYear)) makeUpStandard = resitLimit[score.GradeYear];
@@ -170,6 +173,22 @@ namespace MakeUp.HS
                     }
 
                     if (applyLimit.ContainsKey(score.GradeYear)) passStandard = applyLimit[score.GradeYear];
+
+                    // 檢查如果學生學期科目上有設定，使用學期科目成績上設定
+                    if (decimal.TryParse(score.Detail.GetAttribute("修課及格標準"), out pScore))
+                    {
+                        passStandard = pScore;
+                    }
+
+                    if (decimal.TryParse(score.Detail.GetAttribute("修課補考標準"), out mScore))
+                    {
+                        makeUpStandard = mScore;
+                    }
+
+                    if (s > 0)
+                    {
+                        canResit = (s >= makeUpStandard);
+                    }
 
                     score.Detail.SetAttribute("及格標準", passStandard.ToString());
                     score.Detail.SetAttribute("達補考標準", canResit ? "是" : "否");
@@ -191,7 +210,7 @@ namespace MakeUp.HS
         public Dictionary<string, DataRow> GetStudentMakeupPassScoreByGroupIDs(List<string> GroupIDs)
         {
             //       -- 取得高中補考模組 課程及格與補考標準
-           
+
             Dictionary<string, DataRow> value = new Dictionary<string, DataRow>();
 
             if (GroupIDs.Count > 0)
@@ -220,17 +239,17 @@ WHERE ref_makeup_group_id in(" + string.Join(",", GroupIDs.ToArray()) + @")
 
                 if (dt.Rows.Count > 0)
                 {
-                    foreach(DataRow dr in dt.Rows)
+                    foreach (DataRow dr in dt.Rows)
                     {
                         string key = dr["group_id"] + "_" + dr["student_id"] + "_" + dr["subject"] + "_" + dr["subj_level"];
 
                         if (!value.ContainsKey(key))
-                            value.Add(key, dr); 
+                            value.Add(key, dr);
                     }
                 }
 
             }
-                     
+
 
             return value;
         }

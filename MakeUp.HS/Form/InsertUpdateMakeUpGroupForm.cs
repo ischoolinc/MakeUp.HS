@@ -363,22 +363,22 @@ WHERE
 
                     string key = _group.UID + "_" + row["ref_student_id"] + "_" + data.Subject + "_" + data.Level;
 
-                    if (studPassScoreDict.ContainsKey(key))
-                    {
-                        //及格標準
-                        if (studPassScoreDict[key]["passing_standard"] != null)
-                            data.Pass_Standard = studPassScoreDict[key]["passing_standard"].ToString();
+                    //if (studPassScoreDict.ContainsKey(key))
+                    //{
+                    //    //及格標準
+                    //    if (studPassScoreDict[key]["passing_standard"] != null)
+                    //        data.Pass_Standard = studPassScoreDict[key]["passing_standard"].ToString();
 
-                        //補考標準
-                        if (studPassScoreDict[key]["makeup_standard"] != null)
-                            data.MakeUp_Standard = studPassScoreDict[key]["makeup_standard"].ToString();
-                    }
+                    //    //補考標準
+                    //    if (studPassScoreDict[key]["makeup_standard"] != null)
+                    //        data.MakeUp_Standard = studPassScoreDict[key]["makeup_standard"].ToString();
+                    //}
 
-                    ////及格標準
-                    //data.Pass_Standard = "" + row["pass_standard"];
+                    //及格標準
+                    data.Pass_Standard = "" + row["pass_standard"];
 
-                    ////補考標準
-                    //data.MakeUp_Standard = "" + row["makeup_standard"];
+                    //補考標準
+                    data.MakeUp_Standard = "" + row["makeup_standard"];
 
                     // 取得本學生 成績的輸入小數位數規則
                     // 只有 管理補考成績的情境用得到， 目前會要用比較慢一筆一筆學生查詢，而不直接寫在SQL內的原因
