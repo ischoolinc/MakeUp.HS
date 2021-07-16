@@ -461,6 +461,8 @@ WHERE
             // 沒有補考分數的清單
             List<UDT_MakeUpData> noMakeUpscoreList = new List<UDT_MakeUpData>();
 
+            // 補考分數為「缺」的清單
+            List<UDT_MakeUpData> lackOfMakeUpscoreList = new List<UDT_MakeUpData>();
             #region 填入內容
 
             foreach (string groupID in _scoreDict.Keys)
@@ -474,6 +476,15 @@ WHERE
 
                         continue;
                     }
+
+                    // 補考分數為「缺」 另外處理 不在匯出名單中
+                    if (score.MakeUp_Score == "缺")
+                    {
+                        lackOfMakeUpscoreList.Add(score);
+
+                        continue;
+                    }
+
 
                     // 學生系統編號
                     ws.Cells[index, 0].PutValue("" + score.Ref_Student_ID);
@@ -619,7 +630,60 @@ WHERE
             }
 
 
+            Worksheet ws_LackScore = book.Worksheets[2];
 
+            index = 1;
+
+            foreach (UDT_MakeUpData score in lackOfMakeUpscoreList)
+            {
+
+                // 學生系統編號
+                ws_LackScore.Cells[index, 0].PutValue("" + score.Ref_Student_ID);
+
+                // 學號
+                ws_LackScore.Cells[index, 1].PutValue("" + score.StudentNumber);
+
+                // 班級
+                ws_LackScore.Cells[index, 2].PutValue("" + score.ClassName);
+
+                // 座號
+                ws_LackScore.Cells[index, 3].PutValue("" + score.Seat_no);
+
+                // 科別
+                ws_LackScore.Cells[index, 4].PutValue("" + score.Department);
+
+                // 姓名
+                ws_LackScore.Cells[index, 5].PutValue("" + score.StudentName);
+
+                // 科目
+                ws_LackScore.Cells[index, 6].PutValue("" + score.Subject);
+
+                // 科目級別
+                ws_LackScore.Cells[index, 7].PutValue("" + score.Level);
+
+                // 學年度
+                ws_LackScore.Cells[index, 8].PutValue(_schoolYear);
+
+                // 學期
+                ws_LackScore.Cells[index, 9].PutValue(_semester);
+
+                // 原始成績
+                ws_LackScore.Cells[index, 10].PutValue("" + score.Score);
+
+                // 補考成績
+                ws_LackScore.Cells[index, 11].PutValue("" + score.MakeUp_Score);
+
+                // 及格標準
+                ws_LackScore.Cells[index, 12].PutValue("" + score.Pass_Standard);
+
+
+                // 取得學分
+                ws_LackScore.Cells[index, 13].PutValue("");
+
+
+                index++;
+
+            }
 
             #endregion
 
