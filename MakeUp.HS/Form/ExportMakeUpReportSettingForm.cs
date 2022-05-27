@@ -282,7 +282,8 @@ FROM $make.up.data
     LEFT JOIN class ON class.id = student.ref_class_id    
     LEFT JOIN dept ON dept.id = student.ref_dept_id OR dept.id = class.ref_dept_id
 WHERE
-    $make.up.data.Ref_MakeUp_Group_ID IN (" + groupIDs + ")"
+    $make.up.data.Ref_MakeUp_Group_ID IN (" + groupIDs + ")" +
+    "ORDER BY ref_makeup_group_id,grade_year DESC, class.display_order, class_name, seat_no"
     ;
 
 
@@ -377,11 +378,12 @@ WHERE
 
 
             #region 排序
-            foreach (string groupID in _scoreGroupDict.Keys)
-            {
-                _scoreGroupDict[groupID].Sort((x, y) => { return x.ClassName.CompareTo(y.ClassName); });
+            //2022/5/26 Cynthia 客服反應會造成排序亂掉，先註解
+            //foreach (string groupID in _scoreGroupDict.Keys)
+            //{
+            //    _scoreGroupDict[groupID].Sort((x, y) => { return x.ClassName.CompareTo(y.ClassName); });
 
-            } 
+            //} 
             #endregion
 
             #region 列印

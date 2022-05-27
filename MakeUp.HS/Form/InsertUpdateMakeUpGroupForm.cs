@@ -310,7 +310,8 @@ FROM $make.up.data
     LEFT JOIN class ON class.id = student.ref_class_id    
     LEFT JOIN dept ON dept.id = student.ref_dept_id OR dept.id = class.ref_dept_id
 WHERE
-    $make.up.data.Ref_MakeUp_Group_ID = '" + _group.UID + "'";
+    $make.up.data.Ref_MakeUp_Group_ID = '" + _group.UID + "'"+
+    " ORDER BY class.grade_year DESC, class.display_order, class_name, seat_no";
 
 
             QueryHelper qh = new QueryHelper();
