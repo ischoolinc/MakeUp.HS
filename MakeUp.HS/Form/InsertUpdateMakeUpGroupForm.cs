@@ -432,7 +432,7 @@ WHERE
 
                 row.Cells[7].Value = data.Credit;
 
-                row.Cells[8].Value = data.C_Is_Required_By;
+                row.Cells[8].Value = data.C_Is_Required_By == "部訂"?"部定": data.C_Is_Required_By;
 
                 row.Cells[9].Value = data.C_Is_Required;
 
