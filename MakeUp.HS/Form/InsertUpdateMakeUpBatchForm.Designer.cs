@@ -42,6 +42,7 @@
             this.labelX4 = new DevComponents.DotNetBar.LabelX();
             this.txtStartTime = new DevComponents.DotNetBar.Controls.TextBoxX();
             this.txtEndTime = new DevComponents.DotNetBar.Controls.TextBoxX();
+            this.labelX5 = new DevComponents.DotNetBar.LabelX();
             this.groupPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
@@ -52,7 +53,7 @@
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
             this.btnClose.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnClose.Location = new System.Drawing.Point(572, 445);
+            this.btnClose.Location = new System.Drawing.Point(572, 483);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(102, 23);
             this.btnClose.TabIndex = 13;
@@ -65,7 +66,7 @@
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.BackColor = System.Drawing.Color.Transparent;
             this.btnSave.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnSave.Location = new System.Drawing.Point(462, 445);
+            this.btnSave.Location = new System.Drawing.Point(462, 483);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(104, 23);
             this.btnSave.TabIndex = 12;
@@ -88,6 +89,8 @@
             // 
             // txtBatchName
             // 
+            this.txtBatchName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // 
             // 
@@ -101,6 +104,8 @@
             // 
             // txtDescription
             // 
+            this.txtDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // 
             // 
@@ -128,6 +133,9 @@
             // 
             // groupPanel3
             // 
+            this.groupPanel3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupPanel3.BackColor = System.Drawing.Color.Transparent;
             this.groupPanel3.CanvasColor = System.Drawing.SystemColors.Control;
             this.groupPanel3.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.Office2007;
@@ -194,10 +202,12 @@
             this.lstClass.Border.Class = "ListViewBorder";
             this.lstClass.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lstClass.CheckBoxes = true;
+            this.lstClass.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstClass.Enabled = false;
-            this.lstClass.Location = new System.Drawing.Point(3, 7);
+            this.lstClass.HideSelection = false;
+            this.lstClass.Location = new System.Drawing.Point(0, 0);
             this.lstClass.Name = "lstClass";
-            this.lstClass.Size = new System.Drawing.Size(648, 196);
+            this.lstClass.Size = new System.Drawing.Size(654, 212);
             this.lstClass.TabIndex = 6;
             this.lstClass.UseCompatibleStateImageBehavior = false;
             this.lstClass.View = System.Windows.Forms.View.List;
@@ -238,6 +248,7 @@
             // 
             // labelX4
             // 
+            this.labelX4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelX4.BackColor = System.Drawing.Color.Transparent;
             // 
             // 
@@ -262,11 +273,14 @@
             this.txtStartTime.Name = "txtStartTime";
             this.txtStartTime.Size = new System.Drawing.Size(187, 25);
             this.txtStartTime.TabIndex = 23;
+            this.txtStartTime.WatermarkText = "2023/05/01 00:00:00";
+            this.txtStartTime.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtStartTime_KeyDown);
             this.txtStartTime.Validating += new System.ComponentModel.CancelEventHandler(this.txtStartTime_Validating);
             this.txtStartTime.Validated += new System.EventHandler(this.txtStartTime_Validated);
             // 
             // txtEndTime
             // 
+            this.txtEndTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // 
             // 
@@ -277,14 +291,32 @@
             this.txtEndTime.Name = "txtEndTime";
             this.txtEndTime.Size = new System.Drawing.Size(190, 25);
             this.txtEndTime.TabIndex = 24;
+            this.txtEndTime.WatermarkText = "2023/05/03 23:59:59";
+            this.txtEndTime.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtEndTime_KeyDown);
             this.txtEndTime.Validating += new System.ComponentModel.CancelEventHandler(this.txtEndTime_Validating);
             this.txtEndTime.Validated += new System.EventHandler(this.txtEndTime_Validated);
+            // 
+            // labelX5
+            // 
+            this.labelX5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelX5.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX5.BackgroundStyle.Class = "";
+            this.labelX5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX5.Location = new System.Drawing.Point(16, 445);
+            this.labelX5.Name = "labelX5";
+            this.labelX5.Size = new System.Drawing.Size(660, 56);
+            this.labelX5.TabIndex = 25;
+            this.labelX5.Text = "在「成績輸入開始/結束時間」中輸入「月份/日期」，將自動換轉時間格式為「西元年/月份/日期 00:00:00」，\r\n並可再調整輸入詳細時間。";
             // 
             // InsertUpdateMakeUpBatchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(688, 480);
+            this.ClientSize = new System.Drawing.Size(688, 518);
             this.Controls.Add(this.txtEndTime);
             this.Controls.Add(this.txtStartTime);
             this.Controls.Add(this.labelX4);
@@ -297,6 +329,7 @@
             this.Controls.Add(this.labelX1);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.labelX5);
             this.DoubleBuffered = true;
             this.Name = "InsertUpdateMakeUpBatchForm";
             this.Text = "新增補考梯次";
@@ -323,5 +356,6 @@
         private DevComponents.DotNetBar.LabelX labelX4;
         private DevComponents.DotNetBar.Controls.TextBoxX txtStartTime;
         private DevComponents.DotNetBar.Controls.TextBoxX txtEndTime;
+        private DevComponents.DotNetBar.LabelX labelX5;
     }
 }

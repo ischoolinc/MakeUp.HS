@@ -125,21 +125,23 @@ namespace MakeUp.HS.Form
 
         }
 
+
+
         private void InsertUpdateMakeUpBatchForm_Load(object sender, EventArgs e)
         {
+            if (txtStartTime.Text == string.Empty)
+                _errors.SetError(txtStartTime, "必填");
+            if (txtEndTime.Text == string.Empty)
+                _errors.SetError(txtEndTime, "必填");
 
-            // 加入班級清單
-            List<K12.Data.ClassRecord> classList = K12.Data.Class.SelectAll();
+            Dictionary<string, string> classDic = Utility.GetClassNameList();
 
-            // 以班級名稱排序
-            classList.Sort((x, y) => { return x.Name.CompareTo(y.Name); });
-
-            foreach (K12.Data.ClassRecord classRecord in classList)
+            foreach (string id in classDic.Keys)
             {
                 ListViewItem vItem = new ListViewItem();
-                vItem.Name = classRecord.Name;
-                vItem.Tag = classRecord.ID;
-                vItem.Text = classRecord.Name;
+                vItem.Name = classDic[id];
+                vItem.Tag = id;
+                vItem.Text = classDic[id];
                 vItem.Checked = true;
                 lstClass.Items.Add(vItem);
             }
@@ -442,13 +444,13 @@ FROM
                 {
                     this.DialogResult = DialogResult.OK;
                 }
-              
+
             }
             catch (Exception ex)
             {
-                FISCA.Presentation.Controls.MsgBox.Show("儲存失敗,"+ ex.Message);
+                FISCA.Presentation.Controls.MsgBox.Show("儲存失敗," + ex.Message);
             }
-        
+
         }
 
         // 將傳入的 梯次 的包含班級勾起來
@@ -495,7 +497,7 @@ FROM
         private void ValidTextTime(TextBoxX textbox, PaddingMethod method)
         {
             if (textbox.Text == string.Empty)
-                _errors.SetError(textbox, "");
+                _errors.SetError(textbox, "必填");
             else
             {
                 DateTime? objStart = DateTimeHelper.ParseGregorian(textbox.Text, method);
@@ -532,6 +534,23 @@ FROM
                     DateTime? dt = DateTimeHelper.ParseGregorian(txtBox.Text, PaddingMethod.Last);
                     txtBox.Text = dt.Value.ToString("yyyy/MM/dd HH:mm:ss");
                 }
+            }
+        }
+
+
+        private void txtStartTime_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                txtEndTime.Focus();
+            }
+        }
+
+        private void txtEndTime_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnSave.Focus();
             }
         }
     }

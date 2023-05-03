@@ -254,7 +254,41 @@ WHERE ref_makeup_group_id in(" + string.Join(",", GroupIDs.ToArray()) + @")
             return value;
         }
 
+        /// <summary>
+        /// 取得狀態 為 1.一般、2.延修 的學生班級
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<string, string> GetClassNameList()
+        {
+            //id,name
+            Dictionary<string, string> retVal = new Dictionary<string, string>();
 
+            QueryHelper qh = new QueryHelper();
+            string query = @"SELECT DISTINCT 
+	class.id AS class_id
+	, class_name
+	, class.grade_year 
+	, display_order
+FROM 
+	class 
+INNER JOIN 
+	student 
+	ON class.id=student.ref_class_id 
+	AND student.status IN (1,2) 
+ORDER BY 
+	class.grade_year 
+	, display_order
+	, class_name";
+            DataTable dt = qh.Select(query);
+            foreach (DataRow dr in dt.Rows)
+            {
+                string id = dr["class_id"].ToString();
+                string className = dr["class_name"].ToString();
+                if (!retVal.ContainsKey(id))
+                    retVal.Add(id, className);
+            }
+            return retVal;
+        }
     }
 }
 
