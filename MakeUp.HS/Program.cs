@@ -116,7 +116,17 @@ namespace MakeUp.HS
                 };
             }
 
+            Catalog ribbon1 = RoleAclSource.Instance["教務作業"]["補考作業"];
+            ribbon1.Add(new RibbonFeature("a970b2a5-590a-4d2b-90c2-60dc9cbd9c62", "產生學年科目成績匯入檔"));
 
+            MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["產生學年科目成績匯入檔"].Enable = UserAcl.Current["a970b2a5-590a-4d2b-90c2-60dc9cbd9c62"].Executable;
+
+            MotherForm.RibbonBarItems["教務作業", "補考作業"]["補考作業"]["產生學年科目成績匯入檔"].Click += delegate
+            {
+                Form.ExportMakeUpScoreFormYear emusf = new Form.ExportMakeUpScoreFormYear();
+
+                emusf.ShowDialog();
+            };
         }
     }
 }

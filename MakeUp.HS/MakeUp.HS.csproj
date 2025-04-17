@@ -149,6 +149,12 @@
     <Compile Include="Form\ExportMakeUpScoreForm.designer.cs">
       <DependentUpon>ExportMakeUpScoreForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\ExportMakeUpScoreFormYear.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\ExportMakeUpScoreFormYear.Designer.cs">
+      <DependentUpon>ExportMakeUpScoreFormYear.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\GenMakeUpGroupForm_N.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -235,6 +241,9 @@
       <DependentUpon>ExportMakeUpScoreForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form\ExportMakeUpScoreFormYear.resx">
+      <DependentUpon>ExportMakeUpScoreFormYear.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\GenMakeUpGroupForm_N.resx">
       <DependentUpon>GenMakeUpGroupForm_N.cs</DependentUpon>
     </EmbeddedResource>
@@ -272,6 +281,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\loading.gif" />
+    <None Include="Resources\匯入學年科目成績%28補考成績%29.xlsx" />
     <None Include="Resources\匯入學期科目成績%28補考成績%29.xlsx" />
     <None Include="Resources\補考公告功能變數%28依學生%29.docx" />
     <None Include="Resources\補考公告功能變數%28依群組%29.docx" />

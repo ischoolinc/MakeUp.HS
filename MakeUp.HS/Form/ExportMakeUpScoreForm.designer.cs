@@ -37,16 +37,14 @@
             this.labelX2 = new DevComponents.DotNetBar.LabelX();
             this.cbosemester = new DevComponents.DotNetBar.Controls.ComboBoxEx();
             this.labelX3 = new DevComponents.DotNetBar.LabelX();
-            this.labelX4 = new DevComponents.DotNetBar.LabelX();
             this.SuspendLayout();
             // 
             // btnExport
             // 
             this.btnExport.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnExport.BackColor = System.Drawing.Color.Transparent;
             this.btnExport.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnExport.Location = new System.Drawing.Point(80, 154);
+            this.btnExport.Location = new System.Drawing.Point(47, 101);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(160, 23);
             this.btnExport.TabIndex = 5;
@@ -56,10 +54,9 @@
             // btnClose
             // 
             this.btnClose.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.BackColor = System.Drawing.Color.Transparent;
             this.btnClose.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnClose.Location = new System.Drawing.Point(246, 154);
+            this.btnClose.Location = new System.Drawing.Point(215, 101);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 6;
@@ -78,7 +75,7 @@
             this.cboMakeUpBatch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboMakeUpBatch.FormattingEnabled = true;
             this.cboMakeUpBatch.ItemHeight = 19;
-            this.cboMakeUpBatch.Location = new System.Drawing.Point(108, 94);
+            this.cboMakeUpBatch.Location = new System.Drawing.Point(77, 51);
             this.cboMakeUpBatch.Name = "cboMakeUpBatch";
             this.cboMakeUpBatch.Size = new System.Drawing.Size(216, 25);
             this.cboMakeUpBatch.TabIndex = 7;
@@ -91,7 +88,7 @@
             // 
             this.labelX1.BackgroundStyle.Class = "";
             this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX1.Location = new System.Drawing.Point(38, 94);
+            this.labelX1.Location = new System.Drawing.Point(7, 52);
             this.labelX1.Name = "labelX1";
             this.labelX1.Size = new System.Drawing.Size(64, 23);
             this.labelX1.TabIndex = 8;
@@ -104,7 +101,7 @@
             this.cboSchoolYear.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboSchoolYear.FormattingEnabled = true;
             this.cboSchoolYear.ItemHeight = 19;
-            this.cboSchoolYear.Location = new System.Drawing.Point(108, 63);
+            this.cboSchoolYear.Location = new System.Drawing.Point(77, 11);
             this.cboSchoolYear.Name = "cboSchoolYear";
             this.cboSchoolYear.Size = new System.Drawing.Size(86, 25);
             this.cboSchoolYear.TabIndex = 15;
@@ -118,7 +115,7 @@
             // 
             this.labelX2.BackgroundStyle.Class = "";
             this.labelX2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX2.Location = new System.Drawing.Point(54, 65);
+            this.labelX2.Location = new System.Drawing.Point(23, 12);
             this.labelX2.Name = "labelX2";
             this.labelX2.Size = new System.Drawing.Size(48, 23);
             this.labelX2.TabIndex = 16;
@@ -131,7 +128,7 @@
             this.cbosemester.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbosemester.FormattingEnabled = true;
             this.cbosemester.ItemHeight = 19;
-            this.cbosemester.Location = new System.Drawing.Point(255, 63);
+            this.cbosemester.Location = new System.Drawing.Point(224, 11);
             this.cbosemester.Name = "cbosemester";
             this.cbosemester.Size = new System.Drawing.Size(69, 25);
             this.cbosemester.TabIndex = 13;
@@ -145,32 +142,17 @@
             // 
             this.labelX3.BackgroundStyle.Class = "";
             this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX3.Location = new System.Drawing.Point(200, 63);
+            this.labelX3.Location = new System.Drawing.Point(181, 12);
             this.labelX3.Name = "labelX3";
             this.labelX3.Size = new System.Drawing.Size(36, 23);
             this.labelX3.TabIndex = 14;
             this.labelX3.Text = "學期";
             // 
-            // labelX4
-            // 
-            this.labelX4.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX4.BackgroundStyle.Class = "";
-            this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX4.Location = new System.Drawing.Point(12, 3);
-            this.labelX4.Name = "labelX4";
-            this.labelX4.Size = new System.Drawing.Size(314, 56);
-            this.labelX4.TabIndex = 17;
-            this.labelX4.Text = "本功能將選擇梯次內所有補考資料匯出， 再至系統\r\n學生頁籤匯入學期科目成績。";
-            // 
             // ExportMakeUpScoreForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(337, 189);
-            this.Controls.Add(this.labelX4);
+            this.ClientSize = new System.Drawing.Size(315, 133);
             this.Controls.Add(this.cboSchoolYear);
             this.Controls.Add(this.labelX2);
             this.Controls.Add(this.cbosemester);
@@ -181,10 +163,9 @@
             this.Controls.Add(this.btnExport);
             this.DoubleBuffered = true;
             this.MaximizeBox = true;
-            this.MaximumSize = new System.Drawing.Size(353, 228);
-            this.MinimumSize = new System.Drawing.Size(353, 228);
             this.Name = "ExportMakeUpScoreForm";
             this.Text = "產生學期科目成績匯入檔";
+            this.Load += new System.EventHandler(this.ExportMakeUpScoreForm_Load);
             this.ResumeLayout(false);
 
         }
@@ -199,6 +180,5 @@
         private DevComponents.DotNetBar.LabelX labelX2;
         private DevComponents.DotNetBar.Controls.ComboBoxEx cbosemester;
         private DevComponents.DotNetBar.LabelX labelX3;
-        private DevComponents.DotNetBar.LabelX labelX4;
     }
 }

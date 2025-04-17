@@ -14,9 +14,10 @@ using System.Xml.Linq;
 using System.ComponentModel;
 using FISCA.Presentation.Controls;
 
+
 namespace MakeUp.HS.Form
 {
-    public partial class ExportMakeUpScoreForm : FISCA.Presentation.Controls.BaseForm
+    public partial class ExportMakeUpScoreFormYear : BaseForm
     {
         private List<UDT_MakeUpBatch> _batchList = new List<UDT_MakeUpBatch>();
 
@@ -29,8 +30,6 @@ namespace MakeUp.HS.Form
         // 學年度
         private string _schoolYear;
 
-        // 學期
-        private string _semester;
 
         // 目標梯次 ID
         private string _targetBatchID;
@@ -46,16 +45,14 @@ namespace MakeUp.HS.Form
         private Dictionary<string, List<UDT_MakeUpData>> _scoreDict = new Dictionary<string, List<UDT_MakeUpData>>();
 
 
-        public ExportMakeUpScoreForm()
+        public ExportMakeUpScoreFormYear()
         {
             InitializeComponent();
-
             _worker = new BackgroundWorker();
-            _worker.DoWork += new DoWorkEventHandler(Worker_DoWork);
-            _worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Worker_RunWorkerCompleted);
-            _worker.ProgressChanged += new ProgressChangedEventHandler(Worker_ProgressChanged);
+            _worker.DoWork += _worker_DoWork;
+            _worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
+            _worker.ProgressChanged += _worker_ProgressChanged;
             _worker.WorkerReportsProgress = true;
-
 
             // 學年度 
             cboSchoolYear.Items.Add(int.Parse(School.DefaultSchoolYear) - 3);
@@ -63,16 +60,8 @@ namespace MakeUp.HS.Form
             cboSchoolYear.Items.Add(int.Parse(School.DefaultSchoolYear) - 1);
             cboSchoolYear.Items.Add(int.Parse(School.DefaultSchoolYear));
 
-            // 學期
-            cbosemester.Items.Add(1);
-            cbosemester.Items.Add(2);
-
-            _schoolYear = School.DefaultSchoolYear;
-            _semester = School.DefaultSemester;
-
             // 預設為學校的當學年度學期
             cboSchoolYear.Text = School.DefaultSchoolYear;
-            cbosemester.Text = School.DefaultSemester;
 
             GetMakeUpBatch();
 
@@ -83,7 +72,7 @@ namespace MakeUp.HS.Form
 
         private void GetMakeUpBatch()
         {
-
+            // 學年固定放在第2學期
             #region 取得 該學年度學期的 補考梯次            
             string query = @"
                     SELECT 
@@ -91,7 +80,7 @@ namespace MakeUp.HS.Form
                     FROM $make.up.batch
                     WHERE
                     school_year = '" + _schoolYear + "'" +
-                        "AND semester = '" + _semester + "'";
+                        "AND semester = '2'";
 
             QueryHelper qh = new QueryHelper();
             DataTable dt = qh.Select(query);
@@ -130,7 +119,6 @@ namespace MakeUp.HS.Form
 
         }
 
-
         private void FillCboMakeUpbatch()
         {
 
@@ -158,9 +146,10 @@ namespace MakeUp.HS.Form
             }
         }
 
-
-
-
+        private void _worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            FISCA.Presentation.MotherForm.SetStatusBarMessage("" + e.UserState, e.ProgressPercentage);
+        }
 
         /// <summary>
         /// 依補考梯次 取得所有 補考群組 以及 其下 所有的補考資料
@@ -248,11 +237,7 @@ ORDER BY $make.up.group.makeup_group";
 
                 if (groupIDs != "")
                 {
-                    //透過 group_id 取得學生修課及格與補考標準
-                    Utility uti = new Utility();
-                    Dictionary<string, DataRow> studPassScoreDict = uti.GetStudentMakeupPassScoreByGroupIDs(groupIDList);
-
-
+                   
                     query = @"
 SELECT 
     $make.up.data.uid
@@ -262,6 +247,7 @@ SELECT
     ,dept.name AS department
     ,class.class_name
     ,student.seat_no
+    ,class.grade_year
     ,student.student_number
     ,$make.up.data.subject
     ,$make.up.data.level 
@@ -328,6 +314,9 @@ WHERE
                             //校部定
                             data.C_Is_Required_By = "" + row["c_is_required_by"];
 
+                            // 班級年級
+                            data.GradeYear = "" + row["grade_year"];
+                            
                             //必選修
                             data.C_Is_Required = "" + row["c_is_required"];
 
@@ -340,16 +329,10 @@ WHERE
 
                             string key = data.Ref_MakeUp_Group_ID + "_" + data.Ref_Student_ID + "_" + data.Subject + "_" + data.Level;
 
-                            if (studPassScoreDict.ContainsKey(key))
-                            {
-                                //及格標準
-                                if (studPassScoreDict[key]["passing_standard"] != null)
-                                    data.Pass_Standard = studPassScoreDict[key]["passing_standard"].ToString();
 
-                                //補考標準
-                                if (studPassScoreDict[key]["makeup_standard"] != null)
-                                    data.MakeUp_Standard = studPassScoreDict[key]["makeup_standard"].ToString();
-                            }
+                            data.Pass_Standard = row["pass_standard"] + "";
+                            data.MakeUp_Standard = row["makeup_standard"] + "";
+                           
 
                             ////及格標準
                             //data.Pass_Standard = "" + row["pass_standard"];
@@ -368,90 +351,18 @@ WHERE
 
                 #endregion
             }
-
-
-
-
-
         }
 
 
-
-
-        /// <summary>
-        /// 按下「關閉」時觸發
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-
-
-
-
-
-
-        /// <summary>
-        /// 按下「匯出到 Excel」時觸發
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnExport_Click(object sender, EventArgs e)
-        {
-            // 暫停畫面控制項
-
-            cboMakeUpBatch.SuspendLayout();
-            cboSchoolYear.SuspendLayout();
-            cbosemester.SuspendLayout();
-
-
-            // 選擇的項目
-            DevComponents.DotNetBar.ComboBoxItem selectedItem = (DevComponents.DotNetBar.ComboBoxItem)cboMakeUpBatch.SelectedItem;
-
-            if (selectedItem == null)
-            {
-                MsgBox.Show("梯次別不得空白", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            else
-            {
-                if ("" + selectedItem.Text == "")
-                {
-                    MsgBox.Show("梯次別不得空白", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-            }
-
-            btnExport.Enabled = false;
-            _targetBatchID = "" + selectedItem.Tag;
-
-            _worker.RunWorkerAsync();
-
-        }
-
-
-
-
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-            LoadMakeUpGroup(_targetBatchID);
-
-        }
-
-        private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // 繼續 畫面控制項       
             btnExport.Enabled = true;
             cboMakeUpBatch.ResumeLayout();
             cboSchoolYear.ResumeLayout();
-            cbosemester.ResumeLayout();
 
             // 取得 系統預設的樣板            
-            Workbook book = new Workbook(new MemoryStream(Properties.Resources.匯入學期科目成績_補考成績_));
+            Workbook book = new Workbook(new MemoryStream(Properties.Resources.匯入學年科目成績_補考成績_));
             Worksheet ws = book.Worksheets[0];
 
 
@@ -484,45 +395,35 @@ WHERE
                         continue;
                     }
 
+                    // 學號 0
+                    ws.Cells[index, 0].PutValue("" + score.StudentNumber);
 
-                    // 學生系統編號
-                    ws.Cells[index, 0].PutValue("" + score.Ref_Student_ID);
+                    // 班級 1
+                    ws.Cells[index, 1].PutValue("" + score.ClassName);
 
-                    // 學號
-                    ws.Cells[index, 1].PutValue("" + score.StudentNumber);
+                    // 座號 2
+                    ws.Cells[index, 2].PutValue("" + score.Seat_no);
 
-                    // 班級
-                    ws.Cells[index, 2].PutValue("" + score.ClassName);
+                    // 科別 3
+                    ws.Cells[index, 3].PutValue("" + score.Department);
 
-                    // 座號
-                    ws.Cells[index, 3].PutValue("" + score.Seat_no);
+                    // 姓名 4
+                    ws.Cells[index, 4].PutValue("" + score.StudentName);
 
-                    // 科別
-                    ws.Cells[index, 4].PutValue("" + score.Department);
+                    // 學年度 5
+                    ws.Cells[index, 5].PutValue(_schoolYear);
 
-                    // 姓名
-                    ws.Cells[index, 5].PutValue("" + score.StudentName);
+                    // 成績年級 6
+                    ws.Cells[index, 6].PutValue("" + score.GradeYear);
 
-                    // 科目
-                    ws.Cells[index, 6].PutValue("" + score.Subject);
+                    // 科目 7
+                    ws.Cells[index, 7].PutValue("" + score.Subject);
 
-                    // 科目級別
-                    ws.Cells[index, 7].PutValue("" + score.Level);
-
-                    // 學年度
-                    ws.Cells[index, 8].PutValue(_schoolYear);
-
-                    // 學期
-                    ws.Cells[index, 9].PutValue(_semester);
-
-                    // 是否取得學分
-                    string getCredit = "否";
+                    // 結算成績 9
+                    ws.Cells[index, 8].PutValue("" + score.Score);
 
                     // 補考後的分數
                     decimal makeUp_Score = new decimal();
-
-                    // 原始成績
-                    decimal ori_score = new decimal();
 
                     // 及格標準
                     decimal pass_standard = new decimal();
@@ -538,163 +439,32 @@ WHERE
                         //補考分數 等於或是 比 及格標準高 ， 則取得學分 ， 補考分數 及格標準計
                         if (makeUp_Score >= pass_standard)
                         {
-                            getCredit = "是";
-
                             makeUp_Score = pass_standard;
                         }
-                        // 補考分數 比 及格標準低 ， 沒有取得分數，補考分數 以原始分數計
-                        else
-                        {
 
-                        }
                     }
-
+                    // 補考成績 9                    
                     // 指定成新的補考分數
                     score.MakeUp_Score = "" + makeUp_Score;
-
-                    // 原始成績
-                    ws.Cells[index, 10].PutValue("" + score.Score);
-
                     // 補考成績
-                    ws.Cells[index, 11].PutValue("" + score.MakeUp_Score);
-
-                    // 及格標準
-                    ws.Cells[index, 12].PutValue("" + score.Pass_Standard);
-
-
-                    // 取得學分
-                    ws.Cells[index, 13].PutValue(getCredit);
-
+                    ws.Cells[index, 9].PutValue("" + score.MakeUp_Score);
 
                     index++;
 
                 }
             }
 
-
-            // 沒有補考分數的名單 提醒使用者
-            Worksheet ws_warning = book.Worksheets[1];
-
-            index = 1;
-
-            foreach (UDT_MakeUpData score in noMakeUpscoreList)
-            {
-
-                // 學生系統編號
-                ws_warning.Cells[index, 0].PutValue("" + score.Ref_Student_ID);
-
-                // 學號
-                ws_warning.Cells[index, 1].PutValue("" + score.StudentNumber);
-
-                // 班級
-                ws_warning.Cells[index, 2].PutValue("" + score.ClassName);
-
-                // 座號
-                ws_warning.Cells[index, 3].PutValue("" + score.Seat_no);
-
-                // 科別
-                ws_warning.Cells[index, 4].PutValue("" + score.Department);
-
-                // 姓名
-                ws_warning.Cells[index, 5].PutValue("" + score.StudentName);
-
-                // 科目
-                ws_warning.Cells[index, 6].PutValue("" + score.Subject);
-
-                // 科目級別
-                ws_warning.Cells[index, 7].PutValue("" + score.Level);
-
-                // 學年度
-                ws_warning.Cells[index, 8].PutValue(_schoolYear);
-
-                // 學期
-                ws_warning.Cells[index, 9].PutValue(_semester);
-
-                // 原始成績
-                ws_warning.Cells[index, 10].PutValue("" + score.Score);
-
-                // 補考成績
-                ws_warning.Cells[index, 11].PutValue("" + score.MakeUp_Score);
-
-                // 及格標準
-                ws_warning.Cells[index, 12].PutValue("" + score.Pass_Standard);
-
-
-                // 取得學分
-                ws_warning.Cells[index, 13].PutValue("");
-
-
-                index++;
-
-            }
-
-
-            Worksheet ws_LackScore = book.Worksheets[2];
-
-            index = 1;
-
-            foreach (UDT_MakeUpData score in lackOfMakeUpscoreList)
-            {
-
-                // 學生系統編號
-                ws_LackScore.Cells[index, 0].PutValue("" + score.Ref_Student_ID);
-
-                // 學號
-                ws_LackScore.Cells[index, 1].PutValue("" + score.StudentNumber);
-
-                // 班級
-                ws_LackScore.Cells[index, 2].PutValue("" + score.ClassName);
-
-                // 座號
-                ws_LackScore.Cells[index, 3].PutValue("" + score.Seat_no);
-
-                // 科別
-                ws_LackScore.Cells[index, 4].PutValue("" + score.Department);
-
-                // 姓名
-                ws_LackScore.Cells[index, 5].PutValue("" + score.StudentName);
-
-                // 科目
-                ws_LackScore.Cells[index, 6].PutValue("" + score.Subject);
-
-                // 科目級別
-                ws_LackScore.Cells[index, 7].PutValue("" + score.Level);
-
-                // 學年度
-                ws_LackScore.Cells[index, 8].PutValue(_schoolYear);
-
-                // 學期
-                ws_LackScore.Cells[index, 9].PutValue(_semester);
-
-                // 原始成績
-                ws_LackScore.Cells[index, 10].PutValue("" + score.Score);
-
-                // 補考成績
-                ws_LackScore.Cells[index, 11].PutValue("" + score.MakeUp_Score);
-
-                // 及格標準
-                ws_LackScore.Cells[index, 12].PutValue("" + score.Pass_Standard);
-
-
-                // 取得學分
-                ws_LackScore.Cells[index, 13].PutValue("");
-
-
-                index++;
-
-            }
-
             #endregion
 
             SaveFileDialog sd = new SaveFileDialog();
-            sd.FileName = "匯入學期科目成績(補考成績)";
+            sd.FileName = "匯入學年科目成績(補考成績)";
             sd.Filter = "Excel檔案(*.xls)|*.xls";
             if (sd.ShowDialog() == DialogResult.OK)
             {
                 DialogResult result = new DialogResult();
 
                 try
-                {
+                {                    
                     book.Save(sd.FileName, SaveFormat.Excel97To2003);
                     result = MsgBox.Show("檔案儲存完成，是否開啟檔案? 本補考成績匯入由系統自動以成績計算規則判斷，建議須人工檢查後再做匯入", "是否開啟", MessageBoxButtons.YesNo);
                 }
@@ -716,16 +486,53 @@ WHERE
                 }
             }
 
-            FISCA.Presentation.MotherForm.SetStatusBarMessage("補考成績匯入學期科目成績輸出完成");
-
+            FISCA.Presentation.MotherForm.SetStatusBarMessage("補考成績匯入學年科目成績輸出完成");
         }
 
-        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void _worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            FISCA.Presentation.MotherForm.SetStatusBarMessage("" + e.UserState, e.ProgressPercentage);
+            LoadMakeUpGroup(_targetBatchID);
         }
 
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
 
+        private void ExportMakeUpScoreFormYear_Load(object sender, EventArgs e)
+        {
+            this.MaximumSize = this.MinimumSize = this.Size;
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            // 暫停畫面控制項
+
+            cboMakeUpBatch.SuspendLayout();
+            cboSchoolYear.SuspendLayout();
+
+            // 選擇的項目
+            DevComponents.DotNetBar.ComboBoxItem selectedItem = (DevComponents.DotNetBar.ComboBoxItem)cboMakeUpBatch.SelectedItem;
+
+            if (selectedItem == null)
+            {
+                MsgBox.Show("梯次別不得空白", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else
+            {
+                if ("" + selectedItem.Text == "")
+                {
+                    MsgBox.Show("梯次別不得空白", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            btnExport.Enabled = false;
+            _targetBatchID = "" + selectedItem.Tag;
+
+            _worker.RunWorkerAsync();
+        }
 
         private void cboSchoolYear_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -740,27 +547,5 @@ WHERE
 
             }
         }
-
-        private void cbosemester_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // 非第一次開啟，則 切換到該學期的補考梯次
-            if (!_isFirstLoad)
-            {
-                _semester = cbosemester.Text;
-
-                GetMakeUpBatch();
-
-                FillCboMakeUpbatch();
-
-
-
-            }
-        }
-
-        private void ExportMakeUpScoreForm_Load(object sender, EventArgs e)
-        {
-            this.MaximumSize = this.MinimumSize = this.Size;
-        }
     }
 }
-

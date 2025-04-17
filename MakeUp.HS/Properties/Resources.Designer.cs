@@ -83,6 +83,16 @@ namespace MakeUp.HS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] 匯入學年科目成績_補考成績_ {
+            get {
+                object obj = ResourceManager.GetObject("匯入學年科目成績_補考成績_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] 匯入學期科目成績_補考成績_ {
             get {
                 object obj = ResourceManager.GetObject("匯入學期科目成績_補考成績_", resourceCulture);
