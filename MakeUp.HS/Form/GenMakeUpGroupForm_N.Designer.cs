@@ -1,6 +1,6 @@
 ﻿namespace MakeUp.HS.Form
 {
-    partial class GenMakeUpGroupForm
+    partial class GenMakeUpGroupForm_N
     {
         /// <summary>
         /// Required designer variable.
@@ -28,24 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelX1 = new DevComponents.DotNetBar.LabelX();
             this.picLoading = new System.Windows.Forms.PictureBox();
+            this.labelX1 = new DevComponents.DotNetBar.LabelX();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
-            // 
-            // labelX1
-            // 
-            this.labelX1.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.labelX1.BackgroundStyle.Class = "";
-            this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX1.Location = new System.Drawing.Point(12, 12);
-            this.labelX1.Name = "labelX1";
-            this.labelX1.Size = new System.Drawing.Size(154, 23);
-            this.labelX1.TabIndex = 0;
-            this.labelX1.Text = "產生學分制補考群組中...";
             // 
             // picLoading
             // 
@@ -55,14 +41,28 @@
             this.picLoading.BackColor = System.Drawing.Color.Transparent;
             this.picLoading.Image = global::MakeUp.HS.Properties.Resources.loading;
             this.picLoading.InitialImage = null;
-            this.picLoading.Location = new System.Drawing.Point(88, 51);
+            this.picLoading.Location = new System.Drawing.Point(143, 65);
             this.picLoading.Name = "picLoading";
             this.picLoading.Size = new System.Drawing.Size(44, 46);
             this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picLoading.TabIndex = 22;
+            this.picLoading.TabIndex = 24;
             this.picLoading.TabStop = false;
             // 
-            // GenMakeUpGroupForm
+            // labelX1
+            // 
+            this.labelX1.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX1.BackgroundStyle.Class = "";
+            this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX1.Location = new System.Drawing.Point(54, 26);
+            this.labelX1.Name = "labelX1";
+            this.labelX1.Size = new System.Drawing.Size(154, 23);
+            this.labelX1.TabIndex = 23;
+            this.labelX1.Text = "產生學時制補考群組中...";
+            // 
+            // GenMakeUpGroupForm_N
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -70,8 +70,8 @@
             this.Controls.Add(this.picLoading);
             this.Controls.Add(this.labelX1);
             this.DoubleBuffered = true;
-            this.Name = "GenMakeUpGroupForm";
-            this.Text = "產生學分制補考群組";
+            this.Name = "GenMakeUpGroupForm_N";
+            this.Text = "產生學時制補考群組";
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();
             this.ResumeLayout(false);
 
@@ -79,7 +79,7 @@
 
         #endregion
 
-        private DevComponents.DotNetBar.LabelX labelX1;
         private System.Windows.Forms.PictureBox picLoading;
+        private DevComponents.DotNetBar.LabelX labelX1;
     }
 }

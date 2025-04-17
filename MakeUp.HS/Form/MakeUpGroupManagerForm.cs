@@ -1174,6 +1174,8 @@ FROM
 
         private void btnExportExcel_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(_selectedBatch.MakeUp_Batch))
+                return;            
 
             Workbook book = new Workbook();
             book.Worksheets.Clear();

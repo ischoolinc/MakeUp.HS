@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MakeUp.HS</RootNamespace>
     <AssemblyName>MakeUp.HS</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -120,6 +120,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAO\DataAccess.cs" />
+    <Compile Include="DAO\RptReStudSubjectInfo.cs" />
+    <Compile Include="DAO\SemsSubjectInfo.cs" />
+    <Compile Include="DAO\StudentInfo.cs" />
+    <Compile Include="DAO\YearSubjectInfo.cs" />
     <Compile Include="Form\AssignTeacherForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,6 +148,18 @@
     </Compile>
     <Compile Include="Form\ExportMakeUpScoreForm.designer.cs">
       <DependentUpon>ExportMakeUpScoreForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\GenMakeUpGroupForm_N.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\GenMakeUpGroupForm_N.Designer.cs">
+      <DependentUpon>GenMakeUpGroupForm_N.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\MakeUpBatchManagerForm_Group.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\MakeUpBatchManagerForm_Group.Designer.cs">
+      <DependentUpon>MakeUpBatchManagerForm_Group.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\MakeUpScoreStatusForm.cs">
       <SubType>Form</SubType>
@@ -217,6 +234,12 @@
     <EmbeddedResource Include="Form\ExportMakeUpScoreForm.resx">
       <DependentUpon>ExportMakeUpScoreForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\GenMakeUpGroupForm_N.resx">
+      <DependentUpon>GenMakeUpGroupForm_N.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\MakeUpBatchManagerForm_Group.resx">
+      <DependentUpon>MakeUpBatchManagerForm_Group.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\MakeUpScoreStatusForm.resx">
       <DependentUpon>MakeUpScoreStatusForm.cs</DependentUpon>
