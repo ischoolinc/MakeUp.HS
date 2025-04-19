@@ -18,10 +18,10 @@ namespace MakeUp.HS.DAO
         public decimal Credit { get; set; }
 
         // 及格標準
-        public decimal PassStandard { get; set; }
+        public decimal? PassStandard { get; set; }
 
         // 補考標準
-        public decimal ReStandard { get; set; }
+        public decimal? ReStandard { get; set; }
 
         // 修課校部訂
         public string RequiredBy { get; set; }

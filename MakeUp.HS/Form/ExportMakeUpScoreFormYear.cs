@@ -62,7 +62,8 @@ namespace MakeUp.HS.Form
 
             // 預設為學校的當學年度學期
             cboSchoolYear.Text = School.DefaultSchoolYear;
-
+            _schoolYear = School.DefaultSchoolYear;
+            
             GetMakeUpBatch();
 
             FillCboMakeUpbatch();

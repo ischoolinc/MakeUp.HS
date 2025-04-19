@@ -175,10 +175,6 @@ namespace MakeUp.HS.Form
                             //Console.WriteLine(score.Detail);
                             decimal passScore = 0;
 
-                            decimal.TryParse(score.Detail.GetAttribute("修課及格標準"), out passScore);
-
-                            si.PassStandard = passScore;
-
                             // 取得學期科目成績
                             if (tmpYearSemsSubjectScoreDict.ContainsKey(score.Subject))
                             {
@@ -187,7 +183,11 @@ namespace MakeUp.HS.Form
                                 ss.SubjectName = score.Subject;
                                 ss.Score = score.Score;
                                 ss.Credit = score.CreditDec;
-                                ss.PassStandard = passScore;
+                                if (decimal.TryParse(score.Detail.GetAttribute("修課及格標準"), out passScore))
+                                {
+
+                                    ss.PassStandard = passScore;
+                                }
 
                                 ss.Required = score.Detail.GetAttribute("修課必選修");
                                 ss.RequiredBy = score.Detail.GetAttribute("修課校部訂");
@@ -199,6 +199,8 @@ namespace MakeUp.HS.Form
 
                                 tmpYearSemsSubjectScoreDict[score.Subject].Add(ss);
                             }
+
+                            si.PassStandard = passScore;
                         }
                     }
 
