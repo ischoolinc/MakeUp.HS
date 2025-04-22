@@ -13,7 +13,7 @@ using FISCA.Data;
 using System.Xml.Linq;
 using System.ComponentModel;
 using FISCA.Presentation.Controls;
-
+using MakeUp.HS.DAO;
 
 namespace MakeUp.HS.Form
 {
@@ -63,7 +63,7 @@ namespace MakeUp.HS.Form
             // 預設為學校的當學年度學期
             cboSchoolYear.Text = School.DefaultSchoolYear;
             _schoolYear = School.DefaultSchoolYear;
-            
+
             GetMakeUpBatch();
 
             FillCboMakeUpbatch();
@@ -238,7 +238,7 @@ ORDER BY $make.up.group.makeup_group";
 
                 if (groupIDs != "")
                 {
-                   
+
                     query = @"
 SELECT 
     $make.up.data.uid
@@ -269,9 +269,19 @@ WHERE
                     qh = new QueryHelper();
                     dt = qh.Select(query);
 
-                    // 取得學生學年度學期修課標準， 如果沒有使用預設，比對後填入
+                    List<string> StudentIDList = new List<string>();
+                    // 取得學生系統編號
+                    if (dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            StudentIDList.Add("" + row["ref_student_id"]);
+                        }
+                    }
 
-
+                    // 透過學年度與學生ID取得已有成績的學年科目成績年級
+                    Dictionary<string, Dictionary<string, string>> StudentGradeYearDict = DataAccess.GetGradeYearBySchoolYearSIDs(_schoolYear, StudentIDList);
+                    
                     //整理目前的補考資料
                     if (dt.Rows.Count > 0)
                     {
@@ -317,7 +327,17 @@ WHERE
 
                             // 班級年級
                             data.GradeYear = "" + row["grade_year"];
-                            
+
+                            // 有學年科目成績與學年為主
+                            if (StudentGradeYearDict.ContainsKey(data.Ref_Student_ID))
+                            {
+                                if (StudentGradeYearDict[data.Ref_Student_ID].ContainsKey(data.Subject))
+                                {
+                                    data.GradeYear = StudentGradeYearDict[data.Ref_Student_ID][data.Subject];
+                                }
+                            }
+
+
                             //必選修
                             data.C_Is_Required = "" + row["c_is_required"];
 
@@ -333,7 +353,7 @@ WHERE
 
                             data.Pass_Standard = row["pass_standard"] + "";
                             data.MakeUp_Standard = row["makeup_standard"] + "";
-                           
+
 
                             ////及格標準
                             //data.Pass_Standard = "" + row["pass_standard"];
@@ -348,6 +368,9 @@ WHERE
                             }
                         }
                     }
+
+
+
                 }
 
                 #endregion
@@ -603,7 +626,7 @@ WHERE
                 DialogResult result = new DialogResult();
 
                 try
-                {                    
+                {
                     book.Save(sd.FileName, SaveFormat.Excel97To2003);
                     result = MsgBox.Show("檔案儲存完成，是否開啟檔案? 本補考成績匯入由系統自動以成績計算規則判斷，建議須人工檢查後再做匯入", "是否開啟", MessageBoxButtons.YesNo);
                 }
