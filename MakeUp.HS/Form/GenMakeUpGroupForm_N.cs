@@ -215,24 +215,39 @@ namespace MakeUp.HS.Form
                     {
                         if (tmpYearSemsSubjectScoreDict.ContainsKey(ys.SubjectName))
                         {
-                            if (ys.Score >= si.PassStandard)
-                            {
-                                ys.IsPass = true;
-                            }
-                            else
-                                ys.IsPass = false;
+                            //if (ys.Score >= si.PassStandard)
+                            //{
+                            //    ys.IsPass = true;
+                            //}
+                            //else
+                            //    ys.IsPass = false;
 
                             ys.Credit = 0;
                             foreach (SemsSubjectInfo ss in tmpYearSemsSubjectScoreDict[ys.SubjectName])
                             {
                                 ys.Credit += ss.Credit;
-                                ys.PassStandard = ss.PassStandard;
-                                ys.ReStandard = ss.ReStandard;
-                                ys.Required = ss.Required;
-                                ys.RequiredBy = ss.RequiredBy;
+                                if (ss.PassStandard.HasValue)
+                                    ys.PassStandard = ss.PassStandard;
+
+                                if (ss.ReStandard.HasValue)
+                                    ys.ReStandard = ss.ReStandard;
+
+                                if (ss.Required != "")
+                                    ys.Required = ss.Required;
+
+                                if (ss.RequiredBy != "")
+                                    ys.RequiredBy = ss.RequiredBy;
+                                
                                 if (ys.RequiredBy == "部訂")
                                     ys.RequiredBy = "部定";
                             }
+
+                            if (ys.Score >= ys.PassStandard)
+                            {
+                                ys.IsPass = true;
+                            }
+                            else
+                                ys.IsPass = false;
 
                         }
                     }
