@@ -248,9 +248,13 @@ ORDER BY $make.up.group.makeup_group";
 
                 if (groupIDs != "")
                 {
-                    //透過 group_id 取得學生修課及格與補考標準
-                    Utility uti = new Utility();
-                    Dictionary<string, DataRow> studPassScoreDict = uti.GetStudentMakeupPassScoreByGroupIDs(groupIDList);
+                    //                    2025 / 4 / 21，因工單：評估 補考模組 產生學時制補考群組
+                    //https://3.basecamp.com/4399967/buckets/15765350/todos/7410774016
+                    //討論決定及格標準讀取補考紀錄儲存的及格標準，不讀取學生修課紀錄上，這段先註解，相關程式也需要改寫。
+
+                    //                    //透過 group_id 取得學生修課及格與補考標準
+                    //                    Utility uti = new Utility();
+                    //                    Dictionary<string, DataRow> studPassScoreDict = uti.GetStudentMakeupPassScoreByGroupIDs(groupIDList);
 
 
                     query = @"
@@ -340,22 +344,22 @@ WHERE
 
                             string key = data.Ref_MakeUp_Group_ID + "_" + data.Ref_Student_ID + "_" + data.Subject + "_" + data.Level;
 
-                            if (studPassScoreDict.ContainsKey(key))
-                            {
-                                //及格標準
-                                if (studPassScoreDict[key]["passing_standard"] != null)
-                                    data.Pass_Standard = studPassScoreDict[key]["passing_standard"].ToString();
+                            //if (studPassScoreDict.ContainsKey(key))
+                            //{
+                            //    //及格標準
+                            //    if (studPassScoreDict[key]["passing_standard"] != null)
+                            //        data.Pass_Standard = studPassScoreDict[key]["passing_standard"].ToString();
 
-                                //補考標準
-                                if (studPassScoreDict[key]["makeup_standard"] != null)
-                                    data.MakeUp_Standard = studPassScoreDict[key]["makeup_standard"].ToString();
-                            }
+                            //    //補考標準
+                            //    if (studPassScoreDict[key]["makeup_standard"] != null)
+                            //        data.MakeUp_Standard = studPassScoreDict[key]["makeup_standard"].ToString();
+                            //}
 
-                            ////及格標準
-                            //data.Pass_Standard = "" + row["pass_standard"];
+                            //及格標準
+                            data.Pass_Standard = "" + row["pass_standard"];
 
-                            ////補考標準
-                            //data.MakeUp_Standard = "" + row["makeup_standard"];
+                            //補考標準
+                            data.MakeUp_Standard = "" + row["makeup_standard"];
 
 
                             if (_scoreDict.ContainsKey(data.Ref_MakeUp_Group_ID))
@@ -368,15 +372,7 @@ WHERE
 
                 #endregion
             }
-
-
-
-
-
         }
-
-
-
 
         /// <summary>
         /// 按下「關閉」時觸發
@@ -387,12 +383,6 @@ WHERE
         {
             this.Close();
         }
-
-
-
-
-
-
 
         /// <summary>
         /// 按下「匯出到 Excel」時觸發
@@ -432,9 +422,6 @@ WHERE
 
         }
 
-
-
-
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
 
@@ -462,8 +449,13 @@ WHERE
 
             // 補考分數為「缺」的清單
             List<UDT_MakeUpData> lackOfMakeUpscoreList = new List<UDT_MakeUpData>();
+
+            // 補考分數輸入非0~100值
+            List<UDT_MakeUpData> outside_the_0_100rangeList = new List<UDT_MakeUpData>();
+
             #region 填入內容
 
+            bool chkScorePass = false;
             foreach (string groupID in _scoreDict.Keys)
             {
                 foreach (UDT_MakeUpData score in _scoreDict[groupID])
@@ -484,6 +476,19 @@ WHERE
                         continue;
                     }
 
+                    // 補考分數非0~100
+                    decimal num;
+                    chkScorePass = false;
+                    if (decimal.TryParse(score.MakeUp_Score,out num))
+                    {
+                        if (num >= 0 && num <= 100)
+                            chkScorePass = true;
+                    }
+                    if (chkScorePass == false)
+                    {
+                        outside_the_0_100rangeList.Add(score);
+                        continue;
+                    }
 
                     // 學生系統編號
                     ws.Cells[index, 0].PutValue("" + score.Ref_Student_ID);
@@ -679,6 +684,60 @@ WHERE
                 // 取得學分
                 ws_LackScore.Cells[index, 13].PutValue("");
 
+
+                index++;
+
+            }
+
+            // 輸入值非0~100
+            Worksheet ws_N_0_100Score = book.Worksheets[3];
+
+            index = 1;
+
+            foreach (UDT_MakeUpData score in outside_the_0_100rangeList)
+            {
+
+                // 學生系統編號
+                ws_N_0_100Score.Cells[index, 0].PutValue("" + score.Ref_Student_ID);
+
+                // 學號
+                ws_N_0_100Score.Cells[index, 1].PutValue("" + score.StudentNumber);
+
+                // 班級
+                ws_N_0_100Score.Cells[index, 2].PutValue("" + score.ClassName);
+
+                // 座號
+                ws_N_0_100Score.Cells[index, 3].PutValue("" + score.Seat_no);
+
+                // 科別
+                ws_N_0_100Score.Cells[index, 4].PutValue("" + score.Department);
+
+                // 姓名
+                ws_N_0_100Score.Cells[index, 5].PutValue("" + score.StudentName);
+
+                // 科目
+                ws_N_0_100Score.Cells[index, 6].PutValue("" + score.Subject);
+
+                // 科目級別
+                ws_N_0_100Score.Cells[index, 7].PutValue("" + score.Level);
+
+                // 學年度
+                ws_N_0_100Score.Cells[index, 8].PutValue(_schoolYear);
+
+                // 學期
+                ws_N_0_100Score.Cells[index, 9].PutValue(_semester);
+
+                // 原始成績
+                ws_N_0_100Score.Cells[index, 10].PutValue("" + score.Score);
+
+                // 補考成績
+                ws_N_0_100Score.Cells[index, 11].PutValue("" + score.MakeUp_Score);
+
+                // 及格標準
+                ws_N_0_100Score.Cells[index, 12].PutValue("" + score.Pass_Standard);
+
+                // 取得學分
+                ws_N_0_100Score.Cells[index, 13].PutValue("");
 
                 index++;
 

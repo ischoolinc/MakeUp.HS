@@ -374,8 +374,12 @@ WHERE
 
             // 補考分數為「缺」的清單
             List<UDT_MakeUpData> lackOfMakeUpscoreList = new List<UDT_MakeUpData>();
-            #region 填入內容
 
+            // 補考分數輸入非0~100值
+            List<UDT_MakeUpData> outside_the_0_100rangeList = new List<UDT_MakeUpData>();
+
+            #region 填入內容
+            bool chkScorePass = false;
             foreach (string groupID in _scoreDict.Keys)
             {
                 foreach (UDT_MakeUpData score in _scoreDict[groupID])
@@ -393,6 +397,20 @@ WHERE
                     {
                         lackOfMakeUpscoreList.Add(score);
 
+                        continue;
+                    }
+
+                    // 補考分數非0~100
+                    decimal num;
+                    chkScorePass = false;
+                    if (decimal.TryParse(score.MakeUp_Score, out num))
+                    {
+                        if (num >= 0 && num <= 100)
+                            chkScorePass = true;
+                    }
+                    if (chkScorePass == false)
+                    {
+                        outside_the_0_100rangeList.Add(score);
                         continue;
                     }
 
@@ -453,6 +471,126 @@ WHERE
                     index++;
 
                 }
+            }
+
+            // 沒有補考分數的名單 提醒使用者
+            // 無補考分數清單
+            Worksheet ws_warning = book.Worksheets[1];
+
+            index = 1;
+
+            foreach (UDT_MakeUpData score in noMakeUpscoreList)
+            {
+                // 學號 0
+                ws_warning.Cells[index, 0].PutValue("" + score.StudentNumber);
+
+                // 班級 1
+                ws_warning.Cells[index, 1].PutValue("" + score.ClassName);
+
+                // 座號 2
+                ws_warning.Cells[index, 2].PutValue("" + score.Seat_no);
+
+                // 科別 3
+                ws_warning.Cells[index, 3].PutValue("" + score.Department);
+
+                // 姓名 4
+                ws_warning.Cells[index, 4].PutValue("" + score.StudentName);
+
+                // 學年度 5
+                ws_warning.Cells[index, 5].PutValue(_schoolYear);
+
+                // 成績年級 6
+                ws_warning.Cells[index, 6].PutValue("" + score.GradeYear);
+
+                // 科目 7
+                ws_warning.Cells[index, 7].PutValue("" + score.Subject);
+
+                // 結算成績 9
+                ws_warning.Cells[index, 8].PutValue("" + score.Score);
+
+                // 補考成績
+                ws_warning.Cells[index, 9].PutValue("" + score.MakeUp_Score);
+
+                index++;
+            }
+
+            // 缺考清單
+            Worksheet ws_LackScore = book.Worksheets[2];
+            index = 1;
+            foreach (UDT_MakeUpData score in lackOfMakeUpscoreList)
+            {
+                // 學號 0
+                ws_LackScore.Cells[index, 0].PutValue("" + score.StudentNumber);
+
+                // 班級 1
+                ws_LackScore.Cells[index, 1].PutValue("" + score.ClassName);
+
+                // 座號 2
+                ws_LackScore.Cells[index, 2].PutValue("" + score.Seat_no);
+
+                // 科別 3
+                ws_LackScore.Cells[index, 3].PutValue("" + score.Department);
+
+                // 姓名 4
+                ws_LackScore.Cells[index, 4].PutValue("" + score.StudentName);
+
+                // 學年度 5
+                ws_LackScore.Cells[index, 5].PutValue(_schoolYear);
+
+                // 成績年級 6
+                ws_LackScore.Cells[index, 6].PutValue("" + score.GradeYear);
+
+                // 科目 7
+                ws_LackScore.Cells[index, 7].PutValue("" + score.Subject);
+
+                // 結算成績 9
+                ws_LackScore.Cells[index, 8].PutValue("" + score.Score);
+
+                // 補考成績
+                ws_LackScore.Cells[index, 9].PutValue("" + score.MakeUp_Score);
+
+                index++;
+            }
+
+            // 輸入非0~100值
+            Worksheet ws_N_0_100Score = book.Worksheets[3];
+
+            index = 1;
+
+            foreach (UDT_MakeUpData score in outside_the_0_100rangeList)
+            {
+                // 學號 0
+                ws_N_0_100Score.Cells[index, 0].PutValue("" + score.StudentNumber);
+
+                // 班級 1
+                ws_N_0_100Score.Cells[index, 1].PutValue("" + score.ClassName);
+
+                // 座號 2
+                ws_N_0_100Score.Cells[index, 2].PutValue("" + score.Seat_no);
+
+                // 科別 3
+                ws_N_0_100Score.Cells[index, 3].PutValue("" + score.Department);
+
+                // 姓名 4
+                ws_N_0_100Score.Cells[index, 4].PutValue("" + score.StudentName);
+
+                // 學年度 5
+                ws_N_0_100Score.Cells[index, 5].PutValue(_schoolYear);
+
+                // 成績年級 6
+                ws_N_0_100Score.Cells[index, 6].PutValue("" + score.GradeYear);
+
+                // 科目 7
+                ws_N_0_100Score.Cells[index, 7].PutValue("" + score.Subject);
+
+                // 結算成績 9
+                ws_N_0_100Score.Cells[index, 8].PutValue("" + score.Score);
+
+                // 補考成績
+                ws_N_0_100Score.Cells[index, 9].PutValue("" + score.MakeUp_Score);
+
+                index++;
+
             }
 
             #endregion
