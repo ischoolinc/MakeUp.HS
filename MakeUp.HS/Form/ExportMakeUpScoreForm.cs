@@ -89,7 +89,9 @@ namespace MakeUp.HS.Form
                     SELECT 
                     * 
                     FROM $make.up.batch
-                    WHERE
+                    WHERE 
+                    COALESCE(is_archive, '') = '' 
+                    AND  
                     school_year = '" + _schoolYear + "'" +
                         "AND semester = '" + _semester + "'";
 
