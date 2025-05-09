@@ -138,12 +138,12 @@ namespace MakeUp.HS.Form
                             //makeUpGroupKey = scaRecord.CourseName + "_課程系統編號(" + scaRecord.CourseID + ")";
 
                             // 2019/04/26 穎驊與恩正確認， 同一學期的 課程名稱 在系統中是唯一值， 因此不必擔心重覆的問題，捨棄上面舊的補考群組名稱。
-                            makeUpGroupKey = scaRecord.CourseName ;
+                            makeUpGroupKey = scaRecord.CourseName.Replace("'", "''");
                         }
                         else if (info.Detail.GetAttribute("達補考標準") == "否" && scaRecord != null)
                         {
                             // 2019/04/26 穎驊與恩正確認， 不同課程的未達標準分開建立
-                            makeUpGroupKey = scaRecord.CourseName +"_" + "未達補考標準群組";
+                            makeUpGroupKey = scaRecord.CourseName.Replace("'", "''") + "_" + "未達補考標準群組";
                         }
                         else
                         {
@@ -167,7 +167,7 @@ namespace MakeUp.HS.Form
 
                             makeUpGroupRecord.Ref_MakeUp_Batch_ID = _batch.UID;
 
-                           
+
                             // 只有課程群組 才會有 預設的 閱卷老師
                             // 授課教師 要另外對照出來(原本 smart school API 沒支援)，目前這邊會先抓教師一
                             if (isCourseGroup)
@@ -179,7 +179,7 @@ namespace MakeUp.HS.Form
                             {
                                 makeUpGroupRecord.Ref_Teacher_ID = "";
                             }
-                            
+
 
                             makeUpGroupDict.Add(makeUpGroupKey, makeUpGroupRecord);
                         }
@@ -201,7 +201,7 @@ namespace MakeUp.HS.Form
                         makeUpData.Department = "";
 
                         // 科目
-                        makeUpData.Subject = info.Subject;
+                        makeUpData.Subject = info.Subject.Replace("'", "''");
 
                         // 級別
                         makeUpData.Level = info.Level;
@@ -473,7 +473,7 @@ SELECT 0
             {
                 MsgBox.Show("本梯次班級沒有任何學生需要補考，故本梯次沒有任何補考群組。", "提醒", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            
+
 
         }
 

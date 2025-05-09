@@ -237,7 +237,7 @@ namespace MakeUp.HS.Form
 
                                 if (ss.RequiredBy != "")
                                     ys.RequiredBy = ss.RequiredBy;
-                                
+
                                 if (ys.RequiredBy == "部訂")
                                     ys.RequiredBy = "部定";
                             }
@@ -386,8 +386,8 @@ namespace MakeUp.HS.Form
 
                 foreach (RptReStudSubjectInfo data in RptReStudSubjectYearDict[classID])
                 {
-                    string makeUpGroupKey = data.ClassName + "_" + data.SubjectName;
-                    string tKey = data.ClassID + "_" + data.SubjectName;
+                    string makeUpGroupKey = data.ClassName + "_" + data.SubjectName.Replace("'", "''");
+                    string tKey = data.ClassID + "_" + data.SubjectName.Replace("'", "''");
 
 
                     if (!makeUpGroupDict.ContainsKey(makeUpGroupKey))
@@ -429,7 +429,7 @@ namespace MakeUp.HS.Form
                     makeUpData.Department = "";
 
                     // 科目
-                    makeUpData.Subject = data.SubjectName;
+                    makeUpData.Subject = data.SubjectName.Replace("'", "''");
 
                     // 級別
                     makeUpData.Level = "";
