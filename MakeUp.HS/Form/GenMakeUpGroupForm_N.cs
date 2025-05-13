@@ -320,14 +320,16 @@ namespace MakeUp.HS.Form
 
                 }
 
-
-
-                // 處理所有學年不及格就可以補考的學生(有不及格科目，且沒有學年科目0分)
-                if (si.FailSubjectCount > 0 && si.YearSubjectZeroScore.Count == 0)
+                // 檢查4點留級判斷有符合，有留級才需要補考
+                if ((si.IsFailCreditCountOverHalf && si.IsFailSubjectCountOverHalf) || si.IsFailEntryScore || si.YearSubjectZeroScore.Count > 0)
                 {
-                    if (!StudentReExamReportDict.ContainsKey(si.StudentID))
-                        StudentReExamReportDict.Add(si.StudentID, si);
-                }
+                    // 處理所有學年不及格就可以補考的學生(有不及格科目，且沒有學年科目0分)
+                    if (si.FailSubjectCount > 0 && si.YearSubjectZeroScore.Count == 0)
+                    {
+                        if (!StudentReExamReportDict.ContainsKey(si.StudentID))
+                            StudentReExamReportDict.Add(si.StudentID, si);
+                    }
+                }                
             }
 
             _worker.ReportProgress(70);
